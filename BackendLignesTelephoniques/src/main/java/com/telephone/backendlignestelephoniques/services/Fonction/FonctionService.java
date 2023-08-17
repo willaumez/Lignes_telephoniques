@@ -9,7 +9,7 @@ public interface FonctionService {
 
 
     //=============================================  Fonction  ========================================================//
-    Fonction saveFonction(Fonction fonction);
+    void saveFonction(Fonction fonction);
     Fonction getFonction(Long fonctionId) throws ElementNotFoundException;
     void deleteFonction(Long id);
     Fonction updateFonction(Fonction fonction);

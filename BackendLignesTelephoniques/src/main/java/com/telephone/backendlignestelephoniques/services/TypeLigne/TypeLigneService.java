@@ -9,7 +9,7 @@ public interface TypeLigneService {
 
 
     //=============================================  TypeLigne  ========================================================//
-    TypeLigne saveTypeLigne(TypeLigne typeLigne);
+    void saveTypeLigne(TypeLigne typeLigne);
     TypeLigne getTypeLigne(Long typeLigneId) throws ElementNotFoundException;
     void deleteTypeLigne(Long id);
     TypeLigne updateTypeLigne(TypeLigne typeLigne);

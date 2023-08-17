@@ -9,7 +9,7 @@ public interface DirectionService {
 
 
     //=============================================  Direction  ========================================================//
-    Direction saveDirection(Direction direction);
+    void saveDirection(Direction direction);
     Direction getDirection(Long directionId) throws ElementNotFoundException;
     void deleteDirection(Long id);
     Direction updateDirection(Direction direction);

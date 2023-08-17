@@ -15,8 +15,7 @@ import java.util.List;
 @Slf4j
 public class ForfaitServiceImpl implements ForfaitService {
     @Override
-    public Forfait saveForfait(Forfait forfait) {
-        return null;
+    public void saveForfait(Forfait forfait) {
     }
 
     @Override

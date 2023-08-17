@@ -8,7 +8,7 @@ import java.util.List;
 public interface DebitService {
 
     //=============================================  Debit  ========================================================//
-    Debit saveDebit(Debit debit);
+    void saveDebit(Debit debit);
     Debit getDebit(Long debitId) throws ElementNotFoundException;
     void deleteDebit(Long id);
     Debit updateDebit(Debit debit);

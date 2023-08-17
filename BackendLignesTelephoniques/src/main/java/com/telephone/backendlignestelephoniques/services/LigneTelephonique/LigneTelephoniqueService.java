@@ -9,7 +9,7 @@ public interface LigneTelephoniqueService {
 
 
     //=============================================  LigneTelephonique  ========================================================//
-    LigneTelephonique saveLigneTelephonique(LigneTelephonique ligneTelephonique);
+    void saveLigneTelephonique(LigneTelephonique ligneTelephonique);
     LigneTelephonique getLigneTelephonique(Long ligneId) throws ElementNotFoundException;
     void deleteLigneTelephonique(Long id);
     LigneTelephonique updateLigneTelephonique(LigneTelephonique ligneTelephonique);

@@ -15,8 +15,7 @@ import java.util.List;
 @Slf4j
 public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     @Override
-    public LigneTelephonique saveLigneTelephonique(LigneTelephonique ligneTelephonique) {
-        return null;
+    public void saveLigneTelephonique(LigneTelephonique ligneTelephonique) {
     }
 
     @Override

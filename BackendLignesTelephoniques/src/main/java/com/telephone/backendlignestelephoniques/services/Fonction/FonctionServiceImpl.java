@@ -15,8 +15,7 @@ import java.util.List;
 @Slf4j
 public class FonctionServiceImpl implements FonctionService {
     @Override
-    public Fonction saveFonction(Fonction fonction) {
-        return null;
+    public void saveFonction(Fonction fonction) {
     }
 
     @Override

@@ -9,7 +9,7 @@ public interface ForfaitService {
 
 
     //=============================================  Forfait  ========================================================//
-    Forfait saveForfait(Forfait forfait);
+    void saveForfait(Forfait forfait);
     Forfait getForfait(Long forfaitId) throws ElementNotFoundException;
     void deleteForfait(Long id);
     Forfait updateForfait(Forfait forfait);

@@ -15,8 +15,7 @@ import java.util.List;
 @Slf4j
 public class TypeLigneServiceImpl implements TypeLigneService {
     @Override
-    public TypeLigne saveTypeLigne(TypeLigne typeLigne) {
-        return null;
+    public void saveTypeLigne(TypeLigne typeLigne) {
     }
 
     @Override

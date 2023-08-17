@@ -10,11 +10,12 @@ public interface RestorationService {
 
 
     //=============================================  Restoration  ========================================================//
-    Restoration saveRestoration(Restoration restoration);
+    void saveRestoration(Restoration restoration);
     Restoration getRestoration(Long restorationId) throws ElementNotFoundException;
     void deleteRestoration(Long id);
     Restoration updateRestoration(Restoration restoration);
     List<Restoration> listRestoration();
 
+    void deleteOldRestorations();
 
 }

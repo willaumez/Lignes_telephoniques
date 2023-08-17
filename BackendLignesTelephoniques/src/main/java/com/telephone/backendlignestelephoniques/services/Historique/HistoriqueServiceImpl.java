@@ -15,8 +15,7 @@ import java.util.List;
 @Slf4j
 public class HistoriqueServiceImpl implements HistoriqueService {
     @Override
-    public Historiques saveHistoriques(Historiques historiques) {
-        return null;
+    public void saveHistoriques(Historiques historiques) {
     }
 
     @Override

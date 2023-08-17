@@ -15,8 +15,7 @@ import java.util.List;
 @Slf4j
 public class DebitServiceImpl implements DebitService {
     @Override
-    public Debit saveDebit(Debit debit) {
-        return null;
+    public void saveDebit(Debit debit) {
     }
 
     @Override

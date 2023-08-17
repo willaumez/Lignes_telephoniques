@@ -9,7 +9,7 @@ public interface NatureLigneService {
 
 
     //=============================================  NatureLigne  ========================================================//
-    NatureLigne saveNatureLigne(NatureLigne natureLigne);
+    void saveNatureLigne(NatureLigne natureLigne);
     NatureLigne getNatureLigne(Long historiqueId) throws ElementNotFoundException;
     void deleteNatureLigne(Long id);
     NatureLigne updateNatureLigne(NatureLigne natureLigne);

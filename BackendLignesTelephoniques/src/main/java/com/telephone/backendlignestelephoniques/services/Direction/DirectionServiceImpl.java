@@ -15,8 +15,7 @@ import java.util.List;
 @Slf4j
 public class DirectionServiceImpl implements DirectionService {
     @Override
-    public Direction saveDirection(Direction direction) {
-        return null;
+    public void saveDirection(Direction direction) {
     }
 
     @Override

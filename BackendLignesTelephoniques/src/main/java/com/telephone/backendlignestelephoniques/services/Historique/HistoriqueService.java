@@ -9,7 +9,7 @@ public interface HistoriqueService {
 
 
     //=============================================  Historique  ========================================================//
-    Historiques saveHistoriques(Historiques historiques);
+    void saveHistoriques(Historiques historiques);
     Historiques getHistoriques(Long historiqueId) throws ElementNotFoundException;
     void deleteHistoriques(Long id);
     Historiques updateHistoriques(Historiques historiques);

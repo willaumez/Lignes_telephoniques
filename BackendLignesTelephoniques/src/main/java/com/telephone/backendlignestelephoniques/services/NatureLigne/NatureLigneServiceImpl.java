@@ -15,8 +15,7 @@ import java.util.List;
 @Slf4j
 public class NatureLigneServiceImpl implements NatureLigneService {
     @Override
-    public NatureLigne saveNatureLigne(NatureLigne natureLigne) {
-        return null;
+    public void saveNatureLigne(NatureLigne natureLigne) {
     }
 
     @Override
