@@ -1,11 +1,15 @@
 package com.telephone.backendlignestelephoniques.services.Restoration;
 
+import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.entities.Restoration;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.RestorationRepository;
+import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,28 +24,43 @@ public class RestorationServiceImpl implements RestorationService {
 
     //@Autowired
     private RestorationRepository restorationRepository;
+    private LigneTelephoniqueService ligneTelephoniqueService;
+    private HistoriqueService historiqueService;
+
     @Override
     public void saveRestoration(Restoration restoration) {
+        restorationRepository.save(restoration);
     }
 
     @Override
     public Restoration getRestoration(Long restorationId) throws ElementNotFoundException {
-        return null;
+        return restorationRepository.findById(restorationId)
+                .orElseThrow(() -> new ElementNotFoundException("----- Restoration non trouvée -----"));
     }
 
     @Override
     public void deleteRestoration(Long id) {
-
+        restorationRepository.deleteById(id);
     }
 
     @Override
-    public Restoration updateRestoration(Restoration restoration) {
-        return null;
+    public void restoration(Long id) throws ElementNotFoundException {
+        Restoration restoration = restorationRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Restoration with id " + id + " not found"));
+
+        Restoration.Ligne restorationLigne = restoration.getLigneTelephonique();
+        LigneTelephonique ligneTelephonique = new LigneTelephonique();
+        BeanUtils.copyProperties(restorationLigne, ligneTelephonique);
+
+        ligneTelephoniqueService.saveLigneTelephonique(ligneTelephonique);
+        deleteRestoration(id);
+
+        historiqueService.saveHistoriques("Restoration de la ligne", ligneTelephonique.getNumeroLigne());
     }
 
     @Override
     public List<Restoration> listRestoration() {
-        return null;
+        return restorationRepository.findAll();
     }
 
 
@@ -52,6 +71,8 @@ public class RestorationServiceImpl implements RestorationService {
 
         List<Restoration> oldRestorations = restorationRepository.findByDateSuppressionBefore(thresholdDate);
         restorationRepository.deleteAll(oldRestorations);
+
+        historiqueService.saveHistoriques("Suppression liste-Restoration", "Suppression automatique après 7 jours");
     }
 
     //Execution automatique
@@ -59,5 +80,6 @@ public class RestorationServiceImpl implements RestorationService {
     public void deleteOldRestorationsScheduled() {
         deleteOldRestorations();
     }
+
 
 }

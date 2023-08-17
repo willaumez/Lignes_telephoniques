@@ -38,7 +38,7 @@ public class NatureRestController {
 
     //====================  delete  ======================//
     @DeleteMapping("/nature/delete/{id}")
-    public void deleteNatureLigne(@PathVariable Long id){
+    public void deleteNatureLigne(@PathVariable Long id) throws ElementNotFoundException {
         this.natureLigneService.deleteNatureLigne(id);
     }
 

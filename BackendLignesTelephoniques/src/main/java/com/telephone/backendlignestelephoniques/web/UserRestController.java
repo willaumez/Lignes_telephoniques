@@ -2,6 +2,7 @@ package com.telephone.backendlignestelephoniques.web;
 
 
 import com.telephone.backendlignestelephoniques.entities.User;
+import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.exceptions.UserNotFoundException;
 import com.telephone.backendlignestelephoniques.services.User.UserServices;
 import lombok.AllArgsConstructor;
@@ -44,7 +45,7 @@ public class UserRestController {
     }
 
     @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable Long id) throws UserNotFoundException {
         userServices.deleteUser(id);
     }
 

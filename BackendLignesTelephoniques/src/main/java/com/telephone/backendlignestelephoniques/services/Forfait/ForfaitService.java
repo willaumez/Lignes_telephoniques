@@ -11,7 +11,7 @@ public interface ForfaitService {
     //=============================================  Forfait  ========================================================//
     void saveForfait(Forfait forfait);
     Forfait getForfait(Long forfaitId) throws ElementNotFoundException;
-    void deleteForfait(Long id);
+    void deleteForfait(Long id) throws ElementNotFoundException;
     Forfait updateForfait(Forfait forfait);
     List<Forfait> listForfaits();
 

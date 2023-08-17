@@ -19,11 +19,11 @@ public class Historiques {
 
     private String actionEffectue;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date dateAction;
 
     private String nomOperateur;
-    private String emailOperateur;
 
-    private String ligneCible;
+    private String elementCible;
 }

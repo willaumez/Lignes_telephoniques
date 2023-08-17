@@ -30,11 +30,13 @@ public class HistoriqueRestController {
     }
 
     //====================  save  ======================//
+/*
     @PostMapping("/historiques/save")
     public Historiques saveHistorique(@RequestBody Historiques historiques){
         this.historiqueService.saveHistoriques(historiques);
         return historiques;
     }
+*/
 
     //====================  delete  ======================//
     @DeleteMapping("/historiques/delete/{id}")
@@ -43,10 +45,6 @@ public class HistoriqueRestController {
     }
 
     //====================  update  ======================//
-    @PutMapping("/historiques/update")
-    public Historiques updateHistorique(@RequestBody Historiques historiques) {
-        return historiqueService.updateHistoriques(historiques);
-    }
 
 
 

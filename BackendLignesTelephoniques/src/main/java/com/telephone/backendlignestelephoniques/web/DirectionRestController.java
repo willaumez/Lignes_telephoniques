@@ -38,7 +38,7 @@ public class DirectionRestController {
 
     //====================  delete  ======================//
     @DeleteMapping("/direction/delete/{id}")
-    public void deleteDirection(@PathVariable Long id){
+    public void deleteDirection(@PathVariable Long id) throws ElementNotFoundException {
         this.directionService.deleteDirection(id);
     }
 

@@ -11,7 +11,7 @@ public interface FonctionService {
     //=============================================  Fonction  ========================================================//
     void saveFonction(Fonction fonction);
     Fonction getFonction(Long fonctionId) throws ElementNotFoundException;
-    void deleteFonction(Long id);
+    void deleteFonction(Long id) throws ElementNotFoundException;
     Fonction updateFonction(Fonction fonction);
     List<Fonction> listFonctions();
 

@@ -10,7 +10,7 @@ public interface DebitService {
     //=============================================  Debit  ========================================================//
     void saveDebit(Debit debit);
     Debit getDebit(Long debitId) throws ElementNotFoundException;
-    void deleteDebit(Long id);
+    void deleteDebit(Long id) throws ElementNotFoundException;
     Debit updateDebit(Debit debit);
     List<Debit> listDebits();
 

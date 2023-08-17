@@ -38,7 +38,7 @@ public class ForfaitRestController {
 
     //====================  delete  ======================//
     @DeleteMapping("/forfait/delete/{id}")
-    public void deleteForfait(@PathVariable Long id){
+    public void deleteForfait(@PathVariable Long id) throws ElementNotFoundException {
         this.forfaitService.deleteForfait(id);
     }
 

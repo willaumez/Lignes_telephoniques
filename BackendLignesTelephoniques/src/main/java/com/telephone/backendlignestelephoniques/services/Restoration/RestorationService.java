@@ -13,7 +13,7 @@ public interface RestorationService {
     void saveRestoration(Restoration restoration);
     Restoration getRestoration(Long restorationId) throws ElementNotFoundException;
     void deleteRestoration(Long id);
-    Restoration updateRestoration(Restoration restoration);
+    void restoration(Long id) throws ElementNotFoundException;
     List<Restoration> listRestoration();
 
     void deleteOldRestorations();

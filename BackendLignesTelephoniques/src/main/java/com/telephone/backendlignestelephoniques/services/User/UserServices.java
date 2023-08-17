@@ -2,13 +2,14 @@ package com.telephone.backendlignestelephoniques.services.User;
 
 import com.telephone.backendlignestelephoniques.entities.User;
 import com.telephone.backendlignestelephoniques.exceptions.UserNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface UserServices {
     User saveUser(User user);
     User getUser(Long userId) throws UserNotFoundException;
-    void deleteUser(Long id);
+    void deleteUser(Long id) throws UserNotFoundException;
     User updateUser(User user);
     List<User> listUsers();
     List<User> searchUser(String keyword);
@@ -16,6 +17,8 @@ public interface UserServices {
     boolean confirmPassword(Long id, String password) throws UserNotFoundException ;
 
     User getUserByUsername(String username);
+
+    //UserDetails getLoggedInUserDetails();
 
 
     //=====================================================================================================//

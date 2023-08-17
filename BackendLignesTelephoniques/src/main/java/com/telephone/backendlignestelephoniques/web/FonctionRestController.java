@@ -39,7 +39,7 @@ public class FonctionRestController {
 
     //====================  delete  ======================//
     @DeleteMapping("/fonction/delete/{id}")
-    public void deleteFonction(@PathVariable Long id){
+    public void deleteFonction(@PathVariable Long id) throws ElementNotFoundException {
         this.fonctionService.deleteFonction(id);
     }
 

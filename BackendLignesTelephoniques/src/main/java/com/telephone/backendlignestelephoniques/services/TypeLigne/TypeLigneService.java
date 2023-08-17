@@ -11,7 +11,7 @@ public interface TypeLigneService {
     //=============================================  TypeLigne  ========================================================//
     void saveTypeLigne(TypeLigne typeLigne);
     TypeLigne getTypeLigne(Long typeLigneId) throws ElementNotFoundException;
-    void deleteTypeLigne(Long id);
+    void deleteTypeLigne(Long id) throws ElementNotFoundException;
     TypeLigne updateTypeLigne(TypeLigne typeLigne);
     List<TypeLigne> listTypeLigne();
 

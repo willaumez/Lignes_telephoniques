@@ -39,7 +39,7 @@ public class DebitRestController {
 
     //====================  delete  ======================//
     @DeleteMapping("/debit/delete/{id}")
-    public void deleteDebit(@PathVariable Long id){
+    public void deleteDebit(@PathVariable Long id) throws ElementNotFoundException {
         this.debitService.deleteDebit(id);
     }
 

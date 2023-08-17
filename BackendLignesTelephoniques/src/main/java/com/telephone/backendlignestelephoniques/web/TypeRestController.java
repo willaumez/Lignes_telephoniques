@@ -38,7 +38,7 @@ public class TypeRestController {
 
     //====================  delete  ======================//
     @DeleteMapping("/typeLigne/delete/{id}")
-    public void deleteTypeLigne(@PathVariable Long id){
+    public void deleteTypeLigne(@PathVariable Long id) throws ElementNotFoundException {
         this.typeLigneService.deleteTypeLigne(id);
     }
 

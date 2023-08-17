@@ -38,7 +38,7 @@ public class LigneTelephoniqueRestController {
 
     //====================  delete  ======================//
     @DeleteMapping("/telephonique/delete/{id}")
-    public void deleteLigneTelephonique(@PathVariable Long id){
+    public void deleteLigneTelephonique(@PathVariable Long id) throws ElementNotFoundException {
         this.ligneTelephoniqueService.deleteLigneTelephonique(id);
     }
 

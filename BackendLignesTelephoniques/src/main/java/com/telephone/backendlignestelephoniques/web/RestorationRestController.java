@@ -43,10 +43,6 @@ public class RestorationRestController {
     }
 
     //====================  update  ======================//
-    @PutMapping("/restoration/update")
-    public Restoration updateRestoration(@RequestBody Restoration restoration) {
-        return restorationService.updateRestoration(restoration);
-    }
 
 
 
