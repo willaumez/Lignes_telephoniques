@@ -23,6 +23,6 @@ public class Forfait {
     @CreatedDate
     private Date createdDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "forfait", fetch = FetchType.LAZY)
     private List<LigneTelephonique> lignesTelephoniques;
 }

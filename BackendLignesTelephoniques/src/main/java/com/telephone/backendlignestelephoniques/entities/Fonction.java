@@ -23,6 +23,6 @@ public class Fonction {
     @CreatedDate
     private Date createdDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "fonction", fetch = FetchType.LAZY)
     private List<LigneTelephonique> lignesTelephoniques;
 }

@@ -23,6 +23,6 @@ public class Direction {
     @CreatedDate
     private Date createdDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "direction", fetch = FetchType.LAZY)
     private List<LigneTelephonique> lignesTelephoniques;
 }

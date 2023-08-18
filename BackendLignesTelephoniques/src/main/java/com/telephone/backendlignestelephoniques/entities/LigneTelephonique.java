@@ -21,10 +21,10 @@ public class LigneTelephonique {
     @Column(unique = true)
     private String numeroLigne;
 
-    @OneToOne
+    @ManyToOne
     private TypeLigne typeLigne;
 
-    @OneToOne
+    @ManyToOne
     private Direction direction;
 
     private String affectation;
@@ -36,21 +36,21 @@ public class LigneTelephonique {
     private String numeroSerie;
     private Double montant;
 
-    @OneToOne
+    @ManyToOne
     private Forfait forfait;
 
     private String codePIN;
     private String codePUK;
 
-    @OneToOne
+    @ManyToOne
     private Fonction fonction;
 
-    @OneToOne
+    @ManyToOne
     private Debit debit;
 
     private String adresseIP;
 
-    @OneToOne
+    @ManyToOne
     private NatureLigne natureLigne;
 
     private String nomUtilisateur;

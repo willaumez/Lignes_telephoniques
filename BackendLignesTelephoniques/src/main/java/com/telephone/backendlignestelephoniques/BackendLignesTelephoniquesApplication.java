@@ -1,5 +1,7 @@
 package com.telephone.backendlignestelephoniques;
 
+import com.telephone.backendlignestelephoniques.entities.User;
+import com.telephone.backendlignestelephoniques.enums.RoleType;
 import com.telephone.backendlignestelephoniques.services.User.UserServices;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -28,7 +30,7 @@ public class BackendLignesTelephoniquesApplication {
 				user.setPassword("admin");
 				user.setRole(RoleType.ADMIN);
 				user.setCreatedDate(new Date());
-				userServices.saveUser(user);
+				userServices.saveUser(user, "Admin");
 			});
 
 			Stream.of("Hassan", "Yassine", "Aicha", "jency").forEach(username -> {
@@ -38,7 +40,7 @@ public class BackendLignesTelephoniquesApplication {
 				user.setPassword("admin");
 				user.setRole(RoleType.USER);
 				user.setCreatedDate(new Date());
-				userServices.saveUser(user);
+				userServices.saveUser(user,"Admin");
 			});*/
 
 		};

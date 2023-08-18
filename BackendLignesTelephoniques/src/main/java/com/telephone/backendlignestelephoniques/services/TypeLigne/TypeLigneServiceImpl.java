@@ -1,9 +1,11 @@
 package com.telephone.backendlignestelephoniques.services.TypeLigne;
 
+import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.TypeLigneRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class TypeLigneServiceImpl implements TypeLigneService {
 
     private TypeLigneRepository typeLigneRepository;
     private HistoriqueService historiqueService;
+    private LigneTelephoniqueService ligneTelephoniqueService;
 
     @Override
     public void saveTypeLigne(TypeLigne typeLigne, String operateur) {
@@ -39,6 +42,12 @@ public class TypeLigneServiceImpl implements TypeLigneService {
     public void deleteTypeLigne(Long id, String operateur) throws ElementNotFoundException {
         TypeLigne typeLigne = typeLigneRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("TypeLigne with id " + id + " not found"));
+
+        List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueService.ligneByType(typeLigne);
+        for (LigneTelephonique ligneTelephonique : ligneTelephoniques) {
+            ligneTelephoniqueService.deleteLigneTelephonique(ligneTelephonique.getIdLigne(), operateur);
+        }
+
         typeLigneRepository.deleteById(id);
         historiqueService.saveHistoriques("Suppression [TypeLigne]", typeLigne.getNomType(), operateur);
     }

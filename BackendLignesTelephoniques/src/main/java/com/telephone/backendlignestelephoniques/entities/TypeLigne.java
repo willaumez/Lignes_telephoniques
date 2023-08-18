@@ -24,6 +24,6 @@ public class TypeLigne {
     @CreatedDate
     private Date createdDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "typeLigne", fetch = FetchType.LAZY)
     private List<LigneTelephonique> lignesTelephoniques;
 }

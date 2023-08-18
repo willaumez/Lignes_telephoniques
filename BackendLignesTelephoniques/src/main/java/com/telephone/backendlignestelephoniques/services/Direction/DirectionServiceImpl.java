@@ -1,9 +1,11 @@
 package com.telephone.backendlignestelephoniques.services.Direction;
 
 import com.telephone.backendlignestelephoniques.entities.Direction;
+import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.DirectionRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class DirectionServiceImpl implements DirectionService {
 
     private DirectionRepository directionRepository;
     private HistoriqueService historiqueService;
+    private LigneTelephoniqueService ligneTelephoniqueService;
 
     @Override
     public void saveDirection(Direction direction, String operateur) {
@@ -39,6 +42,11 @@ public class DirectionServiceImpl implements DirectionService {
     public void deleteDirection(Long id, String operateur) throws ElementNotFoundException {
         Direction direction = directionRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Direction with id " + id + " not found"));
+
+        List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueService.ligneByDirection(direction);
+        for (LigneTelephonique ligneTelephonique : ligneTelephoniques) {
+            ligneTelephoniqueService.deleteLigneTelephonique(ligneTelephonique.getIdLigne(), operateur);
+        }
 
         directionRepository.deleteById(id);
         historiqueService.saveHistoriques("Suppression [Direction]", direction.getNomDirection(), operateur);

@@ -1,9 +1,11 @@
 package com.telephone.backendlignestelephoniques.services.NatureLigne;
 
+import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.entities.NatureLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.NatureRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,8 @@ public class NatureLigneServiceImpl implements NatureLigneService {
 
     private NatureRepository natureRepository;
     private HistoriqueService historiqueService;
+    private LigneTelephoniqueService ligneTelephoniqueService;
+
 
     @Override
     public void saveNatureLigne(NatureLigne natureLigne, String operateur) {
@@ -39,6 +43,12 @@ public class NatureLigneServiceImpl implements NatureLigneService {
     public void deleteNatureLigne(Long id, String operateur) throws ElementNotFoundException {
         NatureLigne natureLigne = natureRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("NatureLigne with id " + id + " not found"));
+
+        List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueService.ligneByNature(natureLigne);
+        for (LigneTelephonique ligneTelephonique : ligneTelephoniques) {
+            ligneTelephoniqueService.deleteLigneTelephonique(ligneTelephonique.getIdLigne(), operateur);
+        }
+
         natureRepository.deleteById(id);
         historiqueService.saveHistoriques("Suppression [Nature-Ligne]", natureLigne.getNomNature(), operateur);
     }

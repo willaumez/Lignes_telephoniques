@@ -23,6 +23,6 @@ public class Debit {
     @CreatedDate
     private Date createdDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "debit", fetch = FetchType.LAZY)
     private List<LigneTelephonique> lignesTelephoniques;
 }

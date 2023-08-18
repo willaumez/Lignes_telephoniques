@@ -1,9 +1,12 @@
 package com.telephone.backendlignestelephoniques.services.Debit;
 
 import com.telephone.backendlignestelephoniques.entities.Debit;
+import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.DebitRepository;
+import com.telephone.backendlignestelephoniques.repositories.LigneTelephoniqueRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,6 +24,7 @@ public class DebitServiceImpl implements DebitService {
 
     private DebitRepository debitRepository;
     private HistoriqueService historiqueService;
+    private LigneTelephoniqueService ligneTelephoniqueService;
 
     @Override
     public void saveDebit(Debit debit, String operateur) {
@@ -39,6 +43,11 @@ public class DebitServiceImpl implements DebitService {
     public void deleteDebit(Long id, String operateur) throws ElementNotFoundException {
         Debit debit = debitRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Debit with id " + id + " not found"));
+
+        List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueService.ligneByDebit(debit);
+        for (LigneTelephonique ligneTelephonique : ligneTelephoniques) {
+            ligneTelephoniqueService.deleteLigneTelephonique(ligneTelephonique.getIdLigne(), operateur);
+        }
 
         debitRepository.deleteById(id);
         historiqueService.saveHistoriques("Suppression [Debit]", debit.getNomDebit(), operateur);

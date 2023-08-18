@@ -23,6 +23,6 @@ public class NatureLigne {
     @CreatedDate
     private Date createdDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "natureLigne", fetch = FetchType.LAZY)
     private List<LigneTelephonique> lignesTelephoniques;
 }

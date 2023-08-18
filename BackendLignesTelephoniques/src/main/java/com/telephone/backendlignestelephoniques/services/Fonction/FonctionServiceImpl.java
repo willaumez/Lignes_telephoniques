@@ -1,9 +1,11 @@
 package com.telephone.backendlignestelephoniques.services.Fonction;
 
 import com.telephone.backendlignestelephoniques.entities.Fonction;
+import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.FonctionRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,8 @@ public class FonctionServiceImpl implements FonctionService {
 
     private FonctionRepository fonctionRepository;
     private HistoriqueService historiqueService;
+    private LigneTelephoniqueService ligneTelephoniqueService;
+
 
     @Override
     public void saveFonction(Fonction fonction, String operateur) {
@@ -39,6 +43,12 @@ public class FonctionServiceImpl implements FonctionService {
     public void deleteFonction(Long id, String operateur) throws ElementNotFoundException {
         Fonction fonction = fonctionRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Fonction with id " + id + " not found"));
+
+        List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueService.ligneByFonction(fonction);
+        for (LigneTelephonique ligneTelephonique : ligneTelephoniques) {
+            ligneTelephoniqueService.deleteLigneTelephonique(ligneTelephonique.getIdLigne(), operateur);
+        }
+
         fonctionRepository.deleteById(id);
         historiqueService.saveHistoriques("Suppression [Fonction]", fonction.getNomFonction(), operateur);
     }

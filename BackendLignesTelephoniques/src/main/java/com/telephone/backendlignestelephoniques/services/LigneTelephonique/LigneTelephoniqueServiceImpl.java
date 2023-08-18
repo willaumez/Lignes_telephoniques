@@ -1,6 +1,6 @@
 package com.telephone.backendlignestelephoniques.services.LigneTelephonique;
 
-import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
+import com.telephone.backendlignestelephoniques.entities.*;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.LigneTelephoniqueRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
@@ -56,6 +56,37 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     @Override
     public List<LigneTelephonique> listLigneTelephonique() {
         return ligneTelephoniqueRepository.findAll();
+    }
+
+    // find By
+    @Override
+    public List<LigneTelephonique> ligneByDebit(Debit debit) {
+        return ligneTelephoniqueRepository.findByDebit(debit);
+    }
+
+    @Override
+    public List<LigneTelephonique> ligneByDirection(Direction direction) {
+        return ligneTelephoniqueRepository.findByDirection(direction);
+    }
+
+    @Override
+    public List<LigneTelephonique> ligneByFonction(Fonction fonction) {
+        return ligneTelephoniqueRepository.findByFonction(fonction);
+    }
+
+    @Override
+    public List<LigneTelephonique> ligneByForfait(Forfait forfait) {
+        return ligneTelephoniqueRepository.findByForfait(forfait);
+    }
+
+    @Override
+    public List<LigneTelephonique> ligneByNature(NatureLigne natureLigne) {
+        return ligneTelephoniqueRepository.findByNatureLigne(natureLigne);
+    }
+
+    @Override
+    public List<LigneTelephonique> ligneByType(TypeLigne typeLigne) {
+        return ligneTelephoniqueRepository.findByTypeLigne(typeLigne);
     }
 
 

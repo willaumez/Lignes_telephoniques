@@ -1,9 +1,11 @@
 package com.telephone.backendlignestelephoniques.services.Forfait;
 
 import com.telephone.backendlignestelephoniques.entities.Forfait;
+import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.ForfaitRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class ForfaitServiceImpl implements ForfaitService {
 
     private ForfaitRepository forfaitRepository;
     private HistoriqueService historiqueService;
+    private LigneTelephoniqueService ligneTelephoniqueService;
 
     @Override
     public void saveForfait(Forfait forfait, String operateur) {
@@ -39,6 +42,12 @@ public class ForfaitServiceImpl implements ForfaitService {
     public void deleteForfait(Long id, String operateur) throws ElementNotFoundException {
         Forfait forfait = forfaitRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Forfait with id " + id + " not found"));
+
+        List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueService.ligneByForfait(forfait);
+        for (LigneTelephonique ligneTelephonique : ligneTelephoniques) {
+            ligneTelephoniqueService.deleteLigneTelephonique(ligneTelephonique.getIdLigne(), operateur);
+        }
+
         forfaitRepository.deleteById(id);
         historiqueService.saveHistoriques("Suppression [Forfait]", forfait.getNomForfait(), operateur);
     }
