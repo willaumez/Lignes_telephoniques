@@ -9,10 +9,10 @@ public interface FonctionService {
 
 
     //=============================================  Fonction  ========================================================//
-    void saveFonction(Fonction fonction);
+    void saveFonction(Fonction fonction, String operateur);
     Fonction getFonction(Long fonctionId) throws ElementNotFoundException;
-    void deleteFonction(Long id) throws ElementNotFoundException;
-    Fonction updateFonction(Fonction fonction);
+    void deleteFonction(Long id, String operateur) throws ElementNotFoundException;
+    Fonction updateFonction(Fonction fonction, String operateur);
     List<Fonction> listFonctions();
 
 }

@@ -9,9 +9,9 @@ public interface LigneTelephoniqueService {
 
 
     //=============================================  LigneTelephonique  ========================================================//
-    void saveLigneTelephonique(LigneTelephonique ligneTelephonique);
+    void saveLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur);
     LigneTelephonique getLigneTelephonique(Long ligneId) throws ElementNotFoundException;
-    void deleteLigneTelephonique(Long id) throws ElementNotFoundException;
-    LigneTelephonique updateLigneTelephonique(LigneTelephonique ligneTelephonique);
+    void deleteLigneTelephonique(Long id, String operateur) throws ElementNotFoundException;
+    LigneTelephonique updateLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur);
     List<LigneTelephonique> listLigneTelephonique();
 }

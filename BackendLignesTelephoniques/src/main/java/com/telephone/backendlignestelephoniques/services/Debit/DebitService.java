@@ -8,10 +8,10 @@ import java.util.List;
 public interface DebitService {
 
     //=============================================  Debit  ========================================================//
-    void saveDebit(Debit debit);
+    void saveDebit(Debit debit, String operateur);
     Debit getDebit(Long debitId) throws ElementNotFoundException;
-    void deleteDebit(Long id) throws ElementNotFoundException;
-    Debit updateDebit(Debit debit);
+    void deleteDebit(Long id, String operateur) throws ElementNotFoundException;
+    Debit updateDebit(Debit debit, String operateur);
     List<Debit> listDebits();
 
 }

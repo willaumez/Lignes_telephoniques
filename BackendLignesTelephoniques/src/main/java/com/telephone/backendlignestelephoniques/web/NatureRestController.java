@@ -30,22 +30,22 @@ public class NatureRestController {
     }
 
     //====================  save  ======================//
-    @PostMapping("/nature/save")
-    public NatureLigne saveNatureLigne(@RequestBody NatureLigne natureLigne){
-        this.natureLigneService.saveNatureLigne(natureLigne);
+    @PostMapping("/nature/save/{operateur}")
+    public NatureLigne saveNatureLigne(@PathVariable String operateur, @RequestBody NatureLigne natureLigne){
+        this.natureLigneService.saveNatureLigne(natureLigne, operateur);
         return natureLigne;
     }
 
     //====================  delete  ======================//
-    @DeleteMapping("/nature/delete/{id}")
-    public void deleteNatureLigne(@PathVariable Long id) throws ElementNotFoundException {
-        this.natureLigneService.deleteNatureLigne(id);
+    @DeleteMapping("/nature/delete/{id}/{operateur}")
+    public void deleteNatureLigne(@PathVariable Long id, @PathVariable String operateur) throws ElementNotFoundException {
+        this.natureLigneService.deleteNatureLigne(id, operateur);
     }
 
     //====================  update  ======================//
-    @PutMapping("/nature/update")
-    public NatureLigne updateNatureLigne(@RequestBody NatureLigne natureLigne) {
-        return natureLigneService.updateNatureLigne(natureLigne);
+    @PutMapping("/nature/update/{operateur}")
+    public NatureLigne updateNatureLigne(@PathVariable String operateur, @RequestBody NatureLigne natureLigne) {
+        return natureLigneService.updateNatureLigne(natureLigne, operateur);
     }
 
 

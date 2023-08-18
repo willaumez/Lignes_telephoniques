@@ -4,16 +4,14 @@ import com.telephone.backendlignestelephoniques.entities.User;
 import com.telephone.backendlignestelephoniques.exceptions.UserNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.UserRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,14 +24,15 @@ public class UserServicesImpl implements UserServices {
     private final HistoriqueService historiqueService;
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(User user, String operateur) {
         String password = user.getPassword();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(password);
         user.setPassword(hashedPassword);
 
+        user.setCreatedDate(new Date());
         User savedUser = userRepository.save(user);
-        historiqueService.saveHistoriques("Ajout [User]", savedUser.getUsername());
+        historiqueService.saveHistoriques("Ajout [User]", savedUser.getUsername(), operateur);
         return savedUser;
     }
 
@@ -44,23 +43,27 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public void deleteUser(Long id) throws UserNotFoundException {
+    public void deleteUser(Long id, String operateur) throws UserNotFoundException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
         userRepository.deleteById(id);
-        historiqueService.saveHistoriques("Suppression [User]", user.getUsername());
+        historiqueService.saveHistoriques("Suppression [User]", user.getUsername(), operateur);
     }
 
     @Override
-    public User updateUser(User user) {
+    public User updateUser(User user, String operateur) {
         if (user.getPassword() != null) {
             String password = user.getPassword();
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String hashedPassword = passwordEncoder.encode(password);
             user.setPassword(hashedPassword);
         }
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        user.setCreatedDate(existingUser.getCreatedDate());
         User updatedUser = userRepository.save(user);
-        historiqueService.saveHistoriques("Mise à jour [TypeLigne]", updatedUser.getUsername());
+        historiqueService.saveHistoriques("Mise à jour [TypeLigne]", updatedUser.getUsername(), operateur);
         return updatedUser;
     }
 

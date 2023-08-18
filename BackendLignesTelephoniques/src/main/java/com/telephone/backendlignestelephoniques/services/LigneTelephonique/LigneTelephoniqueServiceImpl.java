@@ -4,11 +4,13 @@ import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.LigneTelephoniqueRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,9 +23,10 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     private HistoriqueService historiqueService;
 
     @Override
-    public void saveLigneTelephonique(LigneTelephonique ligneTelephonique) {
+    public void saveLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur) {
+        ligneTelephonique.setCreatedDate(new Date());
         ligneTelephoniqueRepository.save(ligneTelephonique);
-        historiqueService.saveHistoriques("Ajout [Ligne-Téléphonique]", ligneTelephonique.getNumeroLigne());
+        historiqueService.saveHistoriques("Ajout [Ligne-Téléphonique]", ligneTelephonique.getNumeroLigne(), operateur);
     }
 
     @Override
@@ -33,17 +36,20 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     }
 
     @Override
-    public void deleteLigneTelephonique(Long id) throws ElementNotFoundException {
+    public void deleteLigneTelephonique(Long id, String operateur) throws ElementNotFoundException {
         LigneTelephonique ligneTelephonique = ligneTelephoniqueRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Ligne-Telephonique with id " + id + " not found"));
         ligneTelephoniqueRepository.deleteById(id);
-        historiqueService.saveHistoriques("Suppression [Ligne-Téléphonique]", ligneTelephonique.getNumeroLigne());
+        historiqueService.saveHistoriques("Suppression [Ligne-Téléphonique]", ligneTelephonique.getNumeroLigne(), operateur);
     }
 
     @Override
-    public LigneTelephonique updateLigneTelephonique(LigneTelephonique ligneTelephonique) {
+    public LigneTelephonique updateLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur) {
+        LigneTelephonique existingLigne = ligneTelephoniqueRepository.findById(ligneTelephonique.getIdLigne())
+                .orElseThrow(() -> new EntityNotFoundException("LigneTelephonique not found"));
+        ligneTelephonique.setCreatedDate(existingLigne.getCreatedDate());
         LigneTelephonique updatedLigne = ligneTelephoniqueRepository.save(ligneTelephonique);
-        historiqueService.saveHistoriques("Mise à jour [Ligne-Téléphonique]", updatedLigne.getNumeroLigne());
+        historiqueService.saveHistoriques("Mise à jour [Ligne-Téléphonique]", updatedLigne.getNumeroLigne(), operateur);
         return updatedLigne;
     }
 

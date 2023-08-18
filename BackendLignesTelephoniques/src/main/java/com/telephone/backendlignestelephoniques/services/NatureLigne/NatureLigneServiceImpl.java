@@ -1,15 +1,16 @@
 package com.telephone.backendlignestelephoniques.services.NatureLigne;
 
 import com.telephone.backendlignestelephoniques.entities.NatureLigne;
-import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.NatureRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -22,9 +23,10 @@ public class NatureLigneServiceImpl implements NatureLigneService {
     private HistoriqueService historiqueService;
 
     @Override
-    public void saveNatureLigne(NatureLigne natureLigne) {
+    public void saveNatureLigne(NatureLigne natureLigne, String operateur) {
+        natureLigne.setCreatedDate(new Date());
         natureRepository.save(natureLigne);
-        historiqueService.saveHistoriques("Ajout [Nature-Ligne]", natureLigne.getNomNature());
+        historiqueService.saveHistoriques("Ajout [Nature-Ligne]", natureLigne.getNomNature(), operateur);
     }
 
     @Override
@@ -34,17 +36,20 @@ public class NatureLigneServiceImpl implements NatureLigneService {
     }
 
     @Override
-    public void deleteNatureLigne(Long id) throws ElementNotFoundException {
+    public void deleteNatureLigne(Long id, String operateur) throws ElementNotFoundException {
         NatureLigne natureLigne = natureRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("NatureLigne with id " + id + " not found"));
         natureRepository.deleteById(id);
-        historiqueService.saveHistoriques("Suppression [Nature-Ligne]", natureLigne.getNomNature());
+        historiqueService.saveHistoriques("Suppression [Nature-Ligne]", natureLigne.getNomNature(), operateur);
     }
 
     @Override
-    public NatureLigne updateNatureLigne(NatureLigne natureLigne) {
+    public NatureLigne updateNatureLigne(NatureLigne natureLigne, String operateur) {
+        NatureLigne existingNatureLigne = natureRepository.findById(natureLigne.getIdNature())
+                .orElseThrow(() -> new EntityNotFoundException("NatureLigne not found"));
+        natureLigne.setCreatedDate(existingNatureLigne.getCreatedDate());
         NatureLigne updatedNature = natureRepository.save(natureLigne);
-        historiqueService.saveHistoriques("Mise à jour [Nature-Ligne]", updatedNature.getNomNature());
+        historiqueService.saveHistoriques("Mise à jour [Nature-Ligne]", updatedNature.getNomNature(), operateur);
         return updatedNature;
     }
 

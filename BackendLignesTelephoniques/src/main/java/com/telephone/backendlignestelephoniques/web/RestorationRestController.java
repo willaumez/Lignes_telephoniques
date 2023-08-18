@@ -30,20 +30,22 @@ public class RestorationRestController {
     }
 
     //====================  save  ======================//
-    @PostMapping("/restoration/save")
-    public Restoration saveRestoration(@RequestBody Restoration restoration){
-        this.restorationService.saveRestoration(restoration);
+    @PostMapping("/restoration/save/{operateur}")
+    public Restoration saveRestoration(@PathVariable String operateur, @RequestBody Restoration restoration){
+        this.restorationService.saveRestoration(restoration, operateur);
         return restoration;
     }
 
     //====================  delete  ======================//
-    @DeleteMapping("/restoration/delete/{id}")
-    public void deleteRestoration(@PathVariable Long id){
-        this.restorationService.deleteRestoration(id);
+    @DeleteMapping("/restoration/delete/{id}/{operateur}")
+    public void deleteRestoration(@PathVariable Long id, @PathVariable String operateur){
+        this.restorationService.deleteRestoration(id, operateur);
     }
 
-    //====================  update  ======================//
-
-
+    //====================  restoration  ======================//
+    @GetMapping("/restorer/{restorationId}/{operateur}")
+    public void setRestoration(@PathVariable Long restorationId, @PathVariable String operateur) throws ElementNotFoundException {
+         restorationService.restorer(restorationId, operateur);
+    }
 
 }

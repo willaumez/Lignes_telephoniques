@@ -4,11 +4,13 @@ import com.telephone.backendlignestelephoniques.entities.Direction;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.DirectionRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,9 +23,10 @@ public class DirectionServiceImpl implements DirectionService {
     private HistoriqueService historiqueService;
 
     @Override
-    public void saveDirection(Direction direction) {
+    public void saveDirection(Direction direction, String operateur) {
+        direction.setCreatedDate(new Date());
         directionRepository.save(direction);
-        historiqueService.saveHistoriques("Ajout [Direction]", direction.getNomDirection());
+        historiqueService.saveHistoriques("Ajout [Direction]", direction.getNomDirection(), operateur);
     }
 
     @Override
@@ -33,18 +36,21 @@ public class DirectionServiceImpl implements DirectionService {
     }
 
     @Override
-    public void deleteDirection(Long id) throws ElementNotFoundException {
+    public void deleteDirection(Long id, String operateur) throws ElementNotFoundException {
         Direction direction = directionRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Direction with id " + id + " not found"));
 
         directionRepository.deleteById(id);
-        historiqueService.saveHistoriques("Suppression [Direction]", direction.getNomDirection());
+        historiqueService.saveHistoriques("Suppression [Direction]", direction.getNomDirection(), operateur);
     }
 
     @Override
-    public Direction updateDirection(Direction direction) {
+    public Direction updateDirection(Direction direction, String operateur) {
+        Direction existingDirection = directionRepository.findById(direction.getIdDirection())
+                .orElseThrow(() -> new EntityNotFoundException("Direction not found"));
+        direction.setCreatedDate(existingDirection.getCreatedDate());
         Direction updatedDirection = directionRepository.save(direction);
-        historiqueService.saveHistoriques("Mise à jour [Direction]", updatedDirection.getNomDirection());
+        historiqueService.saveHistoriques("Mise à jour [Direction]", updatedDirection.getNomDirection(), operateur);
 
         return updatedDirection;
     }

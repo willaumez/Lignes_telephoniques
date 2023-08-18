@@ -9,10 +9,10 @@ public interface TypeLigneService {
 
 
     //=============================================  TypeLigne  ========================================================//
-    void saveTypeLigne(TypeLigne typeLigne);
+    void saveTypeLigne(TypeLigne typeLigne, String operateur);
     TypeLigne getTypeLigne(Long typeLigneId) throws ElementNotFoundException;
-    void deleteTypeLigne(Long id) throws ElementNotFoundException;
-    TypeLigne updateTypeLigne(TypeLigne typeLigne);
+    void deleteTypeLigne(Long id, String operateur) throws ElementNotFoundException;
+    TypeLigne updateTypeLigne(TypeLigne typeLigne, String operateur);
     List<TypeLigne> listTypeLigne();
 
 

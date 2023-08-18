@@ -30,22 +30,22 @@ public class ForfaitRestController {
     }
 
     //====================  save  ======================//
-    @PostMapping("/forfait/save")
-    public Forfait saveForfait(@RequestBody Forfait forfait){
-        this.forfaitService.saveForfait(forfait);
+    @PostMapping("/forfait/save/{operateur}")
+    public Forfait saveForfait(@PathVariable String operateur, @RequestBody Forfait forfait){
+        this.forfaitService.saveForfait(forfait, operateur);
         return forfait;
     }
 
     //====================  delete  ======================//
-    @DeleteMapping("/forfait/delete/{id}")
-    public void deleteForfait(@PathVariable Long id) throws ElementNotFoundException {
-        this.forfaitService.deleteForfait(id);
+    @DeleteMapping("/forfait/delete/{id}/{operateur}")
+    public void deleteForfait(@PathVariable Long id, @PathVariable String operateur) throws ElementNotFoundException {
+        this.forfaitService.deleteForfait(id, operateur);
     }
 
     //====================  update  ======================//
-    @PutMapping("/forfait/update")
-    public Forfait updateDirection(@RequestBody Forfait forfait) {
-        return forfaitService.updateForfait(forfait);
+    @PutMapping("/forfait/update/{operateur}")
+    public Forfait updateDirection(@PathVariable String operateur, @RequestBody Forfait forfait) {
+        return forfaitService.updateForfait(forfait, operateur);
     }
 
 

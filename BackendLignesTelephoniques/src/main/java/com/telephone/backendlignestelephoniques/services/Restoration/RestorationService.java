@@ -10,10 +10,10 @@ public interface RestorationService {
 
 
     //=============================================  Restoration  ========================================================//
-    void saveRestoration(Restoration restoration);
+    void saveRestoration(Restoration restoration, String operateur);
     Restoration getRestoration(Long restorationId) throws ElementNotFoundException;
-    void deleteRestoration(Long id);
-    void restoration(Long id) throws ElementNotFoundException;
+    void deleteRestoration(Long id, String operateur);
+    void restorer(Long id, String operateur) throws ElementNotFoundException;
     List<Restoration> listRestoration();
 
     void deleteOldRestorations();

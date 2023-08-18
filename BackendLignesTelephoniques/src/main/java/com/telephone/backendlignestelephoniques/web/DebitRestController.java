@@ -31,22 +31,22 @@ public class DebitRestController {
     }
 
     //====================  save  ======================//
-    @PostMapping("/debit/save")
-    public Debit saveDebit(@RequestBody Debit debit){
-        this.debitService.saveDebit(debit);
+    @PostMapping("/debit/save/{operateur}")
+    public Debit saveDebit(@PathVariable String operateur, @RequestBody Debit debit){
+        this.debitService.saveDebit(debit, operateur);
         return debit;
     }
 
     //====================  delete  ======================//
-    @DeleteMapping("/debit/delete/{id}")
-    public void deleteDebit(@PathVariable Long id) throws ElementNotFoundException {
-        this.debitService.deleteDebit(id);
+    @DeleteMapping("/debit/delete/{id}/{operateur}")
+    public void deleteDebit(@PathVariable Long id, @PathVariable String operateur) throws ElementNotFoundException {
+        this.debitService.deleteDebit(id, operateur);
     }
 
     //====================  update  ======================//
-    @PutMapping("/debit/update")
-    public Debit updateDebit(@RequestBody Debit debit) {
-        return debitService.updateDebit(debit);
+    @PutMapping("/debit/update/{operateur}")
+    public Debit updateDebit(@PathVariable String operateur, @RequestBody Debit debit) {
+        return debitService.updateDebit(debit, operateur);
     }
 
 }

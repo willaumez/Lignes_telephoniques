@@ -33,20 +33,20 @@ public class UserRestController {
         return userServices.getUser(userId);
     }
 
-    @PostMapping("/users")
-    public User saveUser(@RequestBody User user) {
-        return userServices.saveUser(user);
+    @PostMapping("/users/save/{operateur}")
+    public User saveUser(@PathVariable String operateur, @RequestBody User user) {
+        return userServices.saveUser(user, operateur);
     }
 
-    @PutMapping("/users/{userId}")
-    public User updateUser(@PathVariable Long userId, @RequestBody User user) {
+    @PutMapping("/users/update/{userId}/{operateur}")
+    public User updateUser(@PathVariable Long userId, @PathVariable String operateur, @RequestBody User user) {
         user.setId(userId);
-        return userServices.updateUser(user);
+        return userServices.updateUser(user, operateur);
     }
 
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable Long id) throws UserNotFoundException {
-        userServices.deleteUser(id);
+    @DeleteMapping("/users/delete/{id}/{operateur}")
+    public void deleteUser(@PathVariable Long id, @PathVariable String operateur) throws UserNotFoundException {
+        userServices.deleteUser(id, operateur);
     }
 
     @GetMapping("/confirm/{id}/{password}")

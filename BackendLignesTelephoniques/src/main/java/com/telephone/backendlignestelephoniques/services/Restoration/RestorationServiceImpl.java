@@ -28,7 +28,8 @@ public class RestorationServiceImpl implements RestorationService {
     private HistoriqueService historiqueService;
 
     @Override
-    public void saveRestoration(Restoration restoration) {
+    public void saveRestoration(Restoration restoration, String operateur) {
+        restoration.setDateSuppression(new Date());
         restorationRepository.save(restoration);
     }
 
@@ -39,12 +40,12 @@ public class RestorationServiceImpl implements RestorationService {
     }
 
     @Override
-    public void deleteRestoration(Long id) {
+    public void deleteRestoration(Long id, String operateur) {
         restorationRepository.deleteById(id);
     }
 
     @Override
-    public void restoration(Long id) throws ElementNotFoundException {
+    public void restorer(Long id, String operateur) throws ElementNotFoundException {
         Restoration restoration = restorationRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Restoration with id " + id + " not found"));
 
@@ -52,10 +53,10 @@ public class RestorationServiceImpl implements RestorationService {
         LigneTelephonique ligneTelephonique = new LigneTelephonique();
         BeanUtils.copyProperties(restorationLigne, ligneTelephonique);
 
-        ligneTelephoniqueService.saveLigneTelephonique(ligneTelephonique);
-        deleteRestoration(id);
+        ligneTelephoniqueService.saveLigneTelephonique(ligneTelephonique, operateur);
+        deleteRestoration(id, operateur);
 
-        historiqueService.saveHistoriques("Restoration de la ligne", ligneTelephonique.getNumeroLigne());
+        historiqueService.saveHistoriques("Restoration de la ligne", ligneTelephonique.getNumeroLigne(), operateur);
     }
 
     @Override
@@ -72,7 +73,7 @@ public class RestorationServiceImpl implements RestorationService {
         List<Restoration> oldRestorations = restorationRepository.findByDateSuppressionBefore(thresholdDate);
         restorationRepository.deleteAll(oldRestorations);
 
-        historiqueService.saveHistoriques("Suppression liste-Restoration", "Suppression automatique après 7 jours");
+        historiqueService.saveHistoriques("Suppression liste-Restoration", "Suppression automatique après 7 jours", "Serveur");
     }
 
     //Execution automatique

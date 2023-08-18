@@ -4,11 +4,13 @@ import com.telephone.backendlignestelephoniques.entities.Forfait;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.ForfaitRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,9 +23,10 @@ public class ForfaitServiceImpl implements ForfaitService {
     private HistoriqueService historiqueService;
 
     @Override
-    public void saveForfait(Forfait forfait) {
+    public void saveForfait(Forfait forfait, String operateur) {
+        forfait.setCreatedDate(new Date());
         forfaitRepository.save(forfait);
-        historiqueService.saveHistoriques("Ajout [Forfait]", forfait.getNomForfait());
+        historiqueService.saveHistoriques("Ajout [Forfait]", forfait.getNomForfait(), operateur);
     }
 
     @Override
@@ -33,17 +36,20 @@ public class ForfaitServiceImpl implements ForfaitService {
     }
 
     @Override
-    public void deleteForfait(Long id) throws ElementNotFoundException {
+    public void deleteForfait(Long id, String operateur) throws ElementNotFoundException {
         Forfait forfait = forfaitRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Forfait with id " + id + " not found"));
         forfaitRepository.deleteById(id);
-        historiqueService.saveHistoriques("Suppression [Forfait]", forfait.getNomForfait());
+        historiqueService.saveHistoriques("Suppression [Forfait]", forfait.getNomForfait(), operateur);
     }
 
     @Override
-    public Forfait updateForfait(Forfait forfait) {
+    public Forfait updateForfait(Forfait forfait, String operateur) {
+        Forfait existingForfait = forfaitRepository.findById(forfait.getIdForfait())
+                .orElseThrow(() -> new EntityNotFoundException("Forfait not found"));
+        forfait.setCreatedDate(existingForfait.getCreatedDate());
         Forfait updateForfait = forfaitRepository.save(forfait);
-        historiqueService.saveHistoriques("Mise à jour [Forfait]", updateForfait.getNomForfait());
+        historiqueService.saveHistoriques("Mise à jour [Forfait]", updateForfait.getNomForfait(), operateur);
         return updateForfait;
     }
 

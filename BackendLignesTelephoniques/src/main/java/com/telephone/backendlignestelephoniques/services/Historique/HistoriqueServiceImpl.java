@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -24,19 +26,18 @@ import java.util.List;
 public class HistoriqueServiceImpl implements HistoriqueService {
 
     private HistoriquesRepository historiquesRepository;
-    //private UserServices userServices;
+
 
     @Override
-    public void saveHistoriques(String action, String elementCible) {
+    public void saveHistoriques(String action, String elementCible, String operateur) {
 
         Historiques historique = new Historiques();
-        //UserDetails userDetails = userServices.getLoggedInUserDetails();
         //LocalDateTime localDateTime = LocalDateTime.now();
 
         historique.setActionEffectue(action);
         //historique.setDateAction(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
         historique.setDateAction(new Date());
-        historique.setNomOperateur("userDetails.getUsername()");
+        historique.setNomOperateur(operateur);
         historique.setElementCible(elementCible);
 
         historiquesRepository.save(historique);

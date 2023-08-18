@@ -4,11 +4,13 @@ import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.TypeLigneRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,9 +23,10 @@ public class TypeLigneServiceImpl implements TypeLigneService {
     private HistoriqueService historiqueService;
 
     @Override
-    public void saveTypeLigne(TypeLigne typeLigne) {
+    public void saveTypeLigne(TypeLigne typeLigne, String operateur) {
+        typeLigne.setCreatedDate(new Date());
         typeLigneRepository.save(typeLigne);
-        historiqueService.saveHistoriques("Ajout [TypeLigne]", typeLigne.getNomType());
+        historiqueService.saveHistoriques("Ajout [TypeLigne]", typeLigne.getNomType(), operateur);
     }
 
     @Override
@@ -33,17 +36,20 @@ public class TypeLigneServiceImpl implements TypeLigneService {
     }
 
     @Override
-    public void deleteTypeLigne(Long id) throws ElementNotFoundException {
+    public void deleteTypeLigne(Long id, String operateur) throws ElementNotFoundException {
         TypeLigne typeLigne = typeLigneRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("TypeLigne with id " + id + " not found"));
         typeLigneRepository.deleteById(id);
-        historiqueService.saveHistoriques("Suppression [TypeLigne]", typeLigne.getNomType());
+        historiqueService.saveHistoriques("Suppression [TypeLigne]", typeLigne.getNomType(), operateur);
     }
 
     @Override
-    public TypeLigne updateTypeLigne(TypeLigne typeLigne) {
+    public TypeLigne updateTypeLigne(TypeLigne typeLigne, String operateur) {
+        TypeLigne existingTypeLigne = typeLigneRepository.findById(typeLigne.getIdType())
+                .orElseThrow(() -> new EntityNotFoundException("TypeLigne not found"));
+        typeLigne.setCreatedDate(existingTypeLigne.getCreatedDate());
         TypeLigne updatedTypeLigne = typeLigneRepository.save(typeLigne);
-        historiqueService.saveHistoriques("Mise à jour [TypeLigne]", updatedTypeLigne.getNomType());
+        historiqueService.saveHistoriques("Mise à jour [TypeLigne]", updatedTypeLigne.getNomType(), operateur);
         return updatedTypeLigne;
     }
 

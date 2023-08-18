@@ -30,22 +30,22 @@ public class TypeRestController {
     }
 
     //====================  save  ======================//
-    @PostMapping("/typeLigne/save")
-    public TypeLigne saveTypeLigne(@RequestBody TypeLigne typeLigne){
-        this.typeLigneService.saveTypeLigne(typeLigne);
+    @PostMapping("/typeLigne/save/{operateur}")
+    public TypeLigne saveTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne){
+        this.typeLigneService.saveTypeLigne(typeLigne, operateur);
         return typeLigne;
     }
 
     //====================  delete  ======================//
-    @DeleteMapping("/typeLigne/delete/{id}")
-    public void deleteTypeLigne(@PathVariable Long id) throws ElementNotFoundException {
-        this.typeLigneService.deleteTypeLigne(id);
+    @DeleteMapping("/typeLigne/delete/{id}/{operateur}")
+    public void deleteTypeLigne(@PathVariable Long id, @PathVariable String operateur) throws ElementNotFoundException {
+        this.typeLigneService.deleteTypeLigne(id, operateur);
     }
 
     //====================  update  ======================//
-    @PutMapping("/typeLigne/update")
-    public TypeLigne updateTypeLigne(@RequestBody TypeLigne typeLigne) {
-        return typeLigneService.updateTypeLigne(typeLigne);
+    @PutMapping("/typeLigne/update/{operateur}")
+    public TypeLigne updateTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne) {
+        return typeLigneService.updateTypeLigne(typeLigne, operateur);
     }
 
 

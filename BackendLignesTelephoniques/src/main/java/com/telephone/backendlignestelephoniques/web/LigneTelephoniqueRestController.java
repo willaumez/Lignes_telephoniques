@@ -30,22 +30,22 @@ public class LigneTelephoniqueRestController {
     }
 
     //====================  save  ======================//
-    @PostMapping("/telephonique/save")
-    public LigneTelephonique saveLigneTelephonique(@RequestBody LigneTelephonique telephonique){
-        this.ligneTelephoniqueService.saveLigneTelephonique(telephonique);
+    @PostMapping("/telephonique/save/{operateur}")
+    public LigneTelephonique saveLigneTelephonique(@PathVariable String operateur, @RequestBody LigneTelephonique telephonique){
+        this.ligneTelephoniqueService.saveLigneTelephonique(telephonique, operateur);
         return telephonique;
     }
 
     //====================  delete  ======================//
-    @DeleteMapping("/telephonique/delete/{id}")
-    public void deleteLigneTelephonique(@PathVariable Long id) throws ElementNotFoundException {
-        this.ligneTelephoniqueService.deleteLigneTelephonique(id);
+    @DeleteMapping("/telephonique/delete/{id}/{operateur}")
+    public void deleteLigneTelephonique(@PathVariable Long id, @PathVariable String operateur) throws ElementNotFoundException {
+        this.ligneTelephoniqueService.deleteLigneTelephonique(id, operateur);
     }
 
     //====================  update  ======================//
-    @PutMapping("/telephonique/update")
-    public LigneTelephonique updateLigneTelephonique(@RequestBody LigneTelephonique telephonique) {
-        return ligneTelephoniqueService.updateLigneTelephonique(telephonique);
+    @PutMapping("/telephonique/update/{operateur}")
+    public LigneTelephonique updateLigneTelephonique(@PathVariable String operateur, @RequestBody LigneTelephonique telephonique) {
+        return ligneTelephoniqueService.updateLigneTelephonique(telephonique, operateur);
     }
 
 

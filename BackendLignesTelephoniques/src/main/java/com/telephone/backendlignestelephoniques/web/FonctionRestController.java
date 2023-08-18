@@ -31,22 +31,22 @@ public class FonctionRestController {
     }
 
     //====================  save  ======================//
-    @PostMapping("/fonction/save")
-    public Fonction saveFonction(@RequestBody Fonction fonction){
-        this.fonctionService.saveFonction(fonction);
+    @PostMapping("/fonction/save/{operateur}")
+    public Fonction saveFonction(@PathVariable String operateur, @RequestBody Fonction fonction){
+        this.fonctionService.saveFonction(fonction, operateur);
         return fonction;
     }
 
     //====================  delete  ======================//
-    @DeleteMapping("/fonction/delete/{id}")
-    public void deleteFonction(@PathVariable Long id) throws ElementNotFoundException {
-        this.fonctionService.deleteFonction(id);
+    @DeleteMapping("/fonction/delete/{id}/{operateur}")
+    public void deleteFonction(@PathVariable Long id, @PathVariable String operateur) throws ElementNotFoundException {
+        this.fonctionService.deleteFonction(id, operateur);
     }
 
     //====================  update  ======================//
-    @PutMapping("/fonction/update")
-    public Fonction updateDirection(@RequestBody Fonction fonction) {
-        return fonctionService.updateFonction(fonction);
+    @PutMapping("/fonction/update/{operateur}")
+    public Fonction updateDirection(@PathVariable String operateur, @RequestBody Fonction fonction) {
+        return fonctionService.updateFonction(fonction, operateur);
     }
 
 

@@ -30,22 +30,22 @@ public class DirectionRestController {
     }
 
     //====================  save  ======================//
-    @PostMapping("/direction/save")
-    public Direction saveDirection(@RequestBody Direction direction){
-        this.directionService.saveDirection(direction);
+    @PostMapping("/direction/save/{operateur}")
+    public Direction saveDirection(@PathVariable String operateur, @RequestBody Direction direction){
+        this.directionService.saveDirection(direction, operateur);
         return direction;
     }
 
     //====================  delete  ======================//
-    @DeleteMapping("/direction/delete/{id}")
-    public void deleteDirection(@PathVariable Long id) throws ElementNotFoundException {
-        this.directionService.deleteDirection(id);
+    @DeleteMapping("/direction/delete/{id}/{operateur}")
+    public void deleteDirection(@PathVariable Long id, @PathVariable String operateur) throws ElementNotFoundException {
+        this.directionService.deleteDirection(id, operateur);
     }
 
     //====================  update  ======================//
-    @PutMapping("/direction/update")
-    public Direction updateDirection(@RequestBody Direction direction) {
-        return directionService.updateDirection(direction);
+    @PutMapping("/direction/update/{operateur}")
+    public Direction updateDirection(@PathVariable String operateur, @RequestBody Direction direction) {
+        return directionService.updateDirection(direction, operateur);
     }
 
 

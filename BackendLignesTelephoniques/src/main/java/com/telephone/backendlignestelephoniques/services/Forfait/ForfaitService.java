@@ -9,10 +9,10 @@ public interface ForfaitService {
 
 
     //=============================================  Forfait  ========================================================//
-    void saveForfait(Forfait forfait);
+    void saveForfait(Forfait forfait, String operateur);
     Forfait getForfait(Long forfaitId) throws ElementNotFoundException;
-    void deleteForfait(Long id) throws ElementNotFoundException;
-    Forfait updateForfait(Forfait forfait);
+    void deleteForfait(Long id, String operateur) throws ElementNotFoundException;
+    Forfait updateForfait(Forfait forfait, String operateur);
     List<Forfait> listForfaits();
 
 }
