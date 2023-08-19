@@ -8,7 +8,7 @@ import {User} from "../Models/User";
   providedIn: 'root'
 })
 export class LoginService {
-  userData : User | any;
+  userData: User | any;
 
   isAuthenticated: boolean = false;
   accessToken!: any;
@@ -37,7 +37,6 @@ export class LoginService {
       role: decodeJwt.role,
     };
   }
-
   logout() {
     this.isAuthenticated = false;
     this.accessToken = undefined;

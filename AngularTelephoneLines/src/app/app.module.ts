@@ -16,13 +16,15 @@ import {MatDividerModule} from "@angular/material/divider";
 import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { NotAuthorizedComponent } from './Components/not-authorized/not-authorized.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     AdminTemplateComponent,
-    UserTemplateComponent
+    UserTemplateComponent,
+    NotAuthorizedComponent
   ],
   imports: [
     BrowserModule,

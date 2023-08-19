@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {LoginService} from "../../Services/login.service";
 import {Router} from "@angular/router";
 import {CoreService} from "../../core/core.service";
+import {RoleType} from "../../Models/User";
 
 
 // Fonction validateur personnalisée
@@ -42,19 +43,32 @@ export class LoginComponent implements OnInit{
     let username = this.formLogin.value.username;
     let password = this.formLogin.value.password;
 
-    if (username && password){
+    if (username && password) {
       this.loginService.login(username, password).subscribe({
         next: data => {
           this.loginService.loadProfile(data);
-          this.router.navigateByUrl("/admin");
-          this._coreService.openSnackBar('Connexion réussie ! ')
+
+          if (this.loginService.isAuthenticated) {
+            const userRole = this.loginService.getUserData().role;
+
+            if (userRole === RoleType.ADMIN) {
+              this.router.navigateByUrl("/admin");
+            } else if (userRole === RoleType.USER) {
+              this.router.navigateByUrl("/user");
+            }
+          }
+
+          this._coreService.openSnackBar('Connexion réussie ! ');
         },
         error: err => {
-          this._coreService.openSnackBar('Entrer un e-mail et un mot de passe valide! ')
+          this._coreService.openSnackBar('Entrer un e-mail et un mot de passe valide! ');
         }
-      })
+      });
     }
   }
+
+
+
 
 
 
