@@ -1,0 +1,46 @@
+<div class="content-body">
+  <mat-card>
+    <mat-card-content>
+      <div class="header">
+        <P>Authentification</P>
+      </div>
+      <form (ngSubmit)="handleLogin()" name="loginForm" [formGroup]="formLogin">
+        <div class="emailInput">
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Nom ou E-mail</mat-label>
+            <input
+              formControlName="username"
+              matInput
+              placeholder="Entrer le nom ou l'e-mail" required
+            />
+            <mat-error *ngIf="!formLogin.controls['username'].valid">
+              Nom ou E-mail requis
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Mot de Passe</mat-label>
+            <input formControlName="password" matInput [type]=" hide ? 'password' : 'text'" required/>
+
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide Password'"
+               [attr.aria-pressed]="hide">
+              <mat-icon>
+                {{hide ? 'visibility_off' : 'visibility'}}
+              </mat-icon>
+            </button>
+
+            <mat-error *ngIf="!formLogin.controls['password'].valid">
+              Mot de Passe requis
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <button mat-flat-button color="primary">Connexion</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+
