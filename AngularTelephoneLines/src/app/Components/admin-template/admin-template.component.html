@@ -1,1 +1,96 @@
-<p>admin-template works!</p>
+<mat-toolbar color="primary" class="mat-elevation-z8">
+  <button class="togglebtn" (click)="drawer.toggle()" mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <!--  <span><img ngSrc="assets/logo3.webp" alt="logo" height="34" width="150"> </span>-->
+  <span>Lignes-Téléphonique</span>
+  <span class="example-spacer"></span>
+  <button mat-button class="username" routerLink="profile">
+    <mat-icon>account_circle</mat-icon>
+    {{loginService.userData.username}}
+    <sup  class="role-sup">{{ loginService.userData.role === 'ADMIN' ? 'ADMIN' : 'USER' }}</sup>
+  </button>
+
+  <div class="vertical-divider"></div>
+
+  <mat-icon class="logout-icon" (click)="handleLogOut()" >exit_to_app</mat-icon>
+
+</mat-toolbar>
+
+<mat-drawer-container autosize>
+  <mat-drawer #drawer opened="true" mode="side" position="start">
+    <mat-nav-list>
+      <mat-list-item>
+        <button routerLink="accueil" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon> settings_phone </mat-icon> Accueil</button>
+      </mat-list-item>
+      <mat-list-item>
+        <button routerLink="types" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>folder</mat-icon> Type_Ligne</button>
+      </mat-list-item>
+
+            <mat-divider></mat-divider>
+      <mat-list-item>
+        <button routerLink="rapprochement" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon> insert_drive_file </mat-icon> Rapprochement </button>
+      </mat-list-item>
+      <mat-list-item>
+        <button routerLink="facturation" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>event_note</mat-icon> Facturations </button>
+      </mat-list-item>
+
+            <mat-divider></mat-divider>
+      <mat-list-item *ngIf="loginService.userData.role === 'ADMIN'">
+        <button routerLink="tables" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>table</mat-icon> Tables </button>
+      </mat-list-item>
+
+            <mat-divider></mat-divider>
+      <mat-list-item>
+        <button routerLink="aide" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>help</mat-icon> Aide</button>
+      </mat-list-item>
+      <mat-list-item>
+        <button routerLink="profile" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>account_circle</mat-icon> Profile </button>
+      </mat-list-item>
+      <mat-list-item *ngIf="loginService.userData.role === 'ADMIN'">
+        <button routerLink="utilisateurs" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>people</mat-icon> Utilisateurs</button>
+      </mat-list-item>
+
+            <mat-divider></mat-divider>
+      <mat-list-item *ngIf="loginService.userData.role === 'ADMIN'">
+        <button routerLink="paramettre" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>settings</mat-icon> Paramettre</button>
+      </mat-list-item>
+
+            <mat-divider></mat-divider>
+      <mat-list-item>
+        <button mat-button (click)="handleLogOut()">
+          <mat-icon>exit_to_app</mat-icon> Deconnexion </button>
+      </mat-list-item>
+
+    </mat-nav-list>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="body">
+      <router-outlet>
+
+
+      </router-outlet>
+    </div>
+  </mat-drawer-content>
+
+</mat-drawer-container>

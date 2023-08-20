@@ -1,0 +1,62 @@
+:root {
+  --dialog-title-border-radius: 40px; /* Définir le border-radius souhaité */
+  --dialog-title-width: 20em; /* Définir la largeur souhaitée */
+  //--dialog-title-width: 1000px; /* Définir la largeur souhaitée */
+}
+
+div[mat-dialog-title] {
+  border-radius: var(--dialog-title-border-radius);
+  width: var(--dialog-title-width);
+  text-align: center;
+}
+
+.content {
+  width: 900px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.action {
+  padding: 0px 15px 10px;
+
+  button {
+    flex: 1;
+  }
+}
+
+.button-container{
+  width: 400px;
+  margin: 0.3rem auto;
+  align-items: center;
+  align-content: center;
+}
+.button-container button {
+  width: 50%;
+  margin: auto 10px;
+}
+
+mat-form-field{
+  margin: 10px;
+}
+
+//mat-chip-listbox
+
+/**{
+  box-shadow: 0 0 0 4px #000000 inset;
+}*/
+
+mat-chip-listbox{
+  padding-bottom: 10px;
+  mat-chip-option{
+    height: 50%;
+    margin: auto;
+  }
+}
+

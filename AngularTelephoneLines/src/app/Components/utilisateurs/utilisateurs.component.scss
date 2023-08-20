@@ -1,0 +1,218 @@
+.main-body {
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.listUser {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  border-bottom: 6px solid #1b6ca8;
+}
+
+.container-fluid{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .filter {
+    width: 350px;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+}
+
+.action {
+  display: flex;
+  gap: 5px;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+/* CSS pour les cellules du tableau */
+.mat-cell {
+  white-space: nowrap;
+  table-layout: initial;
+
+}
+table {
+  padding: 10px;
+  text-align: center;
+  align-content: center;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 40%;
+}
+
+
+td, th {
+  width: auto;
+  height: auto;
+  align-content: center;
+  align-items: center;
+}
+th{
+  font-size: 1rem;
+}
+/*
+.action-container{
+  display: inline-block;
+  justify-content: space-between;
+  align-items: center; // Centrer les boutons verticalement dans la cellule
+  width: 100%;
+}
+*/
+
+
+/*.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}*/
+
+@keyframes loopEffect {
+  0%, 100% {
+    border-color: currentColor;
+    background-color: #f4f7fa;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #030303;
+  }
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+  background-color: #dcdcde;
+  //font-size: 1rem;
+  font-weight: bold;
+  // color: #030303;
+  //animation: loopEffect 1s infinite;
+  transition: transform 0.3s ease;
+  transform: scale(1);
+}
+.mat-mdc-row:hover{
+  border-top: 2px solid #263238;
+  border-bottom: 2px solid #263238;
+  font-size: 10px;
+}
+
+.demo-row-is-clicked {
+  font-weight: bold;
+}
+
+
+
+
+/*mat-paginator{
+  border-radius: 1rem;
+  float: right;
+  margin-top: 1rem;
+  display: inline-block;
+  border: 2px solid #263238;
+  font-size: 1rem;
+}*/
+
+.customer-container{
+  display: flex;
+  justify-content: space-between;
+
+  .customer-total{
+    //text-align: center;
+    border-radius: 1rem;
+    float: left;
+    margin-top: 2.5rem;
+    display: inline-block;
+    font-size: 1.5rem;
+    color: #263238;
+  }
+  .custom-paginator{
+    border-radius: 1rem;
+    float: right;
+    margin-top: 1rem;
+    display: inline-block;
+    border: 2px solid #263238;
+    font-size: 1rem;
+  }
+
+}
+
+
+
+.mat-elevation-z8 {
+  overflow-x: auto;
+}
+
+.mat-form-field,
+.mat-paginator {
+  overflow: hidden;
+}
+
+@media screen and (max-width: 767px) {
+  table.mat-table {
+    font-size: 12px;
+  }
+
+  th.mat-header-cell,
+  td.mat-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+
+//expend
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.example-element-diagram {
+  min-width: 80px;
+  border: 2px solid black;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 104px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+
+//profile
+.blue-row {
+  background-color: #98c8ff;
+  color: black;
+}

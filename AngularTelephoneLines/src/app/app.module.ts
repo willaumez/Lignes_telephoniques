@@ -14,9 +14,28 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatTableModule} from "@angular/material/table";
 import {MatDividerModule} from "@angular/material/divider";
 import {ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { NotAuthorizedComponent } from './Components/not-authorized/not-authorized.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatMenuModule} from "@angular/material/menu";
+import {NgOptimizedImage} from "@angular/common";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
+import {MatBadgeModule} from "@angular/material/badge";
+import { AccueilComponent } from './Components/accueil/accueil.component';
+import { UtilisateursComponent } from './Components/utilisateurs/utilisateurs.component';
+import { ProfileComponent } from './Components/profile/profile.component';
+import { RapprochementComponent } from './Components/rapprochement/rapprochement.component';
+import { AideComponent } from './Components/aide/aide.component';
+import { UserAddEditComponent } from './Components/utilisateurs/user-add-edit/user-add-edit.component';
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatSelectModule} from "@angular/material/select";
+import {AppHttpInterceptor} from "./interceptors/app-http.interceptor";
 
 @NgModule({
   declarations: [
@@ -24,7 +43,13 @@ import { NotAuthorizedComponent } from './Components/not-authorized/not-authoriz
     LoginComponent,
     AdminTemplateComponent,
     UserTemplateComponent,
-    NotAuthorizedComponent
+    NotAuthorizedComponent,
+    AccueilComponent,
+    UtilisateursComponent,
+    ProfileComponent,
+    RapprochementComponent,
+    AideComponent,
+    UserAddEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,8 +64,23 @@ import { NotAuthorizedComponent } from './Components/not-authorized/not-authoriz
     MatTableModule,
     ReactiveFormsModule,
     MatSnackBarModule,
+    MatAutocompleteModule,
+    MatToolbarModule,
+    MatMenuModule,
+    NgOptimizedImage,
+    MatSidenavModule,
+    MatListModule,
+    MatBadgeModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDialogModule,
+    MatChipsModule,
+    MatSelectModule
+
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AppHttpInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
