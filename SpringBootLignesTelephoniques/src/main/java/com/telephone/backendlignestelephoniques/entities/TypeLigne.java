@@ -27,6 +27,4 @@ public class TypeLigne {
 
     @OneToMany(mappedBy = "typeLigne", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<AttributLigne> attributs = new ArrayList<>();
-
-
 }

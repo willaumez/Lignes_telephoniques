@@ -17,7 +17,7 @@ import {User} from "../../Models/User";
 export class UtilisateursComponent implements OnInit{
 
   displayedColumns: string[] = [
-    'id', 'username', 'email', 'role', 'ACTIONS'];
+    'id', 'username', 'email', 'createdDate', 'role', 'ACTIONS'];
   userData : User = this.loginService.getUserData();
 
   @Input()

@@ -46,11 +46,12 @@ export class LoginService {
   public getUserData(): User {
     return this.userData;
   }
-  setUserData(user: User) {
+  setUserData(user: User):void {
     this.userData = {
       id: user.id,
       username: user.username,
       email: user.email,
+      role: user.role
     };
   }
 

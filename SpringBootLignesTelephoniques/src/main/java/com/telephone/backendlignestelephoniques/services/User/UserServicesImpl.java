@@ -52,16 +52,18 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public User updateUser(User user, String operateur) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setCreatedDate(existingUser.getCreatedDate());
+
         if (user.getPassword() != null) {
             String password = user.getPassword();
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String hashedPassword = passwordEncoder.encode(password);
             user.setPassword(hashedPassword);
+        }else {
+            user.setPassword(existingUser.getPassword());
         }
-        User existingUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-        user.setCreatedDate(existingUser.getCreatedDate());
         User updatedUser = userRepository.save(user);
         historiqueService.saveHistoriques("Mise à jour [TypeLigne]", updatedUser.getUsername(), operateur);
         return updatedUser;

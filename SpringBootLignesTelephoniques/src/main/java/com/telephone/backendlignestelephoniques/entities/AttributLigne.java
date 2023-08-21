@@ -20,5 +20,4 @@ public class AttributLigne {
     private String nomAttribut;
     private String type; // Le type de l'attribut (peut être "String", "Integer", etc.)
     private String referenceEntity; // Nom de l'entité référencée si l'attribut est une référence
-
 }

@@ -20,6 +20,4 @@ public class AttributValue {
     private String nomAttribut;
     private String valeur;
     private Long referenceId; // ID de l'entité référencée
-
-
 }
