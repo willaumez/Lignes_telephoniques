@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {User} from "../Models/User";
-import {Observable} from "rxjs";
+import {catchError, Observable, throwError} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -15,16 +15,16 @@ export class UserService {
     return this.http.get<Array<User>>(environment.backEndHost+"/users");
   }
 
-  public updateUser(user: User): Observable<User> {
-    return this.http.put<User>(environment.backEndHost+"/users/"+user.id, user);
+  public updateUser(user: User, operateur: string): Observable<User> {
+    return this.http.put<User>(environment.backEndHost+"/users/update/"+user.id+"/"+operateur, user);
   }
 
-  public saveUser(user: User): Observable<User> {
-    return this.http.post<User>(environment.backEndHost+"/users", user);
+  public saveUser(user: User, operateur: string): Observable<User> {
+    return this.http.post<User>(environment.backEndHost+"/users/save/"+operateur, user);
   }
 
-  public deleteUser(id: number) {
-    return this.http.delete(environment.backEndHost+"/users/"+id);
+  public deleteUser(id: number, operateur: string):Observable<object> {
+    return this.http.delete(environment.backEndHost+"/users/delete/"+id+"/"+operateur);
   }
 
   public confirmPassword(id: number, password: string):Observable<boolean> {

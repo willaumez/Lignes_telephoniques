@@ -18,6 +18,7 @@ export class UtilisateursComponent implements OnInit{
 
   displayedColumns: string[] = [
     'id', 'username', 'email', 'role', 'ACTIONS'];
+  userData : User = this.loginService.getUserData();
 
   @Input()
   dataSource!: MatTableDataSource<any>;
@@ -70,7 +71,7 @@ export class UtilisateursComponent implements OnInit{
   handleDeleteLigne(id: number) {
     let conf = confirm("Es-tu sure de supprimer cet utilisateur ?")
     if (!conf) return;
-    this.userService.deleteUser(id).subscribe({
+    this.userService.deleteUser(id, this.userData.username).subscribe({
       next: (res) => {
         //this._coreService.openSnackBar('Employee deleted!', 'done');
         this.getUtilisateurs();

@@ -4,6 +4,7 @@ import {UserService} from "../../../Services/user.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {CoreService} from "../../../core/core.service";
 import {User} from "../../../Models/User";
+import {LoginService} from "../../../Services/login.service";
 
 
 interface Selection {
@@ -21,6 +22,7 @@ export class UserAddEditComponent implements OnInit{
   showPasswordFields = false;
   hide: boolean = true;
   userForm: FormGroup;
+  userData : User = this.loginService.getUserData();
 
 
   roles: Selection[] = [
@@ -31,7 +33,7 @@ export class UserAddEditComponent implements OnInit{
 
   constructor(private _fb: FormBuilder, private _userService: UserService,
               private _dialogRef: MatDialogRef<UserAddEditComponent>, private _coreService: CoreService,
-              @Inject(MAT_DIALOG_DATA) public data: any,) {
+              @Inject(MAT_DIALOG_DATA) public data: any, public loginService: LoginService) {
 
     this.userForm = this._fb.group({
       id: null,
@@ -60,7 +62,7 @@ export class UserAddEditComponent implements OnInit{
     if (!this.data){
       if (this.userForm.valid){
         let user: User = this.userForm.value;
-        this._userService.saveUser(user).subscribe({
+        this._userService.saveUser(user, this.userData.username).subscribe({
           next: (val: any) => {
             this._coreService.openSnackBar('Utilisateur ajouté avec succès !');
             this._dialogRef.close(true);
@@ -77,7 +79,7 @@ export class UserAddEditComponent implements OnInit{
     }else {
       if (this.showPasswordFields && this.userForm.valid){
         let user: User = this.userForm.value;
-        this._userService.updateUser(user).subscribe({
+        this._userService.updateUser(user, this.userData.username).subscribe({
           next: (val: any) => {
             this._dialogRef.close(true);
             this._coreService.openSnackBar('Utilisateur mise à jour avec succès !');
@@ -96,7 +98,7 @@ export class UserAddEditComponent implements OnInit{
 
         if (this.userForm.valid){
           let user: User = this.userForm.value;
-          this._userService.updateUser(user).subscribe({
+          this._userService.updateUser(user, this.userData.username).subscribe({
             next: (val: any) => {
               this._dialogRef.close(true);
               this._coreService.openSnackBar('Utilisateur mise à jour avec succès !');

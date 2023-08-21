@@ -41,7 +41,6 @@ export class LoginService {
     this.isAuthenticated = false;
     this.accessToken = undefined;
     this.userData = undefined;
-
   }
 
   public getUserData(): User {
