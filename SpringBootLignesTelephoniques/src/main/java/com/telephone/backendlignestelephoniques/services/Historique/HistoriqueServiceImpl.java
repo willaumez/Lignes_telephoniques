@@ -46,6 +46,11 @@ public class HistoriqueServiceImpl implements HistoriqueService {
     public void deleteHistoriques(Long id) {
         historiquesRepository.deleteById(id);
     }
+    @Override
+    public void deleteAllHistoriques(String operateur) {
+        historiquesRepository.deleteAll();
+        saveHistoriques("Suppression des historiques", "Tous les historiques", operateur);
+    }
 
     @Override
     public List<Historiques> listHistoriques() {

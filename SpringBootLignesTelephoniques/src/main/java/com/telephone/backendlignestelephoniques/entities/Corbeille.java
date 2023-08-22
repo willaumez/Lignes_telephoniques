@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Data
@@ -31,42 +33,33 @@ public class Corbeille {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Ligne {
-        @Column(unique = true)
+        @Column(unique = true, nullable = false)
         private String numeroLigne;
 
-        @OneToOne
+        @ManyToOne
         private TypeLigne typeLigne;
-
-        @OneToOne
-        private Direction direction;
 
         private String affectation;
         private String poste;
+
         @Enumerated(EnumType.STRING)
         private EtatType etat;
+
         private Date dateLivraison;
-        @Column(unique = true)
+
+        @Column(unique = true, nullable = false)
         private String numeroSerie;
+
         private Double montant;
 
-        @OneToOne
-        private Forfait forfait;
+        @CreatedDate
+        private Date createdDate;
 
-        private String codePIN;
-        private String codePUK;
-
-        @OneToOne
-        private Fonction fonction;
-
-        @OneToOne
-        private Debit debit;
-
-        private String adresseIP;
-
-        @OneToOne
-        private NatureLigne natureLigne;
-
-        private String nomUtilisateur;
+        @ElementCollection
+        @MapKeyColumn(name = "nomAttribut")
+        @Column(name = "valeur")
+        @CollectionTable(name = "ligne_attributs", joinColumns = @JoinColumn(name = "ligne_id"))
+        private Map<String, String> attributs = new HashMap<>();
     }
 
 }

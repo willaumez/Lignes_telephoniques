@@ -49,9 +49,9 @@
 
 .mat-drawer-container {
   mat-drawer {
-    margin: 10px 0;
-
-    border-width: 1px 1px 3px 3px;
+    margin: 10px 0 15px 1px;
+    max-height: 90vh;
+    border-width: 3px 1px 3px 3px;
     border-style: inset solid;
     border-color: #4050b5;
     border-radius: 0 10px 10px 0;
@@ -125,7 +125,7 @@
     .body {
       text-align: center;
       min-height: 94vh;
-      padding: 50px;
+      padding: 20px;
     }
   }
 }

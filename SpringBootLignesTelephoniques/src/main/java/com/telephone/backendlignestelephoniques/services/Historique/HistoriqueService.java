@@ -18,5 +18,6 @@ public interface HistoriqueService {
     List<Historiques> listHistoriques();
 
     void deleteOldHistoriques();
+    void deleteAllHistoriques(String operateur);
 
 }

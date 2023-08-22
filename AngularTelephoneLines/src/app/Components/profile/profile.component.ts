@@ -13,9 +13,9 @@ import {LoginService} from "../../Services/login.service";
 export class ProfileComponent {
 
   userData: User | any;
-  showPasswordEdit = false;
-  showInfosEdit = false;
-  passwordConfirmed = false;
+  showPasswordEdit:boolean = false;
+  showInfosEdit:boolean = false;
+  passwordConfirmed:boolean = false;
   userInfosForm: FormGroup | any;
   userPwdForm: FormGroup | any;
 

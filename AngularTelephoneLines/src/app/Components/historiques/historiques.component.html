@@ -1,0 +1,89 @@
+<div class="main-body container-fluid">
+  <div class="row">
+    <h1 class="titre">Liste - Historique </h1>
+  </div>
+  <div class="container">
+    <mat-form-field class="filter" appearance="outline" (click)="resetDateField()">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Recherche..." #input>
+    </mat-form-field>
+
+    <button mat-icon-button matTooltip="Effacer la recherche..." [matTooltipShowDelay]="1000" (click)="resetDateField()"><mat-icon matSuffix>clear</mat-icon></button>
+
+    <mat-form-field class="filter" appearance="outline">
+      <input matInput placeholder="Choisissez une date..." [matDatepicker]="picker" [value]="selectedDate" (dateChange)="applyDateFilter($event.value)" disabled #input>
+      <mat-datepicker-toggle matTooltip="Recherche par date " [matTooltipShowDelay]="1000" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker disabled="false"></mat-datepicker>
+    </mat-form-field>
+
+  </div>
+  <div class="container-fluid">
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="idHistorique">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> No</th>
+          <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
+        </ng-container>
+
+        <!-- Username -->
+        <ng-container matColumnDef="actionEffectue">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Action-Effectué </th>
+          <td mat-cell *matCellDef="let row"> {{ row.actionEffectue }} </td>
+        </ng-container>
+
+        <!-- email -->
+        <ng-container matColumnDef="dateAction">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date-Action</th>
+          <td mat-cell *matCellDef="let row"> {{ row.dateAction | date }} </td>
+        </ng-container>
+
+        <!-- createdDate -->
+        <ng-container matColumnDef="nomOperateur">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom-Operateur </th>
+          <td mat-cell *matCellDef="let row"> {{ row.nomOperateur}} </td>
+        </ng-container>
+
+        <!-- role -->
+        <ng-container matColumnDef="elementCible">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Element-Cible</th>
+          <td mat-cell *matCellDef="let row"> {{ row.elementCible }} </td>
+        </ng-container>
+
+        <!-- Actions-->
+        <ng-container matColumnDef="ACTIONS">
+          <th mat-header-cell *matHeaderCellDef>    </th>
+          <td mat-cell *matCellDef="let row" class="action-container">
+            <button mat-icon-button matTooltip="Supprimer l'historique" [matTooltipShowDelay]="1000"
+                    (click)="handleDelete(row.idHistorique)" class="ms-3"> <mat-icon color="warn">delete</mat-icon> </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!--    Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td *ngIf="!selectedDate" class="mat-cell" colspan="17">Aucune donnée pour la Recherche :  "{{ input.value }}"</td>
+          <td *ngIf="selectedDate" class="mat-cell" colspan="17">Aucune donnée pour la Recherche :  "{{ selectedDate | date }}"</td>
+        </tr>
+
+      </table>
+      <div></div>
+
+    </div>
+
+    <div class="customer-container">
+      <div class="customer-total" *ngIf="dataSource?.data">Total:  {{dataSource.data.length}}</div>
+      <mat-paginator class="custom-paginator" [pageSizeOptions]="[10, 20, 30]" aria-label="Selectionner une page"></mat-paginator>
+    </div>
+
+  </div>
+  <div class="row">
+    <button mat-raised-button matTooltip="Effacer tous les historiques?" [matTooltipShowDelay]="1000"
+            color="accent" type="button" (click)="handleResetAll()">Suppression de tout l'historique
+    </button>
+  </div>
+
+
+</div>

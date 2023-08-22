@@ -35,12 +35,12 @@ export class UtilisateursComponent implements OnInit{
 
   getUtilisateurs(): void {
     this.userService.listUsers().subscribe(
-      (data: any[]) => {
+      (data: any[]):void => {
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
-      (error) => {
+      (error):void => {
         console.error('Erreur lors de la récupération des utilisateurs:', error);
       }
     );
@@ -72,8 +72,7 @@ export class UtilisateursComponent implements OnInit{
     let conf = confirm("Es-tu sure de supprimer cet utilisateur ?")
     if (!conf) return;
     this.userService.deleteUser(id, this.userData.username).subscribe({
-      next: (res) => {
-        //this._coreService.openSnackBar('Employee deleted!', 'done');
+      next: (res):void => {
         this.getUtilisateurs();
         this._coreService.openSnackBar("L'utilisateur a été supprimée avec succès! ");
       },

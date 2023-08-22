@@ -11,6 +11,9 @@ import {UtilisateursComponent} from "./Components/utilisateurs/utilisateurs.comp
 import {RapprochementComponent} from "./Components/rapprochement/rapprochement.component";
 import {ProfileComponent} from "./Components/profile/profile.component";
 import {AideComponent} from "./Components/aide/aide.component";
+import {HistoriquesComponent} from "./Components/historiques/historiques.component";
+import {CorbeilleComponent} from "./Components/corbeille/corbeille.component";
+import {TypeAttributComponent} from "./Components/type-attribut/type-attribut.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -27,6 +30,9 @@ const routes: Routes = [
       {path: 'utilisateurs', component: UtilisateursComponent},
       {path: 'profile', component: ProfileComponent},
       {path: 'rapprochement', component: RapprochementComponent},
+      {path: 'corbeille', component: CorbeilleComponent},
+      {path: 'historique', component: HistoriquesComponent},
+      {path: 'typeAttributs', component: TypeAttributComponent},
       {path: 'notAuthorized', component: NotAuthorizedComponent},
       {path: 'aide', component: AideComponent},
     ],

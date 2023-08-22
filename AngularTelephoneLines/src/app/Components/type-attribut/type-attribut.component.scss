@@ -1,0 +1,89 @@
+.fichier-type {
+  display: flex;
+  border-radius: 8px;
+  color: #2d3a81;
+  margin-top: 1rem;
+
+  .type-liste {
+    flex: 0 0 auto; /* Ne pas agrandir, prendre la largeur du contenu */
+    //width: 20%; /* Par exemple, ajustez la largeur selon vos besoins */
+  }
+
+  .type-detail {
+    flex: 1 1 auto; /* Prendre le reste de l'espace disponible */
+    padding-left: 1rem; /* Ajoutez un peu d'espace à gauche pour la lisibilité */
+  }
+}
+
+.titre {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.example-tab-icon {
+  margin-right: 10px;
+}
+
+.mat-list-item-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+/*.fichier-type {
+  margin-top: 1rem;
+  border: 3px solid black;
+  //display: flex;
+  //align-items: center;
+  //justify-content: center;
+  padding: 5px;
+  border-radius: 8px;
+  color: #2d3a81;
+}*/
+/*.fichier-type {
+  display: flex;
+  //padding: 5px;
+  border-radius: 8px;
+  color: #2d3a81;
+  margin-top: 1rem;
+  //border: 3px solid black;
+  width: auto;
+
+  .mat-list{
+    width: auto;
+  }
+
+  .container-fluid {
+    .type-liste {
+      //flex: 20%;
+      //flex-grow: 0;!* Ne pas agrandir *!
+      flex: 0 0 auto; !* Ne pas agrandir, prendre la largeur du contenu *!
+    }
+
+    .type-detail {
+      //flex: 80%;
+      //flex-grow: 1;!* Prendre le reste de l'espace *!
+      flex: 1 1 auto; !* Prendre le reste de l'espace disponible *!
+    }
+  }
+}
+
+
+.titre {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.example-tab-icon {
+  margin-right: 10px;
+}
+.mat-mdc-list-item-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+!**{
+  box-shadow: 0 0 0 2px black inset;
+}*!
+
+
+.mat-mdc-list-item-icon {
+  color: rgba(0, 0, 0, 0.54);
+}*/

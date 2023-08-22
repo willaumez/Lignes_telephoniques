@@ -1,0 +1,57 @@
+<mat-tab-group>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">local_phone</mat-icon>
+      <span class="titre">Types de Ligne</span>
+    </ng-template>
+    <div class="fichier-type" mat-elevation-z4>
+      <div class="type-liste">
+        <mat-list>
+          <div mat-subheader>Folders</div>
+          <mat-list-item *ngFor="let folder of folders">
+            <mat-icon matListItemIcon>folder</mat-icon>
+            <div matListItemTitle>{{folder.name}}</div>
+            <div matListItemLine>{{folder.updated | date}}</div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Notes</div>
+          <mat-list-item *ngFor="let note of notes">
+            <mat-icon matListItemIcon>note</mat-icon>
+            <div matListItemTitle>{{note.name}}</div>
+            <div matListItemLine>{{note.updated | date}}</div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+      <div class="type-detail">
+        <mat-list>
+          <div mat-subheader>Folders</div>
+          <mat-list-item *ngFor="let folder of folders">
+            <mat-icon matListItemIcon>folder</mat-icon>
+            <div matListItemTitle>{{folder.name}}</div>
+            <div matListItemLine>{{folder.updated | date}}</div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Notes</div>
+          <mat-list-item *ngFor="let note of notes">
+            <mat-icon matListItemIcon>note</mat-icon>
+            <div matListItemTitle>{{note.name}}</div>
+            <div matListItemLine>{{note.updated | date}}</div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon" mat-elevation-z4>star</mat-icon>
+      <span class="titre">Attributs</span>
+    </ng-template>
+    <div class="container-fluid fichier-attribut">
+      Content 2
+    </div>
+  </mat-tab>
+</mat-tab-group>
+
+
+

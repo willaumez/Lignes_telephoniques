@@ -10,20 +10,11 @@ import java.util.List;
 
 @Repository
 public interface LigneTelephoniqueRepository extends JpaRepository<LigneTelephonique, Long> {
+    //List<LigneTelephonique> findByTypeLigne(TypeLigne typeLigneFromDB);
 
-    /*List<LigneTelephonique> findByDebit(Debit debit);
 
-    List<LigneTelephonique> findByFonction(Fonction fonction);
-
-    List<LigneTelephonique> findByForfait(Forfait forfait);
-
-    List<LigneTelephonique> findByNatureLigne(NatureLigne natureLigne);
-
-    List<LigneTelephonique> findByTypeLigne(TypeLigne typeLigne);
-    List<LigneTelephonique> findByDirection(Direction direction);*/
-
-    @Query("SELECT lt FROM LigneTelephonique lt JOIN lt.attributs attributs " +
+   /* @Query("SELECT lt FROM LigneTelephonique lt JOIN lt.attributs attributs " +
             "WHERE KEY(attributs) = :attributName AND VALUE(attributs).valeur = :attributValue")
-    List<LigneTelephonique> findByAttributValue(@Param("attributName") String attributName, @Param("attributValue") String attributValue);
+    List<LigneTelephonique> findByAttributValue(@Param("attributName") String attributName, @Param("attributValue") String attributValue);*/
 
 }

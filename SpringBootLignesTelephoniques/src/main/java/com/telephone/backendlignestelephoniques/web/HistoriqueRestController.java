@@ -17,13 +17,13 @@ public class HistoriqueRestController {
 
     private HistoriqueService historiqueService;
 
-    //====================  listFonctions  ======================//
+    //====================  listHistoriques ======================//
     @GetMapping("/historiques")
     public List<Historiques> listHistoriques() {
         return historiqueService.listHistoriques();
     }
 
-    //====================  une fonction  ======================//
+    //====================  un historique  ======================//
     @GetMapping("/historiques/{historiqueId}")
     public Historiques getHistorique(@PathVariable Long historiqueId) throws ElementNotFoundException {
         return historiqueService.getHistoriques(historiqueId);
@@ -42,6 +42,11 @@ public class HistoriqueRestController {
     @DeleteMapping("/historiques/delete/{id}")
     public void deleteHistorique(@PathVariable Long id){
         this.historiqueService.deleteHistoriques(id);
+    }
+    //====================  delete all  ======================//
+    @DeleteMapping("/historiques/delete/all/{operateur}")
+    public void deleteAllHistorique(@PathVariable String operateur){
+        this.historiqueService.deleteAllHistoriques(operateur);
     }
 
     //====================  update  ======================//

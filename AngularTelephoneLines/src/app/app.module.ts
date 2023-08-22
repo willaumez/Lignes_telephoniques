@@ -36,6 +36,13 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatSelectModule} from "@angular/material/select";
 import {AppHttpInterceptor} from "./interceptors/app-http.interceptor";
+import { HistoriquesComponent } from './Components/historiques/historiques.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import { CorbeilleComponent } from './Components/corbeille/corbeille.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import { TypeAttributComponent } from './Components/type-attribut/type-attribut.component';
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [
@@ -50,6 +57,9 @@ import {AppHttpInterceptor} from "./interceptors/app-http.interceptor";
     RapprochementComponent,
     AideComponent,
     UserAddEditComponent,
+    HistoriquesComponent,
+    CorbeilleComponent,
+    TypeAttributComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,7 +85,11 @@ import {AppHttpInterceptor} from "./interceptors/app-http.interceptor";
     MatSortModule,
     MatDialogModule,
     MatChipsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTooltipModule,
+    MatTabsModule
 
   ],
   providers: [

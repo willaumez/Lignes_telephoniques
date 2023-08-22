@@ -9,22 +9,22 @@ public interface LigneTelephoniqueService {
 
 
     //=============================================  LigneTelephonique  ========================================================//
+    // Enregistre une nouvelle ligne téléphonique
     void saveLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur);
+
+    // Récupère une ligne téléphonique par son ID
     LigneTelephonique getLigneTelephonique(Long ligneId) throws ElementNotFoundException;
+
+    // Supprime une ligne téléphonique par son ID
     void deleteLigneTelephonique(Long id, String operateur) throws ElementNotFoundException;
+
+    // Met à jour une ligne téléphonique
     LigneTelephonique updateLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur);
+
+    // Récupère la liste de toutes les lignes téléphoniques
     List<LigneTelephonique> listLigneTelephonique();
-    List<LigneTelephonique> ligneByDebit(Debit debit);
 
-    List<LigneTelephonique> ligneByDirection(Direction direction);
-
-    List<LigneTelephonique> ligneByFonction(Fonction fonction);
-
-    List<LigneTelephonique> ligneByForfait(Forfait forfait);
-
-    List<LigneTelephonique> ligneByNature(NatureLigne natureLigne);
-
-    List<LigneTelephonique> ligneByType(TypeLigne typeLigne);
-
+    // Récupère la liste de lignes téléphoniques en fonction d'un type de ligne donné
+    List<LigneTelephonique> listLigneTelephoniqueByType(TypeLigne typeLigne);
 
 }

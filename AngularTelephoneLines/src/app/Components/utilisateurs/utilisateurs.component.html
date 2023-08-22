@@ -7,7 +7,7 @@
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. nom" #input>
     </mat-form-field>
-    <button mat-raised-button color="primary" (click)="openAddEditLignForm()">
+    <button mat-raised-button color="primary" (click)="openAddEditLignForm()" matTooltip="Ajouter un utilisateur" [matTooltipShowDelay]="1000">
       AJOUTER
     </button>
   </div>
@@ -50,11 +50,11 @@
         <th mat-header-cell *matHeaderCellDef> ACTIONS</th>
         <td mat-cell *matCellDef="let row" class="action-container">
           <div style="display: flex;" *ngIf="loginService.userData.email != row.email">
-            <button mat-icon-button (click)="openEditForm(row)"> <mat-icon color="primary">edit</mat-icon> </button>
-            <button mat-icon-button (click)="handleDeleteLigne(row.id)" class="ms-3"> <mat-icon color="warn">delete</mat-icon> </button>
+            <button mat-icon-button (click)="openEditForm(row)" matTooltip="Modifier" [matTooltipShowDelay]="1000"> <mat-icon color="primary">edit</mat-icon> </button>
+            <button mat-icon-button (click)="handleDeleteLigne(row.id)" class="ms-3" matTooltip="Supprimer" [matTooltipShowDelay]="1000"> <mat-icon color="warn">delete</mat-icon> </button>
           </div>
           <div style="display: flex;" *ngIf="loginService.userData.email == row.email">
-            <button mat-icon-button (click)="handleDetailUser(row)" class="ms-4" routerLink="/admin/profile">
+            <button mat-icon-button (click)="handleDetailUser(row)" class="ms-4" routerLink="/admin/profile" matTooltip="Profil" [matTooltipShowDelay]="1000">
               <mat-icon color="accent">account_circle</mat-icon>
             </button>
           </div>

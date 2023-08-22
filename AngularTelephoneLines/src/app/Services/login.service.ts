@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import jwtDecode from "jwt-decode";
 import {User} from "../Models/User";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -13,19 +14,20 @@ export class LoginService {
   isAuthenticated: boolean = false;
   accessToken!: any;
 
+//:{headers: HttpHeaders}  :HttpParams
   constructor(private http: HttpClient) {
   }
 
-  public login(username: string, password: string) {
-    let options = {
+  public login(username: string, password: string):Observable<any> {
+    let options: {headers: HttpHeaders} = {
       headers: new HttpHeaders().set("Content-Type", "application/x-www-form-urlencoded")
     }
 
-    let params = new HttpParams().set("username", username).set("password", password);
+    let params: HttpParams = new HttpParams().set("username", username).set("password", password);
     return this.http.post(environment.backEndHost + "/auth/login", params, options);
   }
 
-  loadProfile(data: any) {
+  loadProfile(data: any):void {
     this.isAuthenticated = true;
     this.accessToken = data['access-token'];
     let decodeJwt: any = jwtDecode(this.accessToken);
@@ -37,7 +39,7 @@ export class LoginService {
       role: decodeJwt.role,
     };
   }
-  logout() {
+  logout():void {
     this.isAuthenticated = false;
     this.accessToken = undefined;
     this.userData = undefined;
@@ -54,5 +56,6 @@ export class LoginService {
       role: user.role
     };
   }
+
 
 }

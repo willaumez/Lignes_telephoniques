@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -18,13 +16,22 @@ public class TypeLigne {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idType;
-    @Column(unique = true)
+
+    @Column(unique = true, nullable = false)
     private String nomType;
     private String descriptionType;
 
     @CreatedDate
     private Date createdDate;
 
-    @OneToMany(mappedBy = "typeLigne", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AttributLigne> attributs = new ArrayList<>();
+    @OneToMany(mappedBy = "typeLigne")
+    private Set<LigneTelephonique> lignesTelephoniques = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "type_attribut",
+            joinColumns = @JoinColumn(name = "type_id"),
+            inverseJoinColumns = @JoinColumn(name = "attribut_id")
+    )
+    private Set<Attribut> attributs = new HashSet<>();
 }

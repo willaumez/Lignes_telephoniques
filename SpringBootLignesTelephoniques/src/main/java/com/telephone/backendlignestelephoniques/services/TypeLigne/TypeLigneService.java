@@ -1,5 +1,6 @@
 package com.telephone.backendlignestelephoniques.services.TypeLigne;
 
+import com.telephone.backendlignestelephoniques.entities.Attribut;
 import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 
@@ -15,5 +16,6 @@ public interface TypeLigneService {
     TypeLigne updateTypeLigne(TypeLigne typeLigne, String operateur);
     List<TypeLigne> listTypeLigne();
 
+    void associateAttributesWithType(Long typeLigneId, List<Long> attributs) throws ElementNotFoundException;
 
 }

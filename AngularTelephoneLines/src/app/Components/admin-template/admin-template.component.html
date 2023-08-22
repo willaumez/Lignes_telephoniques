@@ -1,12 +1,12 @@
 <mat-toolbar color="primary" class="mat-elevation-z8">
-  <button class="togglebtn" (click)="drawer.toggle()" mat-icon-button>
+  <button class="togglebtn" (click)="drawer.toggle()" mat-icon-button matTooltip="Menu" [matTooltipShowDelay]="1000">
     <mat-icon>menu</mat-icon>
   </button>
 
   <!--  <span><img ngSrc="assets/logo3.webp" alt="logo" height="34" width="150"> </span>-->
   <span>Lignes-Téléphonique</span>
   <span class="example-spacer"></span>
-  <button mat-button class="username" routerLink="profile">
+  <button mat-button class="username" routerLink="profile" matTooltip="-- Profil -- ">
     <mat-icon>account_circle</mat-icon>
     {{loginService.userData.username}}
     <sup  class="role-sup">{{ loginService.userData.role === 'ADMIN' ? 'ADMIN' : 'USER' }}</sup>
@@ -14,7 +14,7 @@
 
   <div class="vertical-divider"></div>
 
-  <mat-icon class="logout-icon" (click)="handleLogOut()" >exit_to_app</mat-icon>
+  <mat-icon class="logout-icon" (click)="handleLogOut()" matTooltip="Deconnexion" [matTooltipShowDelay]="1000">exit_to_app</mat-icon>
 
 </mat-toolbar>
 
@@ -31,7 +31,7 @@
       <mat-list-item>
         <button routerLink="types" mat-button
                 routerLinkActive="active"
-                [routerLinkActiveOptions]="{exact: true}"><mat-icon>folder</mat-icon> Type_Ligne</button>
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>folder</mat-icon>Type_Ligne</button>
       </mat-list-item>
 
             <mat-divider></mat-divider>
@@ -44,13 +44,6 @@
         <button routerLink="facturation" mat-button
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}"><mat-icon>event_note</mat-icon> Facturations </button>
-      </mat-list-item>
-
-            <mat-divider></mat-divider>
-      <mat-list-item *ngIf="loginService.userData.role === 'ADMIN'">
-        <button routerLink="tables" mat-button
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{exact: true}"><mat-icon>table</mat-icon> Tables </button>
       </mat-list-item>
 
             <mat-divider></mat-divider>
@@ -71,10 +64,28 @@
       </mat-list-item>
 
             <mat-divider></mat-divider>
+
+      <mat-list-item *ngIf="loginService.userData.role === 'ADMIN'">
+        <button routerLink="corbeille" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>restore_from_trash</mat-icon> Corbeille </button>
+      </mat-list-item>
+      <mat-list-item *ngIf="loginService.userData.role === 'ADMIN'">
+        <button routerLink="historique" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>history</mat-icon> Historique </button>
+      </mat-list-item>
+
       <mat-list-item *ngIf="loginService.userData.role === 'ADMIN'">
         <button routerLink="paramettre" mat-button
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}"><mat-icon>settings</mat-icon> Paramettre</button>
+      </mat-list-item>
+
+      <mat-list-item *ngIf="loginService.userData.role === 'ADMIN'">
+        <button routerLink="typeAttributs" mat-button
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"><mat-icon>table</mat-icon> Type/Attributs </button>
       </mat-list-item>
 
             <mat-divider></mat-divider>

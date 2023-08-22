@@ -1,23 +1,29 @@
 package com.telephone.backendlignestelephoniques.entities;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttributValue {
+public class Attribut {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idAttribut;
 
-    @ManyToOne
-    private LigneTelephonique ligneTelephonique;
-
+    @Column(unique = true, nullable = false)
     private String nomAttribut;
-    private String valeur;
-    private Long referenceId; // ID de l'entité référencée
+
+    private String type;
+    private String valeurDefaut;
+
+    @ElementCollection
+    private List<String> enumeration = new ArrayList<>();
 }
