@@ -54,7 +54,7 @@
             <button mat-icon-button (click)="handleDeleteLigne(row.id)" class="ms-3" matTooltip="Supprimer" [matTooltipShowDelay]="1000"> <mat-icon color="warn">delete</mat-icon> </button>
           </div>
           <div style="display: flex;" *ngIf="loginService.userData.email == row.email">
-            <button mat-icon-button (click)="handleDetailUser(row)" class="ms-4" routerLink="/admin/profile" matTooltip="Profil" [matTooltipShowDelay]="1000">
+            <button mat-icon-button class="ms-4" routerLink="/admin/profile" matTooltip="Profil" [matTooltipShowDelay]="1000">
               <mat-icon color="accent">account_circle</mat-icon>
             </button>
           </div>

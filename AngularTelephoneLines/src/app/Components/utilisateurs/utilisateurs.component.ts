@@ -98,17 +98,5 @@ export class UtilisateursComponent implements OnInit{
     });
   }
 
-  /*showRole(role: string | null): String {
-    if (role == 'ADMIN')
-      return "ADMINISTRATEUR";
-    else return "UTILISATEUR"
-  }*/
-
-  handleDetailUser(row: User) {
-
-  }
-
-
-
 
 }

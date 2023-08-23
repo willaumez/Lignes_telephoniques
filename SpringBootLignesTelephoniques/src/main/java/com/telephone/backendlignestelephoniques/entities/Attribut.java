@@ -22,7 +22,6 @@ public class Attribut {
     private String nomAttribut;
 
     private String type;
-    private String valeurDefaut;
     private String valeurAttribut;
 
     @ElementCollection

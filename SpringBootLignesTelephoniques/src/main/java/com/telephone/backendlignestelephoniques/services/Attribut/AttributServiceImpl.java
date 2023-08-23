@@ -56,7 +56,7 @@ public class AttributServiceImpl implements AttributService {
 
         existingAttribut.setNomAttribut(attribut.getNomAttribut());
         existingAttribut.setType(attribut.getType());
-        existingAttribut.setValeurDefaut(attribut.getValeurDefaut());
+        existingAttribut.setValeurAttribut(attribut.getValeurAttribut());
         existingAttribut.setEnumeration(attribut.getEnumeration());
 
         Attribut updatedAttribut = attributRepository.save(existingAttribut);

@@ -1,49 +1,128 @@
 <div class="container">
-  <button class="ajout-button" mat-raised-button
-          matTooltip="Ajouter un type" [matTooltipShowDelay]="1000"
-          (click)="handleAdd()"
-          [style.background-color]="selectAdd ? '#4050b5' : ''"
-          [style.color]="selectAdd ? 'white' : ''"
-  >AJOUTER</button>
-  <ng-container *ngIf="!selectAdd">
+  <div class="recherche-button">
 
-    <div class="fichier-container" mat-elevation-z4>
+    <mat-form-field class="filter" appearance="fill">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. nom" #input>
+    </mat-form-field>
+    <button mat-raised-button matTooltip="Ajouter un type"
+            *ngIf="!selectUpdate"
+            [matTooltipShowDelay]="1000"
+            (click)="handleAdd()" [style.background-color]="selectAdd ? '#4050b5' : ''"
+            [style.color]="selectAdd ? 'white' : ''">AJOUTER</button>
+  </div>
 
-      <div class="container-liste">
-        <mat-list>
-          <div mat-subheader>Folders</div>
-          <mat-list-item *ngFor="let folder of folders">
-            <mat-icon matListItemIcon>folder</mat-icon>
-            <div matListItemTitle>{{folder.name}}</div>
-            <div matListItemLine>{{folder.updated | date}}</div>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <div mat-subheader>Notes</div>
-          <mat-list-item *ngFor="let note of notes">
-            <mat-icon matListItemIcon>note</mat-icon>
-            <div matListItemTitle>{{note.name}}</div>
-            <div matListItemLine>{{note.updated | date}}</div>
-          </mat-list-item>
-        </mat-list>
+  <ng-container *ngIf="!selectAdd && !selectUpdate">
+
+    <!--<div class="fichier-container" mat-elevation-z4>
+      <section class="example-container mat-elevation-z8" tabindex="0">
+        <table mat-table [dataSource]="dataSource">
+
+          &lt;!&ndash; Position Column &ndash;&gt;
+          <ng-container matColumnDef="idAttribut">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.idAttribut}} </td>
+          </ng-container>
+
+          &lt;!&ndash; Name Column &ndash;&gt;
+          <ng-container matColumnDef="nomAttribut">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.nomAttribut}} </td>
+          </ng-container>
+
+          &lt;!&ndash; Type Column &ndash;&gt;
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef> Type </th>
+            <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+          </ng-container>
+
+          &lt;!&ndash; Value Column &ndash;&gt;
+          <ng-container matColumnDef="valeurAttribut">
+            <th mat-header-cell *matHeaderCellDef> Value </th>
+            <td mat-cell *matCellDef="let element"> {{element.valeurAttribut}} </td>
+          </ng-container>
+
+          &lt;!&ndash; Enumeration Column &ndash;&gt;
+          <ng-container matColumnDef="enumeration">
+            <th mat-header-cell *matHeaderCellDef> Enumeration </th>
+            <td mat-cell *matCellDef="let element">
+              <span *ngIf="element.enumeration">{{ element.enumeration.join(', ') }}</span>
+              <span *ngIf="!element.enumeration">N/A</span>
+            </td>
+          </ng-container>
+
+          &lt;!&ndash; Define the columns to display &ndash;&gt;
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </section>
+
+    </div>-->
+    <div class="container-fluid">
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <!-- ID Column -->
+          <ng-container matColumnDef="idAttribut">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> No</th>
+            <td mat-cell *matCellDef="let attribut; let i = index"> {{ i + 1 }} </td>
+          </ng-container>
+          <!-- Name Column -->
+          <ng-container matColumnDef="nomAttribut">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom</th>
+            <td mat-cell *matCellDef="let attribut"> {{ attribut.nomAttribut }} </td>
+          </ng-container>
+
+          <!-- Type Column -->
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Type</th>
+            <td mat-cell *matCellDef="let attribut"> {{ attribut.type }} </td>
+          </ng-container>
+
+          <!-- Value Column -->
+          <ng-container matColumnDef="valeurAttribut">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valeur</th>
+            <td mat-cell *matCellDef="let attribut"> {{ attribut.valeurAttribut }} </td>
+          </ng-container>
+
+          <!-- Enumeration Column -->
+          <ng-container matColumnDef="enumeration">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Énumération? </th>
+            <td mat-cell *matCellDef="let attribut" class="enumeration-cell">
+              <div class="enumeration-content">
+                <span *ngIf="attribut.enumeration">
+                  <span *ngFor="let enumValue of attribut.enumeration; let last = last">
+                    {{ enumValue + (last ? '' : ',  ') }}
+                  </span>
+                </span>
+                <span *ngIf="!attribut.enumeration">N/A</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ACTIONS">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row" class="action-container">
+                <button mat-icon-button (click)="handleEdit(row)" matTooltip="Modifier" [matTooltipShowDelay]="1000"> <mat-icon color="primary">edit</mat-icon> </button>
+                <button mat-icon-button (click)="handleDelete(row.idAttribut)" class="ms-3" matTooltip="Supprimer" [matTooltipShowDelay]="1000"> <mat-icon color="warn">delete</mat-icon> </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let attribut; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="7" *ngIf="!input?.value">Aucune donnée disponible</td>
+            <td class="mat-cell" colspan="17" *ngIf="input?.value">Aucune donnée pour le filtre "{{ input.value }}"</td>
+          </tr>
+
+        </table>
       </div>
-      <div class="container-detail">
-        <mat-list>
-          <div mat-subheader>Folders</div>
-          <mat-list-item *ngFor="let folder of folders">
-            <mat-icon matListItemIcon>folder</mat-icon>
-            <div matListItemTitle>{{folder.name}}</div>
-            <div matListItemLine>{{folder.updated | date}}</div>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <div mat-subheader>Notes</div>
-          <mat-list-item *ngFor="let note of notes">
-            <mat-icon matListItemIcon>note</mat-icon>
-            <div matListItemTitle>{{note.name}}</div>
-            <div matListItemLine>{{note.updated | date}}</div>
-          </mat-list-item>
-        </mat-list>
+      <div class="customer-container">
+        <div class="customer-total" *ngIf="dataSource?.data">Total:   {{dataSource.data.length}}</div>
+        <mat-paginator class="custom-paginator" [pageSizeOptions]="[11, 23, 33, 50]" aria-label="Sélectionner une page"></mat-paginator>
       </div>
     </div>
+
 
   </ng-container>
 
@@ -51,89 +130,100 @@
     <h3>Ajouter un attribut</h3>
 
     <form [formGroup]="attributForm" (ngSubmit)="onAttributSubmit()">
-      <div class="row">
-        <mat-form-field class="flex">
-          <mat-label>Nom</mat-label>
-          <input matInput formControlName="nomAttribut" required>
-          <mat-error *ngIf="attributForm.get('nomAttribut')!.hasError('required')">Le nom de l'attribut est obligatoire</mat-error>
-        </mat-form-field>
-        <mat-form-field class="flex">
-          <mat-label>Type</mat-label>
-          <mat-select formControlName="type">
-            <mat-option *ngFor="let type of typeVariables" [value]="type">
-              {{ type }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="flex">
-          <mat-label>Valeur-Defaut</mat-label>
-          <input matInput formControlName="valeurDefaut">
-        </mat-form-field>
+      <mat-form-field class="small-width" appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="nomAttribut" required>
+        <mat-error *ngIf="attributForm.get('nomAttribut')!.hasError('required')">Le nom de l'attribut est obligatoire
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="small-width" appearance="outline">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let type of typeVariables" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="small-width" appearance="outline">
+        <mat-label>Valeur-Defaut</mat-label>
+        <input matInput type="text" placeholder="23..." formControlName="valeurAttribut">
+      </mat-form-field>
+
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Énumération</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Enter enumeration">
+          <mat-chip-row *ngFor="let enumValue of (attributForm.get('enumeration')?.value ?? [])"
+                        (removed)="removeEnum(enumValue)">
+            {{ enumValue }}
+            <button matChipRemove [attr.aria-label]="'remove ' + enumValue">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input
+            placeholder="Nouvelle valeur -(enum) ..."
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="addEnum($event)"
+          />
+        </mat-chip-grid>
+      </mat-form-field>
+      <div class="button-container">
+        <button mat-raised-button color="warn" type="reset" (click)="handleAdd()">Annuler</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="attributForm.invalid">Enregistrer</button>
       </div>
-      <div class="row">
-        <mat-form-field class="flex">
-          <mat-label>Énumération</mat-label>
-          <mat-chip-grid #chipGrid aria-label="Enter enumeration">
-            <mat-chip-row *ngFor="let enumValue of (attributForm.get('enumeration')?.value ?? [])"
-                          (removed)="removeEnum(enumValue)">
-              {{ enumValue }}
-              <button matChipRemove [attr.aria-label]="'remove ' + enumValue">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
-            <input placeholder="New enum value..."
-                   [matChipInputFor]="chipGrid"
-                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                   [matChipInputAddOnBlur]="addOnBlur"
-                   (matChipInputTokenEnd)="addEnum($event)"/>
-          </mat-chip-grid>
-        </mat-form-field>
-      </div>
-      <button mat-raised-button color="primary" type="submit" [disabled]="attributForm.invalid">Enregistrer</button>
     </form>
-
-
-    <!--<form [formGroup]="attributForm" (ngSubmit)="onAttributSubmit()">
-      <div class="row">
-        <mat-form-field>
-          <mat-label>Nom</mat-label>
-          <input matInput formControlName="nomAttribut" required>
-          <mat-error *ngIf="attributForm.get('nomAttribut')!.hasError('required')">Le nom de l'attribut est obligatoire</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Type</mat-label>
-          <mat-select formControlName="type">
-            <mat-option *ngFor="let type of typeVariables" [value]="type">
-              {{ type }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Valeur-Defaut</mat-label>
-          <input matInput formControlName="valeurDefaut" required>
-          <mat-error *ngIf="attributForm.get('valeurDefaut')!.hasError('required')">La valeur par défaut est obligatoire</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="row">
-        <mat-form-field>
-          <mat-label>Énumération</mat-label>
-          <mat-chip-grid #chipGrid aria-label="Enter enumeration">
-            <mat-chip-row *ngFor="let enumValue of (attributForm.get('enumeration')?.value ?? [])"
-                          (removed)="removeEnum(enumValue)">
-              {{ enumValue }}
-              <button matChipRemove [attr.aria-label]="'remove ' + enumValue">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
-            <input placeholder="New enum value..."
-                   [matChipInputFor]="chipGrid"
-                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                   [matChipInputAddOnBlur]="addOnBlur"
-                   (matChipInputTokenEnd)="addEnum($event)"/>
-          </mat-chip-grid>
-        </mat-form-field>
-      </div>
-      <button mat-raised-button color="primary" type="submit" [disabled]="attributForm.invalid">Enregistrer</button>
-    </form>-->
   </ng-container>
+  <ng-container *ngIf="selectUpdate">
+    <h3>Mettre à jour un attribut</h3>
+
+    <form [formGroup]="attributForm" (ngSubmit)="onAttributSubmit()">
+      <mat-form-field class="small-width" appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="nomAttribut" required>
+        <mat-error *ngIf="attributForm.get('nomAttribut')!.hasError('required')">Le nom de l'attribut est obligatoire</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="small-width" appearance="outline">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let type of typeVariables" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="small-width" appearance="outline">
+        <mat-label>Valeur-Defaut</mat-label>
+        <input matInput type="text" placeholder="23..." formControlName="valeurAttribut">
+      </mat-form-field>
+
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Énumération</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Enter enumeration">
+          <mat-chip-row *ngFor="let enumValue of (attributForm.get('enumeration')?.value ?? [])"
+                        (removed)="removeEnum(enumValue)">
+            {{ enumValue }}
+            <button matChipRemove [attr.aria-label]="'remove ' + enumValue">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input
+            placeholder="Nouvelle valeur -(enum) ..."
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="addEnum($event)"
+          />
+        </mat-chip-grid>
+      </mat-form-field>
+      <div class="button-container">
+        <button mat-raised-button color="warn" type="reset" (click)="handleResetUpdate()">Annuler</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="attributForm.invalid">Mettre à jour</button>
+      </div>
+    </form>
+  </ng-container>
+
 </div>

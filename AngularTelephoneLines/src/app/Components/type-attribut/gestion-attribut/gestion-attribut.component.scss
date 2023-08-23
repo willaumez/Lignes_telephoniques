@@ -1,21 +1,6 @@
-.ajout-button {
-  margin: 20px;
-}
-.fichier-container {
-  display: flex;
-  border-radius: 8px;
-  color: #2d3a81;
-  margin-top: 1rem;
-  border: 2px solid black;
 
-  .container-liste {
-    flex: 0 0 auto; /* Ne pas agrandir, prendre la largeur du contenu */
-  }
-
-  .container-detail {
-    flex: 1 1 auto; /* Prendre le reste de l'espace disponible */
-    padding-left: 1rem; /* Ajoutez un peu d'espace à gauche pour la lisibilité */
-  }
+.container-fluid {
+  width: 100%;
 }
 
 .titre {
@@ -31,47 +16,158 @@
   color: rgba(0, 0, 0, 0.54);
 }
 
+.small-width {
+  width: calc(33.33% - 10px); /* Adjust as needed */
+  min-width: 300px;
+  margin: 0 5px;
+}
 
-form {
+
+.full-width {
+  width: 90%;
+  min-width: 300px;
+  margin: 20px auto;
+}
+
+.mat-chip-row {
   display: flex;
-  flex-direction: column;
-
-  .row {
-    display: flex;
-    flex-direction: row;
-    gap: 16px;
-  }
-
-  .flex {
-    flex: 1;
-  }
-
-  .mat-chip-grid {
-    width: 100%;
-    margin-top: 16px;
-  }
+  align-items: center;
+  background-color: #e0e0e0; /* Adjust as needed */
+  border-radius: 16px; /* Adjust as needed */
+  margin: 4px;
+  padding: 8px;
 }
 
+.mat-chip-row button {
+  margin-left: 8px;
+}
 
-/*
-form {
+.button-container{
+  justify-content: space-between;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 16px;
+  button{
+    display: block;
+    width: 25%;
+    min-width: auto;
+    margin: 10px 20px;
+  }
 }
 
-.mat-form-field {
-  //flex: 1 1 calc(33.33% - 16px); !* Divise l'espace en trois colonnes égales *!
-}
 
-.mat-form-field:last-child {
-  flex-basis: 100%; !* Force le dernier champ à occuper toute la largeur *!
-}
+/*<ng-container *ngIf="selectAdd">*/
 
-.mat-chip-grid {
+.container-fluid{
   width: 100%;
-  margin-top: 16px;
 }
 
-*/
+.mat-elevation-z8 {
+  min-width: 100%;
+  overflow-x: auto;
+
+  table {
+    text-align: center;
+    align-content: center;
+
+    .mat-cell {
+      white-space: nowrap;
+      table-layout: initial;
+    }
+
+    th {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    td {
+      //font-weight: bold;
+    }
+
+    .mat-mdc-header-row {
+      //border: 2px solid #1b6ca8;
+    }
+
+    .mat-mdc-row:hover .mat-mdc-cell {
+      background-color: #f3f3f3;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+      transform: scale(1);
+    }
+
+  }
+
+  tr.mat-header-row {
+    // Styles pour les lignes d'en-tête
+  }
+
+  tr.mat-row {
+    // Styles pour les lignes de données
+  }
+
+  tr.mat-no-data-row {
+    // Styles pour les lignes sans données
+  }
+}
+
+/* enums */
+.enumeration-cell {
+  white-space: normal;
+  word-break: break-word;
+}
+.enumeration-content {
+  max-height: 100px;
+  overflow-y: auto;
+  span {
+    margin-right: 10px;
+  }
+}
+/* Buttons */
+.action-container {
+  white-space: nowrap;
+  button {
+    margin-right: 4px;
+    border-radius: 5px;
+  }
+}
+
+//pagination
+.customer-container {
+  display: flex;
+  justify-content: space-between;
+
+  .customer-total {
+    border-radius: 1rem;
+    float: left;
+    margin-top: 2.5rem;
+    display: inline-block;
+    font-size: 1.5rem;
+    color: #263238;
+  }
+
+  .custom-paginator {
+    border-radius: 1rem;
+    float: right;
+    margin-top: 1rem;
+    display: inline-block;
+    border: 2px solid #263238;
+    font-size: 1rem;
+  }
+}
+
+//Button et recherche
+.recherche-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .filter {
+    width: 350px;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+}
+
+
+
+
+
+

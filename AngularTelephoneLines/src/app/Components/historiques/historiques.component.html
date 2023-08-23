@@ -70,14 +70,11 @@
 
       </table>
       <div></div>
-
     </div>
-
     <div class="customer-container">
       <div class="customer-total" *ngIf="dataSource?.data">Total:  {{dataSource.data.length}}</div>
       <mat-paginator class="custom-paginator" [pageSizeOptions]="[10, 20, 30]" aria-label="Selectionner une page"></mat-paginator>
     </div>
-
   </div>
   <div class="row">
     <button mat-raised-button matTooltip="Effacer tous les historiques?" [matTooltipShowDelay]="1000"

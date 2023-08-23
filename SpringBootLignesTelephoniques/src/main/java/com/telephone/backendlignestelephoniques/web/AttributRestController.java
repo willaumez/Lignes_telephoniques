@@ -19,10 +19,9 @@ public class AttributRestController {
 
     private AttributService attributService;
 
-    @PostMapping
-    public ResponseEntity<String> saveAttribut(@RequestBody Attribut attribut, @RequestParam String operateur) {
+    @PostMapping("/save/{operateur}")
+    public void saveAttribut(@RequestBody Attribut attribut, @PathVariable String operateur) {
         attributService.saveAttribut(attribut, operateur);
-        return ResponseEntity.ok("Attribut saved successfully");
     }
 
     @GetMapping("/{attributId}")
@@ -35,17 +34,15 @@ public class AttributRestController {
         }
     }
 
-    @DeleteMapping("/{attributId}")
-    public ResponseEntity<String> deleteAttribut(@PathVariable Long attributId, @RequestParam String operateur) {
+    @DeleteMapping("/delete/{attributId}/{operateur}")
+    public void deleteAttribut(@PathVariable Long attributId, @PathVariable String operateur) {
         try {
             attributService.deleteAttribut(attributId, operateur);
-            return ResponseEntity.ok("Attribut deleted successfully");
         } catch (ElementNotFoundException e) {
-            return ResponseEntity.notFound().build();
         }
     }
 
-    @PutMapping("/{attributId}")
+    @PutMapping("/update/{attributId}/{operateur}")
     public ResponseEntity<String> updateAttribut(@PathVariable Long attributId, @RequestBody Attribut attribut,
                                                  @RequestParam String operateur) {
         try {
@@ -58,9 +55,8 @@ public class AttributRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Attribut>> listAttributs() {
-        List<Attribut> attributs = attributService.listAttribut();
-        return ResponseEntity.ok(attributs);
+    public List<Attribut> listAttributs() {
+        return attributService.listAttribut();
     }
 
 

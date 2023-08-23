@@ -13,7 +13,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatTableModule} from "@angular/material/table";
 import {MatDividerModule} from "@angular/material/divider";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { NotAuthorizedComponent } from './Components/not-authorized/not-authorized.component';
@@ -45,6 +45,7 @@ import { TypeAttributComponent } from './Components/type-attribut/type-attribut.
 import {MatTabsModule} from "@angular/material/tabs";
 import { GestionTypeComponent } from './Components/type-attribut/gestion-type/gestion-type.component';
 import { GestionAttributComponent } from './Components/type-attribut/gestion-attribut/gestion-attribut.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
   declarations: [
@@ -93,7 +94,9 @@ import { GestionAttributComponent } from './Components/type-attribut/gestion-att
     MatDatepickerModule,
     MatNativeDateModule,
     MatTooltipModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSlideToggleModule,
+    FormsModule
 
   ],
   providers: [

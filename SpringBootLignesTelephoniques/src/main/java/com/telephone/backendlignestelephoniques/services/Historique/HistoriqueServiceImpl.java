@@ -54,7 +54,7 @@ public class HistoriqueServiceImpl implements HistoriqueService {
 
     @Override
     public List<Historiques> listHistoriques() {
-        return historiquesRepository.findAll();
+        return historiquesRepository.findAllOrderByDateDesc();
     }
 
     @Override

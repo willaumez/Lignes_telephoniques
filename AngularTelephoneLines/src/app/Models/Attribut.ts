@@ -2,7 +2,6 @@ export interface Attribut {
   idAttribut: number;
   nomAttribut: string;
   type: TypeVariable;
-  valeurDefaut: string;
   valeurAttribut: string;
   enumeration: string[] | null;
 }
