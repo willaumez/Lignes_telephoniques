@@ -1,0 +1,139 @@
+<div class="container">
+  <button class="ajout-button" mat-raised-button
+          matTooltip="Ajouter un type" [matTooltipShowDelay]="1000"
+          (click)="handleAdd()"
+          [style.background-color]="selectAdd ? '#4050b5' : ''"
+          [style.color]="selectAdd ? 'white' : ''"
+  >AJOUTER</button>
+  <ng-container *ngIf="!selectAdd">
+
+    <div class="fichier-container" mat-elevation-z4>
+
+      <div class="container-liste">
+        <mat-list>
+          <div mat-subheader>Folders</div>
+          <mat-list-item *ngFor="let folder of folders">
+            <mat-icon matListItemIcon>folder</mat-icon>
+            <div matListItemTitle>{{folder.name}}</div>
+            <div matListItemLine>{{folder.updated | date}}</div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Notes</div>
+          <mat-list-item *ngFor="let note of notes">
+            <mat-icon matListItemIcon>note</mat-icon>
+            <div matListItemTitle>{{note.name}}</div>
+            <div matListItemLine>{{note.updated | date}}</div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+      <div class="container-detail">
+        <mat-list>
+          <div mat-subheader>Folders</div>
+          <mat-list-item *ngFor="let folder of folders">
+            <mat-icon matListItemIcon>folder</mat-icon>
+            <div matListItemTitle>{{folder.name}}</div>
+            <div matListItemLine>{{folder.updated | date}}</div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Notes</div>
+          <mat-list-item *ngFor="let note of notes">
+            <mat-icon matListItemIcon>note</mat-icon>
+            <div matListItemTitle>{{note.name}}</div>
+            <div matListItemLine>{{note.updated | date}}</div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <ng-container *ngIf="selectAdd">
+    <h3>Ajouter un attribut</h3>
+
+    <form [formGroup]="attributForm" (ngSubmit)="onAttributSubmit()">
+      <div class="row">
+        <mat-form-field class="flex">
+          <mat-label>Nom</mat-label>
+          <input matInput formControlName="nomAttribut" required>
+          <mat-error *ngIf="attributForm.get('nomAttribut')!.hasError('required')">Le nom de l'attribut est obligatoire</mat-error>
+        </mat-form-field>
+        <mat-form-field class="flex">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option *ngFor="let type of typeVariables" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="flex">
+          <mat-label>Valeur-Defaut</mat-label>
+          <input matInput formControlName="valeurDefaut">
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="flex">
+          <mat-label>Énumération</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Enter enumeration">
+            <mat-chip-row *ngFor="let enumValue of (attributForm.get('enumeration')?.value ?? [])"
+                          (removed)="removeEnum(enumValue)">
+              {{ enumValue }}
+              <button matChipRemove [attr.aria-label]="'remove ' + enumValue">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            <input placeholder="New enum value..."
+                   [matChipInputFor]="chipGrid"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matChipInputAddOnBlur]="addOnBlur"
+                   (matChipInputTokenEnd)="addEnum($event)"/>
+          </mat-chip-grid>
+        </mat-form-field>
+      </div>
+      <button mat-raised-button color="primary" type="submit" [disabled]="attributForm.invalid">Enregistrer</button>
+    </form>
+
+
+    <!--<form [formGroup]="attributForm" (ngSubmit)="onAttributSubmit()">
+      <div class="row">
+        <mat-form-field>
+          <mat-label>Nom</mat-label>
+          <input matInput formControlName="nomAttribut" required>
+          <mat-error *ngIf="attributForm.get('nomAttribut')!.hasError('required')">Le nom de l'attribut est obligatoire</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option *ngFor="let type of typeVariables" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Valeur-Defaut</mat-label>
+          <input matInput formControlName="valeurDefaut" required>
+          <mat-error *ngIf="attributForm.get('valeurDefaut')!.hasError('required')">La valeur par défaut est obligatoire</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field>
+          <mat-label>Énumération</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Enter enumeration">
+            <mat-chip-row *ngFor="let enumValue of (attributForm.get('enumeration')?.value ?? [])"
+                          (removed)="removeEnum(enumValue)">
+              {{ enumValue }}
+              <button matChipRemove [attr.aria-label]="'remove ' + enumValue">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            <input placeholder="New enum value..."
+                   [matChipInputFor]="chipGrid"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matChipInputAddOnBlur]="addOnBlur"
+                   (matChipInputTokenEnd)="addEnum($event)"/>
+          </mat-chip-grid>
+        </mat-form-field>
+      </div>
+      <button mat-raised-button color="primary" type="submit" [disabled]="attributForm.invalid">Enregistrer</button>
+    </form>-->
+  </ng-container>
+</div>

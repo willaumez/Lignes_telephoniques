@@ -1,0 +1,32 @@
+.ajout-button {
+  margin: 20px;
+}
+.fichier-container {
+  display: flex;
+  border-radius: 8px;
+  color: #2d3a81;
+  margin-top: 1rem;
+  border: 2px solid black;
+
+  .container-liste {
+    flex: 0 0 auto; /* Ne pas agrandir, prendre la largeur du contenu */
+  }
+
+  .container-detail {
+    flex: 1 1 auto; /* Prendre le reste de l'espace disponible */
+    padding-left: 1rem; /* Ajoutez un peu d'espace à gauche pour la lisibilité */
+  }
+}
+
+.titre {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.example-tab-icon {
+  margin-right: 10px;
+}
+
+.mat-list-item-icon {
+  color: rgba(0, 0, 0, 0.54);
+}

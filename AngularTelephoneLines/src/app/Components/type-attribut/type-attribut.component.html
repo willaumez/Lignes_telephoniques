@@ -1,57 +1,32 @@
-<mat-tab-group>
-  <mat-tab>
-    <ng-template mat-tab-label>
+<div class="container-fluid">
+  <div class="button-group">
+    <button mat-raised-button (click)="selectTab(0)" [ngClass]="{'active': selectedTabIndex === 0}">
       <mat-icon class="example-tab-icon">local_phone</mat-icon>
-      <span class="titre">Types de Ligne</span>
-    </ng-template>
-    <div class="fichier-type" mat-elevation-z4>
-      <div class="type-liste">
-        <mat-list>
-          <div mat-subheader>Folders</div>
-          <mat-list-item *ngFor="let folder of folders">
-            <mat-icon matListItemIcon>folder</mat-icon>
-            <div matListItemTitle>{{folder.name}}</div>
-            <div matListItemLine>{{folder.updated | date}}</div>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <div mat-subheader>Notes</div>
-          <mat-list-item *ngFor="let note of notes">
-            <mat-icon matListItemIcon>note</mat-icon>
-            <div matListItemTitle>{{note.name}}</div>
-            <div matListItemLine>{{note.updated | date}}</div>
-          </mat-list-item>
-        </mat-list>
-      </div>
-      <div class="type-detail">
-        <mat-list>
-          <div mat-subheader>Folders</div>
-          <mat-list-item *ngFor="let folder of folders">
-            <mat-icon matListItemIcon>folder</mat-icon>
-            <div matListItemTitle>{{folder.name}}</div>
-            <div matListItemLine>{{folder.updated | date}}</div>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <div mat-subheader>Notes</div>
-          <mat-list-item *ngFor="let note of notes">
-            <mat-icon matListItemIcon>note</mat-icon>
-            <div matListItemTitle>{{note.name}}</div>
-            <div matListItemLine>{{note.updated | date}}</div>
-          </mat-list-item>
-        </mat-list>
-      </div>
-    </div>
-  </mat-tab>
+      <span class="button-text">Types de Ligne</span>
+    </button>
+    <button mat-raised-button (click)="selectTab(1)" [ngClass]="{'active': selectedTabIndex === 1}">
+      <mat-icon class="example-tab-icon">star</mat-icon>
+      <span class="button-text">Attributs</span>
+    </button>
+  </div>
 
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon" mat-elevation-z4>star</mat-icon>
-      <span class="titre">Attributs</span>
-    </ng-template>
-    <div class="container-fluid fichier-attribut">
-      Content 2
-    </div>
-  </mat-tab>
-</mat-tab-group>
+    <mat-divider></mat-divider>
+
+  <div class="container-fluid">
+    <ng-container *ngIf="selectedTabIndex==0">
+
+      <app-gestion-type></app-gestion-type>
+
+    </ng-container>
+    <ng-container *ngIf="selectedTabIndex==1">
+
+      <app-gestion-attribut></app-gestion-attribut>
+
+    </ng-container>
+  </div>
+</div>
+
+
 
 
 

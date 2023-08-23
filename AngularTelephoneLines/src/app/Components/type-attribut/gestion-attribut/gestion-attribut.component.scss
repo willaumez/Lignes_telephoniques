@@ -1,0 +1,77 @@
+.ajout-button {
+  margin: 20px;
+}
+.fichier-container {
+  display: flex;
+  border-radius: 8px;
+  color: #2d3a81;
+  margin-top: 1rem;
+  border: 2px solid black;
+
+  .container-liste {
+    flex: 0 0 auto; /* Ne pas agrandir, prendre la largeur du contenu */
+  }
+
+  .container-detail {
+    flex: 1 1 auto; /* Prendre le reste de l'espace disponible */
+    padding-left: 1rem; /* Ajoutez un peu d'espace à gauche pour la lisibilité */
+  }
+}
+
+.titre {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.example-tab-icon {
+  margin-right: 10px;
+}
+
+.mat-list-item-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
+
+  .flex {
+    flex: 1;
+  }
+
+  .mat-chip-grid {
+    width: 100%;
+    margin-top: 16px;
+  }
+}
+
+
+/*
+form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.mat-form-field {
+  //flex: 1 1 calc(33.33% - 16px); !* Divise l'espace en trois colonnes égales *!
+}
+
+.mat-form-field:last-child {
+  flex-basis: 100%; !* Force le dernier champ à occuper toute la largeur *!
+}
+
+.mat-chip-grid {
+  width: 100%;
+  margin-top: 16px;
+}
+
+*/

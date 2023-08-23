@@ -1,0 +1,78 @@
+<div class="container">
+  <button class="ajout-button" mat-raised-button
+          matTooltip="Ajouter un type" [matTooltipShowDelay]="1000"
+          (click)="handleAdd()"
+          [style.background-color]="selectAdd ? '#4050b5' : ''"
+          [style.color]="selectAdd ? 'white' : ''"
+  >AJOUTER</button>
+  <ng-container *ngIf="!selectAdd">
+
+  <div class="fichier-container" mat-elevation-z4>
+
+      <div class="container-liste">
+        <mat-list>
+          <div mat-subheader>Folders</div>
+          <mat-list-item *ngFor="let folder of folders">
+            <mat-icon matListItemIcon>folder</mat-icon>
+            <div matListItemTitle>{{folder.name}}</div>
+            <div matListItemLine>{{folder.updated | date}}</div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Notes</div>
+          <mat-list-item *ngFor="let note of notes">
+            <mat-icon matListItemIcon>note</mat-icon>
+            <div matListItemTitle>{{note.name}}</div>
+            <div matListItemLine>{{note.updated | date}}</div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+      <div class="container-detail">
+        <mat-list>
+          <div mat-subheader>Folders</div>
+          <mat-list-item *ngFor="let folder of folders">
+            <mat-icon matListItemIcon>folder</mat-icon>
+            <div matListItemTitle>{{folder.name}}</div>
+            <div matListItemLine>{{folder.updated | date}}</div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Notes</div>
+          <mat-list-item *ngFor="let note of notes">
+            <mat-icon matListItemIcon>note</mat-icon>
+            <div matListItemTitle>{{note.name}}</div>
+            <div matListItemLine>{{note.updated | date}}</div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+  </div>
+
+  </ng-container>
+
+  <ng-container *ngIf="selectAdd">
+    <h3>Ajouter un type de ligne</h3>
+
+    <form [formGroup]="typeForm" (ngSubmit)="onTypeSubmit()">
+      <mat-form-field>
+        <mat-label>Nom du type</mat-label>
+        <input matInput formControlName="nomType" required>
+        <mat-error *ngIf="typeForm.get('nomType')!.hasError('required')">Le nom du type est obligatoire</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Description du type</mat-label>
+        <textarea matInput formControlName="descriptionType" [maxlength]="255"></textarea>
+      </mat-form-field>
+      <!-- Autres champs et contrôles ici -->
+
+      <mat-form-field>
+        <mat-label>Attributs</mat-label>
+        <mat-select formControlName="attributs" multiple>
+          <mat-option *ngFor="let attribut of attributs" [value]="attribut">
+            {{ attribut.nomAttribut }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="typeForm.invalid">Enregistrer</button>
+    </form>
+  </ng-container>
+</div>

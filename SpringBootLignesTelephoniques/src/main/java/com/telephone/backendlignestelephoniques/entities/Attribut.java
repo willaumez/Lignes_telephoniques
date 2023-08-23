@@ -23,6 +23,7 @@ public class Attribut {
 
     private String type;
     private String valeurDefaut;
+    private String valeurAttribut;
 
     @ElementCollection
     private List<String> enumeration = new ArrayList<>();

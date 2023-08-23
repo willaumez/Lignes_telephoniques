@@ -1,7 +1,20 @@
 export interface Attribut {
   idAttribut: number;
   nomAttribut: string;
-  type: string;
+  type: TypeVariable;
   valeurDefaut: string;
-  enumeration: string[];
+  valeurAttribut: string;
+  enumeration: string[] | null;
+}
+
+export enum TypeVariable {
+  String = 'string',
+  Number = 'number',
+  Boolean = 'boolean',
+  Date = 'date',
+  Array = 'array',
+  Undefined = 'undefined',
+  Symbol = 'symbol',
+  BigInt = 'bigint',
+  null = 'null',
 }

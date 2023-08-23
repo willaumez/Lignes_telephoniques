@@ -43,6 +43,8 @@ import { CorbeilleComponent } from './Components/corbeille/corbeille.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { TypeAttributComponent } from './Components/type-attribut/type-attribut.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import { GestionTypeComponent } from './Components/type-attribut/gestion-type/gestion-type.component';
+import { GestionAttributComponent } from './Components/type-attribut/gestion-attribut/gestion-attribut.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,8 @@ import {MatTabsModule} from "@angular/material/tabs";
     HistoriquesComponent,
     CorbeilleComponent,
     TypeAttributComponent,
+    GestionTypeComponent,
+    GestionAttributComponent,
   ],
   imports: [
     BrowserModule,
