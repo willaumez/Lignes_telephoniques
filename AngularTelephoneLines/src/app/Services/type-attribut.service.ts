@@ -15,6 +15,7 @@ export class TypeAttributService {
     this.operateur = this.userData.getUserData().username;
   }
 
+  //Attributs Services
   saveAttribut(attributData: any): Observable<any> {
     return this.http.post<string>(environment.backEndHost + "/attributs/save/"+this.operateur, attributData)
       .pipe(
@@ -42,8 +43,8 @@ export class TypeAttributService {
       );
   }
 
-  updateAttribut(attributId: number, attributData: any): Observable<string> {
-    return this.http.put<string>(environment.backEndHost + "/attributs/update/"+this.operateur, attributData)
+  updateAttribut(attributData: Attribut): Observable<string> {
+    return this.http.put<any>(environment.backEndHost + "/attributs/update/"+this.operateur, attributData)
       .pipe(
         catchError(error => {
           return throwError(error);
@@ -59,6 +60,9 @@ export class TypeAttributService {
         })
       );
   }
+
+
+  //TypeLigne Services
 
 
 

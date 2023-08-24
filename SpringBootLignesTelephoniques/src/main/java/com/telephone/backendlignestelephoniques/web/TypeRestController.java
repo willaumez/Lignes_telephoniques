@@ -1,5 +1,6 @@
 package com.telephone.backendlignestelephoniques.web;
 
+import com.telephone.backendlignestelephoniques.dtos.TypeLigneDTO;
 import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.services.TypeLigne.TypeLigneService;
@@ -21,19 +22,19 @@ public class TypeRestController {
 
     //====================  list  ======================//
     @GetMapping
-    public List<TypeLigne> listTypeLigne() {
+    public List<TypeLigneDTO> listTypeLigne() {
         return typeLigneService.listTypeLigne();
     }
 
     //====================  get  ======================//
     @GetMapping("/{typeId}")
-    public TypeLigne getTypeLigne(@PathVariable Long typeId) throws ElementNotFoundException {
+    public TypeLigneDTO getTypeLigne(@PathVariable Long typeId) throws ElementNotFoundException {
         return typeLigneService.getTypeLigne(typeId);
     }
 
     //====================  save  ======================//
     @PostMapping("/save/{operateur}")
-    public TypeLigne saveTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne){
+    public TypeLigneDTO saveTypeLigne(@PathVariable String operateur, @RequestBody TypeLigneDTO typeLigne){
         this.typeLigneService.saveTypeLigne(typeLigne, operateur);
         return typeLigne;
     }
@@ -51,7 +52,7 @@ public class TypeRestController {
 
     //====================  update  ======================//
     @PutMapping("/update/{operateur}")
-    public TypeLigne updateTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne) {
+    public TypeLigneDTO updateTypeLigne(@PathVariable String operateur, @RequestBody TypeLigneDTO typeLigne) {
         return typeLigneService.updateTypeLigne(typeLigne, operateur);
     }
 

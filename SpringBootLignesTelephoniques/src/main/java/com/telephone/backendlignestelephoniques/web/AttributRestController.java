@@ -42,16 +42,9 @@ public class AttributRestController {
         }
     }
 
-    @PutMapping("/update/{attributId}/{operateur}")
-    public ResponseEntity<String> updateAttribut(@PathVariable Long attributId, @RequestBody Attribut attribut,
-                                                 @RequestParam String operateur) {
-        try {
-            attribut.setIdAttribut(attributId); // Assurez-vous que l'ID est correctement défini
+    @PutMapping("/update/{operateur}")
+    public void updateAttribut(@PathVariable String operateur, @RequestBody Attribut attribut) {
             attributService.updateAttribut(attribut, operateur);
-            return ResponseEntity.ok("Attribut updated successfully");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @GetMapping

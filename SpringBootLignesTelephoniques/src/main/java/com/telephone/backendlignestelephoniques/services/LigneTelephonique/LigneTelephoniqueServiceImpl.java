@@ -67,8 +67,8 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     }
 
     @Override
-    public List<LigneTelephonique> listLigneTelephoniqueByType(TypeLigne typeLigne) {
-        Set<LigneTelephonique> lignesTelephoniques = typeLigne.getLignesTelephoniques();
+    public List<LigneTelephonique> listLigneTelephoniqueByType(long typeLigneId) {
+        Set<LigneTelephonique> lignesTelephoniques = ligneTelephoniqueRepository.findLigneTelephoniqueByTypeId(typeLigneId);
         return new ArrayList<>(lignesTelephoniques);
     }
 

@@ -12,6 +12,7 @@ import {Observable} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
   selector: 'app-gestion-attribut',
@@ -25,6 +26,8 @@ export class GestionAttributComponent implements OnInit{
   selectUpdate: boolean = false;
   attributForm!: FormGroup;
   typeVariables: string[] = Object.values(TypeVariable);
+
+  enumerations: Set<string> = new Set<string>();
 
   //attributs$!: Observable<Attribut[]>;
   @Input()
@@ -49,6 +52,7 @@ export class GestionAttributComponent implements OnInit{
     this.getAttributs();
   }
 
+  //handle
   handleAdd():void {
     this.selectAdd = !this.selectAdd;
     this.handleResetUpdate()
@@ -60,7 +64,49 @@ export class GestionAttributComponent implements OnInit{
       enumeration: []
     });
   }
+  handleDelete(idAttribut: number):void {
+    let conf:boolean = confirm("Es-tu sure de supprimer cet Attribut ?")
+    if (!conf) return;
+    this.typeAttributService.deleteAttribut(idAttribut).subscribe(
+      (response):void => {
+        this.getAttributs();
+        this._coreService.openSnackBar("Attribut supprimé avec succès !");
+      },
+      (error) => {
+        this._coreService.openSnackBar(error.error.message);
+      }
+    );
+  }
+  handleEdit(attribut: Attribut):void {
+    this.attributForm.patchValue({
+      idAttribut: attribut.idAttribut,
+      nomAttribut: attribut.nomAttribut,
+      type: attribut.type,
+      valeurAttribut: attribut.valeurAttribut || null,
+      enumeration:  []
+    });
+    this.enumerations = new Set<string>(attribut.enumeration);
+    this.selectUpdate = true;
+  }
+  handleResetUpdate() {
+    this.selectUpdate = false;
+  }
 
+
+
+  //Fonctions
+  getAttributs(): void {
+    this.typeAttributService.getAllAttributs().subscribe(
+      (data: any[]):void => {
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      },
+      (error):void => {
+        console.error('Erreur lors de la récupération des attributs:', error.error.message);
+      }
+    );
+  }
   onAttributSubmit(): void {
     if (this.attributForm.valid) {
       const formData = this.attributForm.value;
@@ -77,18 +123,27 @@ export class GestionAttributComponent implements OnInit{
       );
     }
   }
-  getAttributs(): void {
-    this.typeAttributService.getAllAttributs().subscribe(
-      (data: any[]):void => {
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-      },
-      (error):void => {
-        console.error('Erreur lors de la récupération des attributs:', error.error.message);
-      }
-    );
+  onAttributUpdate(): void {
+    if (this.attributForm.valid) {
+      const formData = this.attributForm.value;
+      // Mise à jour des valeurs d'énumération dans le formulaire
+      formData.enumeration = Array.from(this.enumerations);
+      this.typeAttributService.updateAttribut(formData).subscribe(
+        (response):void => {
+          this._coreService.openSnackBar("Attribut mis à jour avec succès !");
+          this.enumerations = new Set<string>();
+          this.getAttributs();
+          this.handleResetUpdate();
+        },
+        (error) => {
+          this.handleAdd();
+          this._coreService.openSnackBar(error.error.message);
+        }
+      );
+    }
   }
+
+
 
   //Recherche
   applyFilter(event: Event):void {
@@ -105,61 +160,36 @@ export class GestionAttributComponent implements OnInit{
   //enum
   addEnum(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-
     // Ajouter un nouvel élément à la liste d'énumération
     if (value) {
-      this.attributForm.get('enumeration')!.value.push(value);
+      if (this.selectUpdate)
+        this.enumerations.add(value);
+      else this.attributForm.get('enumeration')!.value.push(value);
     }
-
     // Effacer la valeur de l'input
     event.chipInput!.clear();
   }
   removeEnum(enumValue: string): void {
     const enumeration = this.attributForm.get('enumeration')!.value;
     const index = enumeration.indexOf(enumValue);
-
-    if (index >= 0) {
-      enumeration.splice(index, 1);
-
-      this._announcer.announce(`Removed ${enumValue}`);
+    if (this.selectUpdate)
+      this.enumerations.delete(enumValue);
+    else {
+      if (index >= 0) {
+        enumeration.splice(index, 1);
+        this._announcer.announce(`Removed ${enumValue}`);
+      }
     }
   }
   edit(enumValue: string, newValue: string): void {
     const enumeration = this.attributForm.get('enumeration')!.value;
     const index = enumeration.indexOf(enumValue);
-
     if (index >= 0 && newValue.trim()) {
       enumeration[index] = newValue.trim();
     }
   }
 
-  handleDelete(idAttribut: number):void {
-    let conf:boolean = confirm("Es-tu sure de supprimer cet Attribut ?")
-    if (!conf) return;
-    this.typeAttributService.deleteAttribut(idAttribut).subscribe(
-      (response):void => {
-        this.getAttributs();
-        this._coreService.openSnackBar("Attribut supprimé avec succès !");
-      },
-      (error) => {
-        this._coreService.openSnackBar(error.error.message);
-      }
-    );
-  }
 
-  handleEdit(attribut: Attribut):void {
-    this.attributForm.setValue({
-      idAttribut: attribut.idAttribut,
-      nomAttribut: attribut.nomAttribut,
-      type: attribut.type,
-      valeurAttribut: attribut.valeurAttribut,
-      enumeration: attribut.enumeration
-    });
-    this.selectUpdate = true;
-  }
-  handleResetUpdate() {
-    this.selectUpdate = false;
-  }
 
 
 }

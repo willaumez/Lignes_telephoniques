@@ -1,9 +1,11 @@
 package com.telephone.backendlignestelephoniques.services.TypeLigne;
 
+import com.telephone.backendlignestelephoniques.dtos.TypeLigneDTO;
 import com.telephone.backendlignestelephoniques.entities.Attribut;
 import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
+import com.telephone.backendlignestelephoniques.mappers.TypeLigneMapperImpl;
 import com.telephone.backendlignestelephoniques.repositories.AttributRepository;
 import com.telephone.backendlignestelephoniques.repositories.TypeLigneRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,25 +31,30 @@ public class TypeLigneServiceImpl implements TypeLigneService {
     private LigneTelephoniqueService ligneTelephoniqueService;
     private AttributRepository attributRepository;
 
+    private TypeLigneMapperImpl mapper;
+
     @Override
-    public void saveTypeLigne(TypeLigne typeLigne, String operateur) {
-        typeLigne.setCreatedDate(new Date());
+    public void saveTypeLigne(TypeLigneDTO typeLigneDTO, String operateur) {
+        typeLigneDTO.setCreatedDate(new Date());
+        TypeLigne typeLigne = mapper.fromTypeLigneDTO(typeLigneDTO);
         typeLigneRepository.save(typeLigne);
         historiqueService.saveHistoriques("Ajout [TypeLigne]", typeLigne.getNomType(), operateur);
     }
 
     @Override
-    public TypeLigne getTypeLigne(Long typeLigneId) throws ElementNotFoundException {
-        return typeLigneRepository.findById(typeLigneId)
+    public TypeLigneDTO getTypeLigne(Long typeLigneId) throws ElementNotFoundException {
+        TypeLigne typeLigne = typeLigneRepository.findById(typeLigneId)
                 .orElseThrow(() -> new ElementNotFoundException("----- TypeLigne non trouvé -----"));
+        return mapper.fromTypeLigne(typeLigne);
     }
+
 
     @Override
     public void deleteTypeLigne(Long id, String operateur) throws ElementNotFoundException {
         TypeLigne typeLigne = typeLigneRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("TypeLigne avec id " + id + " introuvable"));
 
-        List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueService.listLigneTelephoniqueByType(typeLigne);
+        List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueService.listLigneTelephoniqueByType(typeLigne.getIdType());
         for (LigneTelephonique ligneTelephonique : ligneTelephoniques) {
             ligneTelephoniqueService.deleteLigneTelephonique(ligneTelephonique.getIdLigne(), operateur);
         }
@@ -56,7 +64,8 @@ public class TypeLigneServiceImpl implements TypeLigneService {
     }
 
     @Override
-    public TypeLigne updateTypeLigne(TypeLigne typeLigne, String operateur) {
+    public TypeLigneDTO updateTypeLigne(TypeLigneDTO typeLigneDTO, String operateur) {
+        TypeLigne typeLigne = mapper.fromTypeLigneDTO(typeLigneDTO);
         TypeLigne existingTypeLigne = typeLigneRepository.findById(typeLigne.getIdType())
                 .orElseThrow(() -> new EntityNotFoundException("Type-Ligne introuvable"));
         typeLigne.setCreatedDate(existingTypeLigne.getCreatedDate());
@@ -67,12 +76,15 @@ public class TypeLigneServiceImpl implements TypeLigneService {
 
         TypeLigne updatedTypeLigne = typeLigneRepository.save(existingTypeLigne);
         historiqueService.saveHistoriques("Mise à jour [Type-Ligne]", updatedTypeLigne.getNomType(), operateur);
-        return updatedTypeLigne;
+        return mapper.fromTypeLigne(updatedTypeLigne);
     }
 
     @Override
-    public List<TypeLigne> listTypeLigne() {
-        return typeLigneRepository.findAll();
+    public List<TypeLigneDTO> listTypeLigne() {
+        List<TypeLigne> typeLignes = typeLigneRepository.findAll();
+        return typeLignes.stream()
+                .map(customer -> mapper.fromTypeLigne(customer))
+                .collect(Collectors.toList());
     }
 
     @Override

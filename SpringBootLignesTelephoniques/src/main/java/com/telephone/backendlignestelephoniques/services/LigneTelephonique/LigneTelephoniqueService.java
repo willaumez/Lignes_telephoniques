@@ -25,6 +25,6 @@ public interface LigneTelephoniqueService {
     List<LigneTelephonique> listLigneTelephonique();
 
     // Récupère la liste de lignes téléphoniques en fonction d'un type de ligne donné
-    List<LigneTelephonique> listLigneTelephoniqueByType(TypeLigne typeLigne);
+    List<LigneTelephonique> listLigneTelephoniqueByType(long typeLigneId);
 
 }

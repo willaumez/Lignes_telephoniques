@@ -7,9 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface LigneTelephoniqueRepository extends JpaRepository<LigneTelephonique, Long> {
+    @Query("SELECT ligne FROM LigneTelephonique ligne WHERE ligne.typeLigne.idType = :id")
+    Set<LigneTelephonique> findLigneTelephoniqueByTypeId(long id);
     //List<LigneTelephonique> findByTypeLigne(TypeLigne typeLigneFromDB);
 
 

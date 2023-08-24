@@ -53,9 +53,7 @@ public class LigneTelephoniqueRestController {
     //====================  Lignes par type  ======================//
     @GetMapping("/type/{typeId}")
     public List<LigneTelephonique> listLigneTelephoniqueByType(@PathVariable Long typeId){
-        TypeLigne typeLigne = new TypeLigne();
-        typeLigne.setIdType(typeId);
-        return ligneTelephoniqueService.listLigneTelephoniqueByType(typeLigne);
+        return ligneTelephoniqueService.listLigneTelephoniqueByType(typeId);
     }
 
 
