@@ -1,26 +1,16 @@
-.ajout-button {
-  margin: 20px;
-}
-.fichier-container {
-  display: flex;
-  border-radius: 8px;
-  color: #2d3a81;
-  margin-top: 1rem;
-  border: 2px solid black;
-
-  .container-liste {
-    flex: 0 0 auto; /* Ne pas agrandir, prendre la largeur du contenu */
-  }
-
-  .container-detail {
-    flex: 1 1 auto; /* Prendre le reste de l'espace disponible */
-    padding-left: 1rem; /* Ajoutez un peu d'espace à gauche pour la lisibilité */
-  }
+.container-fluid {
+  width: 100%;
 }
 
 .titre {
+  font-size: 20px;
   font-weight: bold;
-  font-size: 1rem;
+  color: #333;
+  text-align: right;
+  border-bottom: 3px solid #1b6ca8;
+  padding-bottom: 10px;
+  margin: 0 auto;
+  width: max-content;
 }
 
 .example-tab-icon {
@@ -30,3 +20,181 @@
 .mat-list-item-icon {
   color: rgba(0, 0, 0, 0.54);
 }
+
+.mat-chip-row {
+  display: flex;
+  align-items: center;
+  background-color: #e0e0e0; /* Adjust as needed */
+  border-radius: 16px; /* Adjust as needed */
+  margin: 4px;
+  padding: 8px;
+}
+
+.mat-chip-row button {
+  margin-left: 8px;
+}
+
+.button-container{
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
+  button{
+    display: block;
+    width: 25%;
+    min-width: auto;
+    margin: 10px 20px;
+  }
+}
+
+//add
+form {
+  display: flex;
+  flex-wrap: wrap;
+  .first {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 10px;
+
+    .first-second {
+      margin-top: 12px;
+      flex: auto;
+      .full-width-textarea {
+        flex-direction: column;
+        height: 100%;
+      }
+    }
+  }
+  .second {
+    width: 50%;
+    flex: 1;
+    //margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    h3{
+      margin: 4px auto;
+      font-size: 25px;
+      font-weight: bold;
+      border-bottom: 2px solid #1b6ca8;
+    }
+    .attribut-liste{
+      margin: 14px;
+      max-height: 400px;
+      overflow-y: auto;
+      mat-selection-list{
+        margin: auto 25px;
+        font-weight: bold;
+        mat-list-option{
+          margin: 5px;
+        }
+      }
+    }
+
+  }
+}
+
+
+/*<ng-container *ngIf="selectAdd">*/
+.container-fluid{
+  width: 100%;
+}
+form{
+  margin-top: 20px;
+}
+
+.mat-elevation-z8 {
+  width: 100%;
+  overflow-x: auto;
+
+  table {
+    text-align: center;
+    align-content: center;
+    margin-top: 10px;
+
+    .mat-cell {
+      white-space: nowrap;
+      table-layout: initial;
+    }
+    th {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    td{
+      //display: flex;
+    }
+    .mat-mdc-row:hover .mat-mdc-cell {
+      background-color: #f3f3f3;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+      transform: scale(1);
+    }
+
+  }
+
+}
+
+/* enums */
+.enumeration-cell {
+  white-space: normal;
+  word-break: break-word;
+  min-width: 200px;
+}
+.enumeration-content {
+  max-height: 100px;
+  overflow-y: auto;
+  span {
+    margin-right: 10px;
+  }
+}
+/* Buttons */
+.action-container {
+  white-space: nowrap;
+  button {
+    margin-right: 4px;
+    border-radius: 5px;
+  }
+}
+
+//pagination
+.customer-container {
+  display: flex;
+  justify-content: space-between;
+
+  .customer-total {
+    border-radius: 1rem;
+    float: left;
+    margin-top: 2.5rem;
+    display: inline-block;
+    font-size: 1.5rem;
+    color: #263238;
+  }
+
+  .custom-paginator {
+    border-radius: 1rem;
+    float: right;
+    margin-top: 1rem;
+    display: inline-block;
+    border: 2px solid #263238;
+    font-size: 1rem;
+  }
+}
+
+//Button et recherche
+.recherche-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .filter {
+    width: 350px;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+}
+
+
+
+
+
+

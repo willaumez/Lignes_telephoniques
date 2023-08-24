@@ -1,6 +1,5 @@
 package com.telephone.backendlignestelephoniques.web;
 
-import com.telephone.backendlignestelephoniques.dtos.TypeLigneDTO;
 import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.services.TypeLigne.TypeLigneService;
@@ -22,37 +21,34 @@ public class TypeRestController {
 
     //====================  list  ======================//
     @GetMapping
-    public List<TypeLigneDTO> listTypeLigne() {
+    public List<TypeLigne> listTypeLigne() {
         return typeLigneService.listTypeLigne();
     }
 
     //====================  get  ======================//
     @GetMapping("/{typeId}")
-    public TypeLigneDTO getTypeLigne(@PathVariable Long typeId) throws ElementNotFoundException {
+    public TypeLigne getTypeLigne(@PathVariable Long typeId) throws ElementNotFoundException {
         return typeLigneService.getTypeLigne(typeId);
     }
 
     //====================  save  ======================//
     @PostMapping("/save/{operateur}")
-    public TypeLigneDTO saveTypeLigne(@PathVariable String operateur, @RequestBody TypeLigneDTO typeLigne){
+    public void saveTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne){
         this.typeLigneService.saveTypeLigne(typeLigne, operateur);
-        return typeLigne;
     }
 
     //====================  delete  ======================//
     @DeleteMapping("/delete/{id}/{operateur}")
-    public ResponseEntity<String> deleteTypeLigne(@PathVariable Long id, @PathVariable String operateur) {
+    public void deleteTypeLigne(@PathVariable Long id, @PathVariable String operateur) {
         try {
             typeLigneService.deleteTypeLigne(id, operateur);
-            return ResponseEntity.ok("Type-Ligne Supprimé avec succés! ");
         } catch (ElementNotFoundException e) {
-            return ResponseEntity.notFound().build();
         }
     }
 
     //====================  update  ======================//
     @PutMapping("/update/{operateur}")
-    public TypeLigneDTO updateTypeLigne(@PathVariable String operateur, @RequestBody TypeLigneDTO typeLigne) {
+    public TypeLigne updateTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne) {
         return typeLigneService.updateTypeLigne(typeLigne, operateur);
     }
 

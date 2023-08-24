@@ -24,9 +24,7 @@ public class TypeLigne {
     @CreatedDate
     private Date createdDate;
 
-    @OneToMany(mappedBy = "typeLigne")
-    private Set<LigneTelephonique> lignesTelephoniques = new HashSet<>();
-
+    //@ManyToMany(cascade = CascadeType.PERSIST)
     @ManyToMany
     @JoinTable(
             name = "type_attribut",

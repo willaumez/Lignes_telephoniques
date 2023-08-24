@@ -1,8 +1,10 @@
 package com.telephone.backendlignestelephoniques.services.Attribut;
 
 import com.telephone.backendlignestelephoniques.entities.Attribut;
+import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.AttributRepository;
+import com.telephone.backendlignestelephoniques.repositories.TypeLigneRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -19,6 +21,7 @@ public class AttributServiceImpl implements AttributService {
 
     private AttributRepository attributRepository;
     private HistoriqueService historiqueService;
+    private TypeLigneRepository typeLigneRepository;
 
     @Override
     public void saveAttribut(Attribut attribut, String operateur) {
@@ -45,9 +48,16 @@ public class AttributServiceImpl implements AttributService {
         // Supprimez les énumérations associées à l'attribut
         attribut.setEnumeration(null);
 
+        List<TypeLigne> typeLignes = typeLigneRepository.findByAttributId(attributId);
+        for (TypeLigne typeLigne : typeLignes) {
+            typeLigne.getAttributs().remove(attribut);
+            typeLigneRepository.save(typeLigne); // Enregistrez le type modifié
+        }
+
         attributRepository.deleteById(attributId);
         historiqueService.saveHistoriques("Suppression [Attribut]", attribut.getNomAttribut(), operateur);
     }
+
 
     @Override
     public Attribut updateAttribut(Attribut attribut, String operateur) {
@@ -59,10 +69,17 @@ public class AttributServiceImpl implements AttributService {
         existingAttribut.setValeurAttribut(attribut.getValeurAttribut());
         existingAttribut.setEnumeration(attribut.getEnumeration());
 
+        List<TypeLigne> typeLignes = typeLigneRepository.findByAttributId(existingAttribut.getIdAttribut());
+        for (TypeLigne typeLigne : typeLignes) {
+            typeLigne.getAttributs().remove(existingAttribut); // Supprime l'attribut de la liste des attributs du type
+            typeLigneRepository.save(typeLigne); // Enregistrez le type modifié
+        }
+
         Attribut updatedAttribut = attributRepository.save(existingAttribut);
         historiqueService.saveHistoriques("Mise à jour [Attribut]", updatedAttribut.getNomAttribut(), operateur);
         return updatedAttribut;
     }
+
 
     @Override
     public List<Attribut> listAttribut() {

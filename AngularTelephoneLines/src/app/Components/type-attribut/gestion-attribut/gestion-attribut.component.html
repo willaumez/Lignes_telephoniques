@@ -5,7 +5,7 @@
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. nom" #input>
     </mat-form-field>
-    <button mat-raised-button matTooltip="Ajouter un type"
+    <button mat-raised-button matTooltip="Ajouter un attribut"
             *ngIf="!selectUpdate"
             [matTooltipShowDelay]="1000"
             (click)="handleAdd()" [style.background-color]="selectAdd ? '#4050b5' : ''"
@@ -41,7 +41,7 @@
 
           <!-- Enumeration Column -->
           <ng-container matColumnDef="enumeration">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Énumération? </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Énumération[] </th>
             <td mat-cell *matCellDef="let attribut" class="enumeration-cell">
               <div class="enumeration-content">
                 <span *ngIf="attribut.enumeration">
@@ -111,7 +111,7 @@
             </button>
           </mat-chip-row>
           <input
-            placeholder="Nouvelle valeur -(enum) ..."
+            placeholder="Valeur:  "
             [matChipInputFor]="chipGrid"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             [matChipInputAddOnBlur]="addOnBlur"
@@ -157,7 +157,7 @@
             </button>
           </mat-chip-row>
           <input
-            placeholder="Nouvelle valeur -(enum) ..."
+            placeholder="Valeur:  "
             [matChipInputFor]="chipGrid"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             [matChipInputAddOnBlur]="addOnBlur"

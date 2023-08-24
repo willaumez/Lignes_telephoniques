@@ -4,6 +4,7 @@ import {catchError, Observable, throwError} from "rxjs";
 import {LoginService} from "./login.service";
 import {environment} from "../../environments/environment";
 import {Attribut} from "../Models/Attribut";
+import {TypeLigne} from "../Models/TypeLigne";
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,42 @@ export class TypeAttributService {
 
 
   //TypeLigne Services
+
+  getAllTypesLigne(): Observable<TypeLigne[]> {
+    return this.http.get<TypeLigne[]>(environment.backEndHost + "/typeLigne")
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+
+  saveTypeLigne(typeData: TypeLigne): Observable<any> {
+    return this.http.post<string>(environment.backEndHost + "/typeLigne/save/"+this.operateur, typeData)
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+
+  deleteTypeLigne(typeId: number): Observable<any> {
+    return this.http.delete<any>(environment.backEndHost + "/typeLigne/delete/"+typeId+"/"+this.operateur)
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+
+  updateTypeLigne(typeData: TypeLigne): Observable<string> {
+    return this.http.put<any>(environment.backEndHost + "/typeLigne/update/"+this.operateur, typeData)
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
 
 
 

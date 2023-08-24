@@ -103,6 +103,7 @@ export class GestionAttributComponent implements OnInit{
         this.dataSource.paginator = this.paginator;
       },
       (error):void => {
+        this._coreService.openSnackBar('Erreur lors de la récupération des attributs:');
         console.error('Erreur lors de la récupération des attributs:', error.error.message);
       }
     );
@@ -114,11 +115,13 @@ export class GestionAttributComponent implements OnInit{
       this.typeAttributService.saveAttribut(formData).subscribe(
         (response):void => {
           this._coreService.openSnackBar("Attribut enregistré avec succès !");
+          this.getAttributs();
           this.handleAdd();
         },
         (error) => {
           this.handleAdd();
           this._coreService.openSnackBar(error.error.message);
+          console.log(error)
         }
       );
     }

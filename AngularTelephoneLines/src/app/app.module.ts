@@ -46,6 +46,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import { GestionTypeComponent } from './Components/type-attribut/gestion-type/gestion-type.component';
 import { GestionAttributComponent } from './Components/type-attribut/gestion-attribut/gestion-attribut.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -66,39 +67,40 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
     GestionTypeComponent,
     GestionAttributComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    MatInputModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    MatTableModule,
-    ReactiveFormsModule,
-    MatSnackBarModule,
-    MatAutocompleteModule,
-    MatToolbarModule,
-    MatMenuModule,
-    NgOptimizedImage,
-    MatSidenavModule,
-    MatListModule,
-    MatBadgeModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatDialogModule,
-    MatChipsModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatTooltipModule,
-    MatTabsModule,
-    MatSlideToggleModule,
-    FormsModule
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        MatInputModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDividerModule,
+        MatTableModule,
+        ReactiveFormsModule,
+        MatSnackBarModule,
+        MatAutocompleteModule,
+        MatToolbarModule,
+        MatMenuModule,
+        NgOptimizedImage,
+        MatSidenavModule,
+        MatListModule,
+        MatBadgeModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDialogModule,
+        MatChipsModule,
+        MatSelectModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatTooltipModule,
+        MatTabsModule,
+        MatSlideToggleModule,
+        FormsModule,
+        MatCheckboxModule
 
-  ],
+    ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AppHttpInterceptor, multi: true}
   ],

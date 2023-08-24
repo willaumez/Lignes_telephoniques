@@ -38,7 +38,7 @@ public class LigneTelephonique {
     @CreatedDate
     private Date createdDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private TypeLigne typeLigne;
 
 }
