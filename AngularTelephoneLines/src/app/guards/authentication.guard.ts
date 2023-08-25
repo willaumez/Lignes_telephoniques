@@ -13,11 +13,15 @@ export class AuthenticationGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+
     if (this.loginService.isAuthenticated) {
       return true;
     } else {
-      // Vous pouvez rediriger vers la page de connexion ou une autre page si l'utilisateur n'est pas authentifié.
-      return this.router.parseUrl('login');
+      const token = localStorage.getItem('access-token');
+      if (token){
+        this.loginService.loadProfile(token);
+        return true
+      }else return this.router.parseUrl('login');
     }
   }
 }

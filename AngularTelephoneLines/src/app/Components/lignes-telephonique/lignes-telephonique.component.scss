@@ -1,0 +1,30 @@
+.titre-liste {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  border-bottom: 6px solid #1b6ca8;
+}
+
+.mat-elevation-z8 {
+  padding: 16px;
+}
+
+button {
+  margin-right: 8px;
+}
+
+table {
+  width: 100%;
+  margin-top: 16px;
+
+  th.mat-header-cell {
+    text-align: left;
+    font-weight: bold;
+  }
+
+  td.mat-cell {
+    padding: 8px;
+  }
+}
+

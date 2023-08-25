@@ -92,7 +92,7 @@ export class TypeAttributService {
       );
   }
 
-  updateTypeLigne(typeData: TypeLigne): Observable<string> {
+  updateTypeLigne(typeData: TypeLigne): Observable<any> {
     return this.http.put<any>(environment.backEndHost + "/typeLigne/update/"+this.operateur, typeData)
       .pipe(
         catchError(error => {

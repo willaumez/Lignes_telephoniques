@@ -88,20 +88,11 @@ export class GestionTypeComponent implements OnInit{
       nomType: typeLigne.nomType,
       descriptionType: typeLigne.descriptionType,
       createdDate: typeLigne.createdDate || null,
+      attributs: typeLigne.attributs
     });
-    const selectedAttributIds: number[] = typeLigne.attributs!.map(attribut => attribut.idAttribut);
-    this.typeLigneForm.controls['attributs'].setValue(selectedAttributIds);
+    /*const selectedAttributIds: Attribut[] = typeLigne.attributs!.map(attribut => attribut);
+    this.typeLigneForm.controls['attributs'].setValue(selectedAttributIds);*/
 
-   /* // Créer une liste d'objets de sélection d'attributs
-    const attributSelections: Attribut[] = this.attributs.map(attribut => {
-      return {
-        attribut: attribut,
-        selected: typeLigne.attributs.includes(attribut.idAttribut)
-      };
-    });
-
-    // Définir les attributs dans le formulaire
-    this.typeLigneForm.controls['attributs'].setValue(selectedAttributs);*/
     this.getAttributs();
     this.selectUpdate = true;
   }
@@ -138,7 +129,6 @@ export class GestionTypeComponent implements OnInit{
   onTypeLigneSubmit(): void {
     if (this.typeLigneForm.valid) {
       const formData = this.typeLigneForm.value;
-      console.log(formData);
       this.typeAttributService.saveTypeLigne(formData).subscribe(
         (response):void => {
           this._coreService.openSnackBar("Type de ligne enregistré avec succès !");
@@ -149,6 +139,23 @@ export class GestionTypeComponent implements OnInit{
           this.handleAdd();
           this._coreService.openSnackBar(error.error.message);
           console.log(error)
+        }
+      );
+    }
+  }
+
+  onTypeLigneUpdate(): void {
+    if (this.typeLigneForm.valid) {
+      const formData = this.typeLigneForm.value;
+      this.typeAttributService.updateTypeLigne(formData).subscribe(
+        (response):void => {
+          this._coreService.openSnackBar("Type de ligne enregistré avec succès !");
+          this.getTypesLigne();
+          this.handleResetUpdate();
+        },
+        (error) => {
+          this.handleResetUpdate();
+          this._coreService.openSnackBar(error.error.message);
         }
       );
     }

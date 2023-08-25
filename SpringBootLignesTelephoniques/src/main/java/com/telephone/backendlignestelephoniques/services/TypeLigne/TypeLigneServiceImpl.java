@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,20 +36,15 @@ public class TypeLigneServiceImpl implements TypeLigneService {
         if (typeLigneRepository.existsByNomType(typeLigne.getNomType())){
             throw new IllegalArgumentException("Un type du même nom existe déjà.");
         }
-
         typeLigne.setCreatedDate(new Date());
-
         // Associer les attributs au type de ligne
         associateAttributesWithType(typeLigne);
-
         typeLigneRepository.save(typeLigne);
         historiqueService.saveHistoriques("Ajout [TypeLigne]", typeLigne.getNomType(), operateur);
     }
-
     private void associateAttributesWithType(TypeLigne typeLigne) {
         List<Attribut> attributs = new ArrayList<>(typeLigne.getAttributs());
         typeLigne.getAttributs().clear();
-
         for (Attribut attribut : attributs) {
             if (attribut.getIdAttribut() != null) {
                 typeLigne.getAttributs().add(attributRepository.findById(attribut.getIdAttribut()).orElse(null));
@@ -56,7 +52,22 @@ public class TypeLigneServiceImpl implements TypeLigneService {
         }
     }
 
+    @Override
+    public void updateTypeLigne(TypeLigne typeLigne, String operateur) {
+        System.out.println(typeLigne);
+        TypeLigne existingTypeLigne = typeLigneRepository.findById(typeLigne.getIdType())
+                .orElseThrow(() -> new EntityNotFoundException("Type-Ligne introuvable"));
+        existingTypeLigne.setNomType(typeLigne.getNomType()); // Mettre à jour le nom si nécessaire
+        existingTypeLigne.setCreatedDate(existingTypeLigne.getCreatedDate());
 
+        // Associer les attributs au type de ligne
+        existingTypeLigne.getAttributs().clear();
+        existingTypeLigne.setAttributs(new HashSet<>(typeLigne.getAttributs()));
+        associateAttributesWithType(existingTypeLigne);
+
+        TypeLigne updatedTypeLigne = typeLigneRepository.save(existingTypeLigne);
+        historiqueService.saveHistoriques("Mise à jour [Type-Ligne]", updatedTypeLigne.getNomType(), operateur);
+    }
 
 
     @Override
@@ -74,21 +85,6 @@ public class TypeLigneServiceImpl implements TypeLigneService {
 
         typeLigneRepository.delete(typeLigne);
         historiqueService.saveHistoriques("Suppression [Type-Ligne]", typeLigne.getNomType(), operateur);
-    }
-
-    @Override
-    public TypeLigne updateTypeLigne(TypeLigne typeLigne, String operateur) {
-        TypeLigne existingTypeLigne = typeLigneRepository.findById(typeLigne.getIdType())
-                .orElseThrow(() -> new EntityNotFoundException("Type-Ligne introuvable"));
-        typeLigne.setCreatedDate(existingTypeLigne.getCreatedDate());
-
-        // Mettez à jour les attributs associés au type de ligne
-        existingTypeLigne.getAttributs().clear();
-        existingTypeLigne.getAttributs().addAll(typeLigne.getAttributs());
-
-        TypeLigne updatedTypeLigne = typeLigneRepository.save(existingTypeLigne);
-        historiqueService.saveHistoriques("Mise à jour [Type-Ligne]", updatedTypeLigne.getNomType(), operateur);
-        return updatedTypeLigne;
     }
 
     @Override

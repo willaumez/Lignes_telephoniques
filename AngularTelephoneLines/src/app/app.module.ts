@@ -47,6 +47,7 @@ import { GestionTypeComponent } from './Components/type-attribut/gestion-type/ge
 import { GestionAttributComponent } from './Components/type-attribut/gestion-attribut/gestion-attribut.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { LignesTelephoniqueComponent } from './Components/lignes-telephonique/lignes-telephonique.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     TypeAttributComponent,
     GestionTypeComponent,
     GestionAttributComponent,
+    LignesTelephoniqueComponent,
   ],
     imports: [
         BrowserModule,

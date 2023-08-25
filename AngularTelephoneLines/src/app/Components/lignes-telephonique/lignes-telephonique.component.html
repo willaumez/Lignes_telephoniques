@@ -1,0 +1,83 @@
+<div>
+  <div class="row"><h1 class="titre-liste">Lignes Téléphonique</h1></div>
+  <div class="mat-elevation-z8">
+    <button mat-raised-button color="primary" (click)="ajouter()">Ajouter</button>
+    <table mat-table [dataSource]="dataSource">
+
+      <!-- Colonne ID de la Ligne -->
+      <ng-container matColumnDef="idLigne">
+        <th mat-header-cell *matHeaderCellDef> ID de la Ligne </th>
+        <td mat-cell *matCellDef="let element"> {{element.idLigne}} </td>
+      </ng-container>
+
+      <!-- Colonne Numéro de la Ligne -->
+      <ng-container matColumnDef="numeroLigne">
+        <th mat-header-cell *matHeaderCellDef> Numéro de la Ligne </th>
+        <td mat-cell *matCellDef="let element"> {{element.numeroLigne}} </td>
+      </ng-container>
+
+      <!-- Colonne Affectation -->
+      <ng-container matColumnDef="affectation">
+        <th mat-header-cell *matHeaderCellDef> Affectation </th>
+        <td mat-cell *matCellDef="let element"> {{element.affectation}} </td>
+      </ng-container>
+
+      <!-- Colonne Poste -->
+      <ng-container matColumnDef="poste">
+        <th mat-header-cell *matHeaderCellDef> Poste </th>
+        <td mat-cell *matCellDef="let element"> {{element.poste}} </td>
+      </ng-container>
+
+      <!-- Colonne État -->
+      <ng-container matColumnDef="etat">
+        <th mat-header-cell *matHeaderCellDef> État </th>
+        <td mat-cell *matCellDef="let element"> {{element.etat}} </td>
+      </ng-container>
+
+      <!-- Colonne Date de Livraison -->
+      <ng-container matColumnDef="dateLivraison">
+        <th mat-header-cell *matHeaderCellDef> Date de Livraison </th>
+        <td mat-cell *matCellDef="let element"> {{element.dateLivraison | date}} </td>
+      </ng-container>
+
+      <!-- Colonne Numéro de Série -->
+      <ng-container matColumnDef="numeroSerie">
+        <th mat-header-cell *matHeaderCellDef> Numéro de Série </th>
+        <td mat-cell *matCellDef="let element"> {{element.numeroSerie}} </td>
+      </ng-container>
+
+      <!-- Colonne Montant -->
+      <ng-container matColumnDef="montant">
+        <th mat-header-cell *matHeaderCellDef> Montant </th>
+        <td mat-cell *matCellDef="let element"> {{element.montant}} </td>
+      </ng-container>
+
+      <!-- Colonne Type de Ligne -->
+      <ng-container matColumnDef="typeLigne">
+        <th mat-header-cell *matHeaderCellDef> Type de Ligne </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.typeLigne.nomType}}
+          <div *ngFor="let attribut of element.typeLigne.attributs">
+            {{attribut.nomAttribut}}: {{attribut.valeurAttribut}}
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Colonne Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button (click)="modifier(element)">Modifier</button>
+          <button mat-button color="warn" (click)="supprimer(element.idLigne)">Supprimer</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+
+
+
+</div>

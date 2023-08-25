@@ -12,7 +12,7 @@ public interface TypeLigneService {
     void saveTypeLigne(TypeLigne typeLigne, String operateur);
     TypeLigne getTypeLigne(Long typeLigneId) throws ElementNotFoundException;
     void deleteTypeLigne(Long id, String operateur) throws ElementNotFoundException;
-    TypeLigne updateTypeLigne(TypeLigne typeLigne, String operateur);
+    void updateTypeLigne(TypeLigne typeLigne, String operateur);
     List<TypeLigne> listTypeLigne();
 
     void associateAttributesWithType(Long typeLigneId, List<Long> attributs) throws ElementNotFoundException;

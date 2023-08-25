@@ -4,6 +4,7 @@ import {CoreService} from "../../core/core.service";
 import {UserService} from "../../Services/user.service";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LoginService} from "../../Services/login.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-profile',
@@ -75,15 +76,15 @@ export class ProfileComponent {
   }
 
   onFormSubmitInfos(): void {
+    let conf:boolean = confirm("Êtes-vous sûr, cela entraînera une reconnexion!")
+    if (!conf) return;
     if (this.showInfosEdit) {
       if (this.userInfosForm.valid) {
         let user: User = this.userInfosForm.value;
         this._userService.updateUser(user, "profil: " + this.userData.username).subscribe({
           next: (val: any): void => {
             this._coreService.openSnackBar('Informations misent à jour avec succès !');
-            this.loginService.setUserData(user);
-            this.userData = this.loginService.getUserData();
-            this.showInfosEdit = false;
+            this.loginService.logout();
           },
           error: (err: any): void => {
             this._coreService.openSnackBar('Échec de la modification des informations!');
@@ -125,13 +126,14 @@ export class ProfileComponent {
       }
       if (this.passwordConfirmed) {
         if (this.userPwdForm.valid) {
+          let conf:boolean = confirm("Êtes-vous sûr, cela entraînera une reconnexion!")
+          if (!conf) return;
           let user: User = this.userPwdForm.value;
           console.log("User----  ", user);
           this._userService.updateUser(user, "profil: " + this.userData.username).subscribe({
             next: (val: any): void => {
               this._coreService.openSnackBar('Mot de pass modifié avec succès !');
-              this.passwordConfirmed = false;
-              this.showPasswordEdit = false;
+              this.loginService.logout();
             },
             error: (err: any): void => {
               this._coreService.openSnackBar("Erreur changement de mot de passe");

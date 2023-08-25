@@ -48,8 +48,9 @@ public class TypeRestController {
 
     //====================  update  ======================//
     @PutMapping("/update/{operateur}")
-    public TypeLigne updateTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne) {
-        return typeLigneService.updateTypeLigne(typeLigne, operateur);
+    public void updateTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne) {
+        System.out.println(typeLigne);
+        typeLigneService.updateTypeLigne(typeLigne, operateur);
     }
 
 }

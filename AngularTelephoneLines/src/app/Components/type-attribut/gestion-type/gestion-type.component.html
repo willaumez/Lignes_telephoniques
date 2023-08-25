@@ -121,7 +121,7 @@
 
   <ng-container *ngIf="selectUpdate">
     <h3 class="titre">Mettre à jour le type de ligne</h3>
-    <form [formGroup]="typeLigneForm" (ngSubmit)="onTypeLigneSubmit()">
+    <form [formGroup]="typeLigneForm" (ngSubmit)="onTypeLigneUpdate()">
       <div class="first">
         <mat-form-field class="first-first" appearance="outline">
           <mat-label>Nom</mat-label>
@@ -145,15 +145,21 @@
             </mat-list-option>
           </mat-selection-list>-->
           <mat-selection-list formControlName="attributs" multiple>
-            <mat-list-option *ngFor="let attribut of attributs" [value]="attribut.idAttribut" class="mat-list-option"
+            <mat-list-option *ngFor="let attribut of attributs" [value]="attribut" class="mat-list-option"
                              color="primary">
               {{ attribut.nomAttribut }}
             </mat-list-option>
           </mat-selection-list>
+          <!--<mat-selection-list formControlName="attributs" multiple>
+            <mat-list-option *ngFor="let attribut of attributs" [value]="attribut" class="mat-list-option"
+                             color="primary">
+              {{ attribut.nomAttribut }}
+            </mat-list-option>
+          </mat-selection-list>-->
         </div>
       </div>
       <div class="button-container">
-        <button mat-raised-button color="warn" type="reset" (click)="handleAdd()">Annuler</button>
+        <button mat-raised-button color="warn" type="reset" (click)="handleResetUpdate()">Annuler</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="typeLigneForm.invalid">Enregistrer</button>
       </div>
     </form>

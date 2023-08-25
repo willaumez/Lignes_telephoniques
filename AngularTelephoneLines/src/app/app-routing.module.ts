@@ -14,6 +14,7 @@ import {AideComponent} from "./Components/aide/aide.component";
 import {HistoriquesComponent} from "./Components/historiques/historiques.component";
 import {CorbeilleComponent} from "./Components/corbeille/corbeille.component";
 import {TypeAttributComponent} from "./Components/type-attribut/type-attribut.component";
+import {LignesTelephoniqueComponent} from "./Components/lignes-telephonique/lignes-telephonique.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -25,6 +26,7 @@ const routes: Routes = [
     children: [
       // Routes enfants pour l'administration si nécessaire
       {path: 'accueil', component: AccueilComponent},
+      {path: 'lignes', component: LignesTelephoniqueComponent},
       {path: '', redirectTo: 'accueil', pathMatch: 'full'},
 
       {path: 'utilisateurs', component: UtilisateursComponent},

@@ -46,11 +46,9 @@ export class LoginComponent implements OnInit{
     if (username && password) {
       this.loginService.login(username, password).subscribe({
         next: data => {
-          this.loginService.loadProfile(data);
-
+          this.loginService.loadProfile(data['access-token']);
           if (this.loginService.isAuthenticated) {
             const userRole = this.loginService.getUserData().role;
-
             if (userRole === RoleType.ADMIN) {
               this.router.navigateByUrl("/admin");
             } else if (userRole === RoleType.USER) {
