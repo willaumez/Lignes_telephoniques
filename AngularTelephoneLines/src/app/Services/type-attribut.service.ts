@@ -62,6 +62,15 @@ export class TypeAttributService {
       );
   }
 
+  getAllAttributNames(): Observable<string[]> {
+    return this.http.get<string[]>(environment.backEndHost+"/attributs/names")
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+
 
   //TypeLigne Services
 

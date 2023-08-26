@@ -3,6 +3,7 @@ package com.telephone.backendlignestelephoniques.services.Attribut;
 import com.telephone.backendlignestelephoniques.entities.Attribut;
 import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
+import com.telephone.backendlignestelephoniques.mappers.LigneMappers;
 import com.telephone.backendlignestelephoniques.repositories.AttributRepository;
 import com.telephone.backendlignestelephoniques.repositories.TypeLigneRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
@@ -12,7 +13,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -22,6 +26,7 @@ public class AttributServiceImpl implements AttributService {
     private AttributRepository attributRepository;
     private HistoriqueService historiqueService;
     private TypeLigneRepository typeLigneRepository;
+    private LigneMappers ligneMappers;
 
     @Override
     public void saveAttribut(Attribut attribut, String operateur) {
@@ -79,10 +84,15 @@ public class AttributServiceImpl implements AttributService {
         historiqueService.saveHistoriques("Mise à jour [Attribut]", updatedAttribut.getNomAttribut(), operateur);
         return updatedAttribut;
     }
-
-
     @Override
     public List<Attribut> listAttribut() {
         return attributRepository.findAll();
     }
+
+    @Override
+    public Set<String> listAttributNames() {
+        List<Attribut> attributs = attributRepository.findAll();  // Récupérer tous les attributs de la base de données
+        return ligneMappers.fromAttributsToNames(new HashSet<>(attributs));  // Utiliser le mapper pour obtenir les noms
+    }
+
 }

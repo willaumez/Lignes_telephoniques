@@ -1,5 +1,6 @@
 package com.telephone.backendlignestelephoniques.services.LigneTelephonique;
 
+import com.telephone.backendlignestelephoniques.dtos.LigneTelephoniqueDto;
 import com.telephone.backendlignestelephoniques.entities.*;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 
@@ -10,7 +11,7 @@ public interface LigneTelephoniqueService {
 
     //=============================================  LigneTelephonique  ========================================================//
     // Enregistre une nouvelle ligne téléphonique
-    void saveLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur);
+    void saveLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur) throws ElementNotFoundException;
 
     // Récupère une ligne téléphonique par son ID
     LigneTelephonique getLigneTelephonique(Long ligneId) throws ElementNotFoundException;
@@ -22,7 +23,7 @@ public interface LigneTelephoniqueService {
     LigneTelephonique updateLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur);
 
     // Récupère la liste de toutes les lignes téléphoniques
-    List<LigneTelephonique> listLigneTelephonique();
+    List<LigneTelephoniqueDto> listLigneTelephonique();
 
     // Récupère la liste de lignes téléphoniques en fonction d'un type de ligne donné
     List<LigneTelephonique> listLigneTelephoniqueByType(long typeLigneId);

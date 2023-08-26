@@ -1,5 +1,7 @@
 package com.telephone.backendlignestelephoniques.web;
 
+import com.nimbusds.jose.shaded.gson.Gson;
+import com.telephone.backendlignestelephoniques.dtos.LigneTelephoniqueDto;
 import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
 import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
@@ -21,7 +23,7 @@ public class LigneTelephoniqueRestController {
 
     //====================  list ======================//
     @GetMapping
-    public List<LigneTelephonique> listLigneTelephoniques() {
+    public List<LigneTelephoniqueDto> listLigneTelephoniques() {
         return ligneTelephoniqueService.listLigneTelephonique();
     }
 
@@ -33,9 +35,10 @@ public class LigneTelephoniqueRestController {
 
     //====================  save  ======================//
     @PostMapping("/save/{operateur}")
-    public LigneTelephonique saveLigneTelephonique(@PathVariable String operateur, @RequestBody LigneTelephonique telephonique){
+    public void saveLigneTelephonique(@PathVariable String operateur, @RequestBody LigneTelephonique telephonique) throws ElementNotFoundException {
+        Gson gson = new Gson();
+        System.out.println("saveLigneTelephonique " + gson.toJson(telephonique));
         this.ligneTelephoniqueService.saveLigneTelephonique(telephonique, operateur);
-        return telephonique;
     }
 
     //====================  delete  ======================//

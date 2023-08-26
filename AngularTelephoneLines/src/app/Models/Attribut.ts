@@ -8,6 +8,7 @@ export interface Attribut {
 
 export enum TypeVariable {
   String = 'string',
+  Enum = 'Enum',
   Number = 'number',
   Boolean = 'boolean',
   Date = 'date',

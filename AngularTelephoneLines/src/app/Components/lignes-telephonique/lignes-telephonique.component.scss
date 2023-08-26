@@ -1,30 +1,126 @@
+// Styles pour le titre
 .titre-liste {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  text-align: center;
-  border-bottom: 6px solid #1b6ca8;
+  font-size: 28px;  // Taille de la police
+  font-weight: bold;  // Gras
+  color: #333;  // Couleur du texte
+  text-align: center;  // Alignement du texte
+  border-bottom: 6px solid #1b6ca8;  // Bordure inférieure
 }
+//button et recherche
+.container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-.mat-elevation-z8 {
-  padding: 16px;
-}
-
-button {
-  margin-right: 8px;
-}
-
-table {
-  width: 100%;
-  margin-top: 16px;
-
-  th.mat-header-cell {
-    text-align: left;
+  .filter {
+    width: 350px;
+    font-size: 1rem;
     font-weight: bold;
   }
+}
 
-  td.mat-cell {
-    padding: 8px;
+// Styles pour le conteneur de la table
+.table-container {
+  margin: 20px 0;  // Marge
+  overflow: auto;
+  width: 100%;
+  max-width: 100%;
+  max-height: 90vh;
+  table {
+    width: max-content;  // Largeur dépend du contenu
+    margin: 20px 0;  // Marge
+    //transform-origin: center top;
+    transform-origin: left top;
+    min-width: 100%;  // Largeur minimale pour prendre tout l'espace disponible
   }
 }
 
+// Styles pour les entêtes de colonnes
+.mat-mdc-header-row {
+  border-bottom: 2px solid #1b6ca8;  // Bordure inférieure
+  font-size: 17px;  // Taille de la police
+  font-weight: bold;  // Gras
+}
+
+// Styles pour les cellules du tableau
+td.mat-cell {
+  padding: 8px;  // Espacement interne
+  white-space: pre-wrap;  // Retour à la ligne
+  overflow: hidden;  // Cache le contenu débordant
+  text-overflow: ellipsis;  // Texte coupé remplacé par des points de suspension
+  font-weight: normal;  // Poids normal de la police
+  width: max-content;  // Largeur maximale basée sur le contenu
+  max-width: calc(3em + 1vw);
+}
+
+// Styles pour le contenu de la cellule
+.cell-content {
+  max-width: 600px;  // Largeur maximale
+  white-space: pre-wrap;  // Retour à la ligne
+  overflow-wrap: break-word;  // Coupe les mots si nécessaire
+}
+
+// Styles pour l'effet hover sur les lignes
+.mat-mdc-row:hover {
+  background-color: #dcdcde;  // Couleur de fond au survol
+  color: #4050b5;  // Couleur du texte au survol
+  border-top: 1px solid #263238;  // Bordure supérieure au survol
+  border-bottom: 1px solid #263238;  // Bordure inférieure au survol
+}
+
+// Styles pour le conteneur d'actions (boutons Modifier, Supprimer)
+.action-container {
+  position: absolute;  // Positionnement absolu
+  top: 38vh;  // A partir du haut
+  right: 0;  // A partir de la droite
+  min-height: max-content;  // Hauteur minimale basée sur le contenu
+  max-width: 70px;  // Largeur maximale
+  overflow-y: auto;  // Défilement vertical si nécessaire
+  background-color: #ffffff;  // Couleur de fond
+  border: 3px solid #4050b5;  // Bordure
+  border-radius: 10px 0 0 10px;  // Rayon de la bordure
+  z-index: 1;  // Index z pour le positionnement
+  display: flex;  // Affichage en flexbox
+  flex-direction: column;  // Direction de flexbox
+  align-items: flex-end;  // Alignement des éléments
+
+  button {
+    margin: 3px 0;  // Marge autour des boutons
+  }
+}
+.zoom-container {
+  position: fixed;  // Positionnement fixed
+  bottom: 0;  // A partir du haut
+  right: 0;  // A partir de la droite
+  min-height: max-content;  // Hauteur minimale basée sur le contenu
+  overflow-x: auto;  // Défilement vertical si nécessaire
+  background-color: #ffffff;  // Couleur de fond
+  border: 1px solid #4050b5;  // Bordure
+  border-radius: 10px 0 0 0;  // Rayon de la bordure
+  z-index: 1;  // Index z pour le positionnement
+  display: flex;  // Affichage en flexbox
+  flex-direction: row;  // Direction de flexbox
+  align-items: flex-end;  // Alignement des éléments
+
+  button {
+    margin: 0 3px;  // Marge autour des boutons
+  }
+}
+
+// Styles pour les lignes sélectionnées ou surlignées
+.highlighted {
+  background-color: #4050b5;  // Couleur de fond
+  color: #fff;  // Couleur du texte
+  font-weight: bolder;  // Gras
+
+  &:hover {
+    background-color: #4050b5;  // Couleur de fond au survol
+    color: #fff;  // Couleur du texte au survol
+  }
+}
+
+/*
+*{
+  box-shadow: 0 0 0 2px #5e00a1 inset;
+}
+*/

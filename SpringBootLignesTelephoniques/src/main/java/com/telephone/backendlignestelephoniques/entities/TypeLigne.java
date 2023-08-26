@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.*;
@@ -25,11 +26,6 @@ public class TypeLigne {
     private Date createdDate;
 
     //@ManyToMany(cascade = CascadeType.PERSIST)
-    @ManyToMany
-    @JoinTable(
-            name = "type_attribut",
-            joinColumns = @JoinColumn(name = "type_id"),
-            inverseJoinColumns = @JoinColumn(name = "attribut_id")
-    )
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH},fetch = FetchType.LAZY)
     private Set<Attribut> attributs = new HashSet<>();
 }

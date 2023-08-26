@@ -48,6 +48,8 @@ import { GestionAttributComponent } from './Components/type-attribut/gestion-att
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { LignesTelephoniqueComponent } from './Components/lignes-telephonique/lignes-telephonique.component';
+import {CdkDrag, DragDropModule} from "@angular/cdk/drag-drop";
+import { LigneAddEditComponent } from './Components/lignes-telephonique/ligne-add-edit/ligne-add-edit.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +70,7 @@ import { LignesTelephoniqueComponent } from './Components/lignes-telephonique/li
     GestionTypeComponent,
     GestionAttributComponent,
     LignesTelephoniqueComponent,
+    LigneAddEditComponent,
   ],
     imports: [
         BrowserModule,
@@ -100,7 +103,7 @@ import { LignesTelephoniqueComponent } from './Components/lignes-telephonique/li
         MatTabsModule,
         MatSlideToggleModule,
         FormsModule,
-        MatCheckboxModule
+        MatCheckboxModule,
 
     ],
   providers: [

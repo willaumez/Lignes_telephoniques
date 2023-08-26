@@ -11,6 +11,7 @@ export interface LigneTelephonique {
   montant: number;
   createdDate: Date;
   typeLigne: TypeLigne;
+  ligneAttributs: [] | null;
 }
 
 export enum EtatType {

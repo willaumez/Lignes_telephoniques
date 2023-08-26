@@ -49,14 +49,14 @@ public class CorbeilleServiceImpl implements CorbeilleService {
         Corbeille corbeille = corbeilleRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Corbeille with id " + id + " not found"));
 
-        Corbeille.Ligne restorationLigne = corbeille.getLigneTelephonique();
+       /* Corbeille.Ligne restorationLigne = corbeille.getLigneTelephonique();
         LigneTelephonique ligneTelephonique = new LigneTelephonique();
-        BeanUtils.copyProperties(restorationLigne, ligneTelephonique);
+        BeanUtils.copyProperties(restorationLigne, ligneTelephonique);*/
 
-        ligneTelephoniqueService.saveLigneTelephonique(ligneTelephonique, operateur);
+       /* ligneTelephoniqueService.saveLigneTelephonique(ligneTelephonique, operateur);
         deleteRestoration(id, operateur);
 
-        historiqueService.saveHistoriques("Corbeille de la ligne", ligneTelephonique.getNumeroLigne(), operateur);
+        historiqueService.saveHistoriques("Corbeille de la ligne", ligneTelephonique.getNumeroLigne(), operateur);*/
     }
 
     @Override

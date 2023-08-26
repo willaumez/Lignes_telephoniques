@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/attributs")
@@ -52,5 +53,10 @@ public class AttributRestController {
         return attributService.listAttribut();
     }
 
+
+    @GetMapping("/names")
+    public Set<String> listAttributNames() {
+        return attributService.listAttributNames();
+    }
 
 }

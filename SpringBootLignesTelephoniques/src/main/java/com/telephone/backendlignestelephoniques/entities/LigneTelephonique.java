@@ -1,13 +1,14 @@
 package com.telephone.backendlignestelephoniques.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.telephone.backendlignestelephoniques.enums.EtatType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
@@ -38,8 +39,11 @@ public class LigneTelephonique {
     @CreatedDate
     private Date createdDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private TypeLigne typeLigne;
 
+    @OneToMany(mappedBy = "ligneTelephonique", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    private Set<LigneAttribut> ligneAttributs = new HashSet<>();
 }
 

@@ -5,6 +5,7 @@ import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundExcept
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public interface AttributService {
@@ -24,4 +25,7 @@ public interface AttributService {
 
     // Récupère la liste de tous les attributs
     List<Attribut> listAttribut();
+
+    Set<String> listAttributNames();
+
 }

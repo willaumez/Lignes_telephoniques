@@ -21,14 +21,11 @@ export interface Section2 {
   styleUrls: ['./gestion-type.component.scss']
 })
 export class GestionTypeComponent implements OnInit{
-  addOnBlur:boolean = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
   selectAdd: boolean = false;
   selectUpdate: boolean = false;
   typeLigneForm!: FormGroup;
 
   typeAttributs: Set<Attribut> = new Set<Attribut>();
-  attributsToCheck = [];
 
    attributs: Attribut[] = [];
 
@@ -38,8 +35,7 @@ export class GestionTypeComponent implements OnInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private _fb: FormBuilder, private _announcer: LiveAnnouncer,
-              private typeAttributService: TypeAttributService, private _coreService: CoreService
+  constructor(private _fb: FormBuilder, private typeAttributService: TypeAttributService, private _coreService: CoreService
   ) {
     this.typeLigneForm = this._fb.group({
       idType: [null],
@@ -90,8 +86,6 @@ export class GestionTypeComponent implements OnInit{
       createdDate: typeLigne.createdDate || null,
       attributs: typeLigne.attributs
     });
-    /*const selectedAttributIds: Attribut[] = typeLigne.attributs!.map(attribut => attribut);
-    this.typeLigneForm.controls['attributs'].setValue(selectedAttributIds);*/
 
     this.getAttributs();
     this.selectUpdate = true;
@@ -161,31 +155,6 @@ export class GestionTypeComponent implements OnInit{
     }
   }
 
-/*
-
-  onAttributUpdate(): void {
-    if (this.attributForm.valid) {
-      const formData = this.attributForm.value;
-      // Mise à jour des valeurs d'énumération dans le formulaire
-      formData.enumeration = Array.from(this.enumerations);
-      this.typeAttributService.updateAttribut(formData).subscribe(
-        (response):void => {
-          this._coreService.openSnackBar("Attribut mis à jour avec succès !");
-          this.enumerations = new Set<string>();
-          this.getAttributs();
-          this.handleResetUpdate();
-        },
-        (error) => {
-          this.handleAdd();
-          this._coreService.openSnackBar(error.error.message);
-        }
-      );
-    }
-  }
-
-*/
-
-
   //Recherche
   applyFilter(event: Event):void {
     this.selectAdd = false;
@@ -196,32 +165,6 @@ export class GestionTypeComponent implements OnInit{
       this.dataSource.paginator.firstPage();
     }
   }
-  //enum
-/*  addEnum(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-    const attribut:any = {};
-    // Ajouter un nouvel élément à la liste d'énumération
-    if (value) {
-      if (this.selectUpdate)
-        this.typeAttributs.add(attribut);
-      else this.typeLigneForm.get('enumeration')!.value.push(value);
-    }
-    // Effacer la valeur de l'input
-    event.chipInput!.clear();
-  }
-  removeEnum(enumValue: string): void {
-    const enumeration = this.typeLigneForm.get('enumeration')!.value;
-    const index = enumeration.indexOf(enumValue);
-    const attribut:any = {};
-    if (this.selectUpdate)
-      this.typeAttributs.delete(attribut);
-    else {
-      if (index >= 0) {
-        enumeration.splice(index, 1);
-        this._announcer.announce(`Removed ${enumValue}`);
-      }
-    }
-  }*/
   edit(enumValue: string, newValue: string): void {
     const enumeration = this.typeLigneForm.get('enumeration')!.value;
     const index = enumeration.indexOf(enumValue);

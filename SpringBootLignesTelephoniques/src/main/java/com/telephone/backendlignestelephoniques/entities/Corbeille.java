@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
+@Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,10 +26,10 @@ public class Corbeille {
     @CreatedDate
     private Date dateSuppression;
 
-    @Embedded
-    private Ligne ligneTelephonique;
+    //@Embedded
+    //private Ligne ligneTelephonique;
 
-    @Embeddable
+/*    @Embeddable
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -60,7 +61,7 @@ public class Corbeille {
         @Column(name = "valeur")
         @CollectionTable(name = "ligne_attributs", joinColumns = @JoinColumn(name = "ligne_id"))
         private Map<String, String> attributs = new HashMap<>();
-    }
+    }*/
 
 }
 
