@@ -25,7 +25,7 @@
   overflow: auto;
   width: 100%;
   max-width: 100%;
-  max-height: 90vh;
+  min-height: 65vh;
   table {
     width: max-content;  // Largeur dépend du contenu
     margin: 20px 0;  // Marge
@@ -90,13 +90,13 @@ td.mat-cell {
 }
 .zoom-container {
   position: fixed;  // Positionnement fixed
-  bottom: 0;  // A partir du haut
-  right: 0;  // A partir de la droite
+  bottom: 10px;  // A partir du haut
+  right: 10px;  // A partir de la droite
   min-height: max-content;  // Hauteur minimale basée sur le contenu
   overflow-x: auto;  // Défilement vertical si nécessaire
   background-color: #ffffff;  // Couleur de fond
   border: 1px solid #4050b5;  // Bordure
-  border-radius: 10px 0 0 0;  // Rayon de la bordure
+  border-radius: 10px 10px 10px 10px;
   z-index: 1;  // Index z pour le positionnement
   display: flex;  // Affichage en flexbox
   flex-direction: row;  // Direction de flexbox
@@ -106,6 +106,28 @@ td.mat-cell {
     margin: 0 3px;  // Marge autour des boutons
   }
 }
+
+
+//Pagination
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;  // Positionnement fixed
+  bottom: 10px;
+
+  .custom-paginator {
+    background-color: #ffffff;  // Couleur de fond
+    border: 1px solid #4050b5;  // Bordure
+    border-radius: 10px 10px 10px 10px;
+    float: right;
+    margin-top: 1rem;
+    display: inline-block;
+    font-size: 1rem;
+  }
+}
+
+
+
 
 // Styles pour les lignes sélectionnées ou surlignées
 .highlighted {
@@ -146,6 +168,5 @@ td.mat-cell {
     height: 50px;
   }
 }
-
 
 

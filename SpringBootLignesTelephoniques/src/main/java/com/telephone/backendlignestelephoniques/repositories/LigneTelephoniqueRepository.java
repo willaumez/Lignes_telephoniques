@@ -20,6 +20,8 @@ public interface LigneTelephoniqueRepository extends JpaRepository<LigneTelephon
     Set<LigneTelephonique> findLigneTelephoniqueByTypeId(long id);
 
     List<LigneTelephonique> findByTypeLigneIdType(Long idType);
+
+    boolean existsByNumeroLigne(String numeroLigne);
     //List<LigneTelephonique> findByTypeLigne(TypeLigne typeLigneFromDB);
 
 
