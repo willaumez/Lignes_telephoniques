@@ -70,12 +70,37 @@
       </tr>
 
     </table>
-    <div></div>
   </div>
-  <div class="customer-container">
+  <!--<div class="customer-container">
     <div class="customer-total" *ngIf="dataSource?.data">Total:   {{dataSource.data.length}}</div>
-    <mat-paginator class="custom-paginator" [pageSizeOptions]="[10, 20, 30]" aria-label="Selectionner une page"></mat-paginator>
+    <mat-paginator class="custom-paginator" [pageSizeOptions]="[5, 23, 33, 50]" aria-label="Sélectionner une page"></mat-paginator>
+  </div>-->
+  <div class="customer-container">
+    <div class="nombrePage">
+      <label for="pageSize">Éléments par page :</label>
+      <select id="pageSize" (change)="changePageSize($event)">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{size}}</option>
+      </select>
+    </div>
+    <div class="custom-paginator">
+      <button mat-icon-button (click)="previousPage()">
+        <mat-icon>first_page</mat-icon>
+      </button>
+      <button mat-icon-button (click)="previousPage()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span>{{pageNumber}}</span>
+      <button mat-icon-button (click)="nextPage()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <button mat-icon-button (click)="nextPage()">
+        <mat-icon>last_page</mat-icon>
+      </button>
+    </div>
   </div>
+
+
+
 </div>
 </ng-container>
 

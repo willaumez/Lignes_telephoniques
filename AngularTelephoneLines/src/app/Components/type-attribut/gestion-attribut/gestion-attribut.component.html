@@ -1,6 +1,7 @@
+<ng-container *ngIf="dataSource ; else failureOrLading">
+
 <div class="container">
   <div class="recherche-button">
-
     <mat-form-field class="filter" appearance="fill">
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. nom" #input>
@@ -165,38 +166,27 @@
           />
         </mat-chip-grid>
       </mat-form-field>
-      <!--<mat-form-field class="full-width" appearance="outline">
-          <mat-label>Énumération</mat-label>
-          <mat-chip-grid #chipGrid aria-label="Enter enumeration">
-            <mat-chip-row *ngFor="let enumValue of attributForm.get('enumeration')?.value; let i = index"
-                          (removed)="removeEnum(enumValue)">
-              {{ enumValue }}
-              <button matChipRemove [attr.aria-label]="'remove ' + enumValue">
-                <mat-icon>cancel</mat-icon>
-              </button>
-              &lt;!&ndash; Ajout d'un champ d'édition pour l'énumération existante &ndash;&gt;
-              <button mat-icon-button [matMenuTriggerFor]="editMenu[i]">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <mat-menu #editMenu="matMenu">
-                <input matInput [(ngModel)]="editValue[i]" placeholder="Nouvelle valeur -(enum) ...">
-                <button mat-button (click)="edit(enumValue, editValue[i]); editMenu.close()">Mettre à jour</button>
-              </mat-menu>
-            </mat-chip-row>
-            <input
-              placeholder="Nouvelle valeur -(enum) ..."
-              [matChipInputFor]="chipGrid"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              [matChipInputAddOnBlur]="addOnBlur"
-              (matChipInputTokenEnd)="addEnum($event)"
-            />
-          </mat-chip-grid>
-        </mat-form-field>-->
       <div class="button-container">
         <button mat-raised-button color="warn" type="reset" (click)="handleResetUpdate()">Annuler</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="attributForm.invalid">Mettre à jour</button>
       </div>
     </form>
   </ng-container>
-
 </div>
+
+</ng-container>
+
+<ng-template #failureOrLading>
+  <div class="failureOrLading-container">
+    <ng-container *ngIf="errorMessage; else loading">
+      <div class="failure">
+        {{errorMessage}}
+      </div>
+    </ng-container>
+    <ng-template #loading>
+      <div class="Lading">
+        <mat-spinner>Chargement...</mat-spinner>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>

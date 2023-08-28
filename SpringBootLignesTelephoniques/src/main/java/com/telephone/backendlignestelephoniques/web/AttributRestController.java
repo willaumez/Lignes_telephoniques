@@ -61,4 +61,10 @@ public class AttributRestController {
         return attributService.listAttributNames();
     }
 
+    @GetMapping("/names/{typeId}")
+    public Set<String> listAttributNames(@PathVariable Long typeId) throws ElementNotFoundException {
+        return attributService.listAttributNamesByType(typeId);
+    }
+
+
 }

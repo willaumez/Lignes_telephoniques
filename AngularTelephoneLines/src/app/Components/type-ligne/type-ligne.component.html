@@ -1,5 +1,14 @@
-<div class="row"><h1 class="titre-liste">Lignes Téléphonique</h1></div>
+<div class="row"><h1 class="titre-liste">Type de lignes Téléphoniques: <span *ngIf="selectedTypeLigne">{{selectedTypeLigne.nomType}}</span> </h1></div>
+<div class="type-Container">
+  <!-- Boucle pour générer un bouton pour chaque type de ligne -->
+  <button *ngFor="let typeLigne of typeLignes"
+          class="type-button"
+          (click)="selectTypeLigne(typeLigne)">
+    {{ typeLigne.nomType }}
+  </button>
+</div>
 <ng-container *ngIf="dataSource && attributNames; else failureOrLading">
+
   <div class="container-fluid">
     <mat-form-field class="filter" appearance="fill">
       <mat-label>Filter</mat-label>

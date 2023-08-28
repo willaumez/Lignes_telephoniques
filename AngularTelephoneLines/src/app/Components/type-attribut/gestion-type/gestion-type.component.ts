@@ -15,19 +15,21 @@ export interface Section2 {
   name: string;
   updated: Date;
 }
+
 @Component({
   selector: 'app-gestion-type',
   templateUrl: './gestion-type.component.html',
   styleUrls: ['./gestion-type.component.scss']
 })
-export class GestionTypeComponent implements OnInit{
+export class GestionTypeComponent implements OnInit {
+  errorMessage!: string;
   selectAdd: boolean = false;
   selectUpdate: boolean = false;
   typeLigneForm!: FormGroup;
 
   typeAttributs: Set<Attribut> = new Set<Attribut>();
 
-   attributs: Attribut[] = [];
+  attributs: Attribut[] = [];
 
   @Input()
   dataSource!: MatTableDataSource<any>;
@@ -46,12 +48,13 @@ export class GestionTypeComponent implements OnInit{
     });
     this.dataSource = new MatTableDataSource<TypeLigne>();
   }
+
   ngOnInit(): void {
     this.getTypesLigne();
   }
 
   //handle
-  handleAdd():void {
+  handleAdd(): void {
     this.selectAdd = !this.selectAdd;
     this.handleResetUpdate()
     this.typeLigneForm.reset({
@@ -63,13 +66,14 @@ export class GestionTypeComponent implements OnInit{
     });
     this.getAttributs();
   }
-  handleDelete(idType: number):void {
-    let conf:boolean = confirm("Êtes-vous sûr de supprimer ce type de ligne ?")
+
+  handleDelete(idType: number): void {
+    let conf: boolean = confirm("Êtes-vous sûr de supprimer ce type de ligne ?")
     if (!conf) return;
-    let confirmation:boolean = confirm("Supprimer aussi toutes les lignes téléphonique du type .")
+    let confirmation: boolean = confirm("Supprimer aussi toutes les lignes téléphonique du type .")
     if (!confirmation) return;
     this.typeAttributService.deleteTypeLigne(idType).subscribe(
-      (response):void => {
+      (response): void => {
         this.getTypesLigne();
         this._coreService.openSnackBar("Type et ligne téléphonique supprimés avec succès !");
       },
@@ -78,7 +82,8 @@ export class GestionTypeComponent implements OnInit{
       }
     );
   }
-  handleEdit(typeLigne: TypeLigne):void {
+
+  handleEdit(typeLigne: TypeLigne): void {
     this.typeLigneForm.patchValue({
       idType: typeLigne.idType,
       nomType: typeLigne.nomType,
@@ -90,6 +95,7 @@ export class GestionTypeComponent implements OnInit{
     this.getAttributs();
     this.selectUpdate = true;
   }
+
   handleResetUpdate() {
     this.selectUpdate = false;
   }
@@ -97,42 +103,46 @@ export class GestionTypeComponent implements OnInit{
 
   //Fonctions
   getTypesLigne(): void {
-    this.typeAttributService.getAllTypesLigne().subscribe(
-      (data: any[]):void => {
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-      },
-      (error):void => {
-        this._coreService.openSnackBar('Erreur lors de la récupération des types de ligne:'+ error.error.message);
-        console.error(error.error.message);
+    this.typeAttributService.getAllTypesLigne().subscribe({
+        next: (data: any[]): void => {
+          this.dataSource = new MatTableDataSource(data);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+        },
+        error: (error) => {
+          this.errorMessage = ('Erreur lors de la récupération des types de ligne: ' + error.error.message)
+          this._coreService.openSnackBar('Erreur lors de la récupération des types de ligne:' + error.error.message);
+        }
       }
     );
   }
+
   getAttributs(): void {
-    this.typeAttributService.getAllAttributs().subscribe(
-      (data: any[]):void => {
-        this.attributs = data;
-      },
-      (error):void => {
-        this._coreService.openSnackBar('Erreur lors de la récupération des attributs:');
-        console.error(error.error.message);
+    this.typeAttributService.getAllAttributs().subscribe({
+        next: (data: any[]): void => {
+          this.attributs = data;
+        },
+        error: (error) => {
+          this._coreService.openSnackBar('Erreur lors de la récupération des attributs:');
+          console.error(error.error.message);
+        }
       }
     );
   }
+
   onTypeLigneSubmit(): void {
     if (this.typeLigneForm.valid) {
       const formData = this.typeLigneForm.value;
-      this.typeAttributService.saveTypeLigne(formData).subscribe(
-        (response):void => {
-          this._coreService.openSnackBar("Type de ligne enregistré avec succès !");
-          this.getTypesLigne();
-          this.handleAdd();
-        },
-        (error) => {
-          this.handleAdd();
-          this._coreService.openSnackBar(error.error.message);
-          console.log(error)
+      this.typeAttributService.saveTypeLigne(formData).subscribe({
+          next: (response): void => {
+            this._coreService.openSnackBar("Type de ligne enregistré avec succès !");
+            this.getTypesLigne();
+            this.handleAdd();
+          },
+          error: (error) => {
+            this.handleAdd();
+            this._coreService.openSnackBar(error.error.message);
+          }
         }
       );
     }
@@ -141,22 +151,23 @@ export class GestionTypeComponent implements OnInit{
   onTypeLigneUpdate(): void {
     if (this.typeLigneForm.valid) {
       const formData = this.typeLigneForm.value;
-      this.typeAttributService.updateTypeLigne(formData).subscribe(
-        (response):void => {
-          this._coreService.openSnackBar("Type de ligne enregistré avec succès !");
-          this.getTypesLigne();
-          this.handleResetUpdate();
-        },
-        (error) => {
-          this.handleResetUpdate();
-          this._coreService.openSnackBar(error.error.message);
+      this.typeAttributService.updateTypeLigne(formData).subscribe({
+          next: (response): void => {
+            this._coreService.openSnackBar("Type de ligne enregistré avec succès !");
+            this.getTypesLigne();
+            this.handleResetUpdate();
+          },
+          error: (error) => {
+            this.handleResetUpdate();
+            this._coreService.openSnackBar(error.error.message);
+          }
         }
       );
     }
   }
 
   //Recherche
-  applyFilter(event: Event):void {
+  applyFilter(event: Event): void {
     this.selectAdd = false;
     this.selectUpdate = false;
     const filterValue = (event.target as HTMLInputElement).value;
@@ -165,6 +176,7 @@ export class GestionTypeComponent implements OnInit{
       this.dataSource.paginator.firstPage();
     }
   }
+
   edit(enumValue: string, newValue: string): void {
     const enumeration = this.typeLigneForm.get('enumeration')!.value;
     const index = enumeration.indexOf(enumValue);
@@ -172,7 +184,6 @@ export class GestionTypeComponent implements OnInit{
       enumeration[index] = newValue.trim();
     }
   }
-
 
 
 }

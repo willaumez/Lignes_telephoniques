@@ -1,4 +1,5 @@
 <div class="main-body container-fluid">
+  <ng-container *ngIf="userData ; else failureOrLading">
   <div class="row"><h1 class="titre">Profil utilisateur</h1></div>
   <div class="infos">
     <div class="row">
@@ -95,6 +96,22 @@
         <button mat-raised-button class="col" color="primary" type="submit">Valider</button>
     </form>
   </div>
+
+  </ng-container>
+  <ng-template #failureOrLading>
+    <div class="failureOrLading-container">
+      <ng-container *ngIf="errorMessage; else loading">
+        <div class="failure">
+          {{errorMessage}}
+        </div>
+      </ng-container>
+      <ng-template #loading>
+        <div class="Lading">
+          <mat-spinner>Chargement...</mat-spinner>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
 
 
 </div>

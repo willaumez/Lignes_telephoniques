@@ -14,34 +14,41 @@ import {User} from "../../Models/User";
   templateUrl: './utilisateurs.component.html',
   styleUrls: ['./utilisateurs.component.scss']
 })
-export class UtilisateursComponent implements OnInit{
+export class UtilisateursComponent implements OnInit {
+  // Initialisation des variables
+  pageNumber: number = 1;
+  pageSize: number = 10;
+  keyword: string = '';
+  pageSizeOptions: number[] = [10, 23, 33, 50,100];
   errorMessage!: string;
   displayedColumns: string[] = [
     'id', 'username', 'email', 'createdDate', 'role', 'ACTIONS'];
-  userData : User = this.loginService.getUserData();
+  userData: User = this.loginService.getUserData();
 
   @Input()
   dataSource!: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+/*  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;*/
 
   constructor(private userService: UserService, private _dialog: MatDialog,
-              private _coreService: CoreService, public loginService: LoginService) { }
+              private _coreService: CoreService, public loginService: LoginService) {
+  }
 
   ngOnInit(): void {
     this.getUtilisateurs();
   }
 
   getUtilisateurs(): void {
-    this.userService.listUsers().subscribe(
-      (data: any[]):void => {
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-      },
-      (error):void => {
-        this.errorMessage = ('Erreur lors de la récupération des utilisateurs: '+error)
+    this.userService.listUsers().subscribe({
+        next: (data: any[]): void => {
+          this.dataSource = new MatTableDataSource(data);
+          /*this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;*/
+        },
+        error: (error) => {
+          this.errorMessage = ('Erreur lors de la récupération des utilisateurs: ' + error)
+        }
       }
     );
   }
@@ -72,11 +79,11 @@ export class UtilisateursComponent implements OnInit{
     let conf = confirm("Es-tu sure de supprimer cet utilisateur ?")
     if (!conf) return;
     this.userService.deleteUser(id, this.userData.username).subscribe({
-      next: (res):void => {
+      next: (res): void => {
         this.getUtilisateurs();
         this._coreService.openSnackBar("L'utilisateur a été supprimée avec succès! ");
       },
-      error:err => {
+      error: err => {
         this._coreService.openSnackBar("Utilisateur Innexistant! ");
         console.log(err);
       }
@@ -96,6 +103,31 @@ export class UtilisateursComponent implements OnInit{
       },
     });
   }
+  //pagination
+  previousPage() {
+    if (this.pageNumber > 1) {
+      this.pageNumber--;
+      this.onDataChanged();
+    }
+  }
+
+// Méthode pour passer à la page suivante
+  nextPage() {
+    // Ici, vous pouvez également vérifier si vous êtes à la dernière page
+    this.pageNumber++;
+    this.onDataChanged();
+  }
+  // Méthode pour rafraîchir les données
+  onDataChanged() {
+    this.getUtilisateurs();
+  }
+  changePageSize(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const newSize = selectElement.value;
+    this.pageSize = +newSize;  // Convertir la chaîne en nombre
+    this.onDataChanged();
+  }
+
 
 
 }

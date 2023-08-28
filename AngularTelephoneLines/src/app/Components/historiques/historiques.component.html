@@ -2,6 +2,7 @@
   <div class="row">
     <h1 class="titre">Liste - Historique </h1>
   </div>
+  <ng-container *ngIf="dataSource ; else failureOrLading">
   <div class="container">
     <mat-form-field class="filter" appearance="outline" (click)="resetDateField()">
       <input matInput (keyup)="applyFilter($event)" placeholder="Recherche..." #input>
@@ -81,6 +82,22 @@
             color="accent" type="button" (click)="handleResetAll()">Suppression de tout l'historique
     </button>
   </div>
+
+  </ng-container>
+  <ng-template #failureOrLading>
+    <div class="failureOrLading-container">
+      <ng-container *ngIf="errorMessage; else loading">
+        <div class="failure">
+          {{errorMessage}}
+        </div>
+      </ng-container>
+      <ng-template #loading>
+        <div class="Lading">
+          <mat-spinner>Chargement...</mat-spinner>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
 
 
 </div>

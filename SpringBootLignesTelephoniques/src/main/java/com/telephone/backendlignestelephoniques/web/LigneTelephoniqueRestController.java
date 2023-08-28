@@ -3,6 +3,7 @@ package com.telephone.backendlignestelephoniques.web;
 import com.nimbusds.jose.shaded.gson.Gson;
 import com.telephone.backendlignestelephoniques.dtos.LigneTelephoniqueDto;
 import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
+import com.telephone.backendlignestelephoniques.entities.Rapprochement;
 import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueService;
@@ -56,6 +57,12 @@ public class LigneTelephoniqueRestController {
     @GetMapping("/type/{typeId}")
     public List<LigneTelephonique> listLigneTelephoniqueByType(@PathVariable Long typeId) {
         return ligneTelephoniqueService.listLigneTelephoniqueByType(typeId);
+    }
+
+    //====================  get Rapprochement  ======================//
+    @GetMapping("/rapprochement")
+    public List<Rapprochement> rapprochementList() {
+        return ligneTelephoniqueService.rapprochementList();
     }
 
 

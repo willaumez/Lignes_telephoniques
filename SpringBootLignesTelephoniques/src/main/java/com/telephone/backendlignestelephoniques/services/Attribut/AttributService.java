@@ -28,4 +28,6 @@ public interface AttributService {
 
     Set<String> listAttributNames();
 
+    Set<String> listAttributNamesByType(long idType) throws ElementNotFoundException;
+
 }

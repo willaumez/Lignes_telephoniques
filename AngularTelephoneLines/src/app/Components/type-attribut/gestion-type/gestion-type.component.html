@@ -1,3 +1,4 @@
+<ng-container *ngIf="dataSource ; else failureOrLading">
 <div class="container">
   <div class="recherche-button">
 
@@ -150,12 +151,6 @@
               {{ attribut.nomAttribut }}
             </mat-list-option>
           </mat-selection-list>
-          <!--<mat-selection-list formControlName="attributs" multiple>
-            <mat-list-option *ngFor="let attribut of attributs" [value]="attribut" class="mat-list-option"
-                             color="primary">
-              {{ attribut.nomAttribut }}
-            </mat-list-option>
-          </mat-selection-list>-->
         </div>
       </div>
       <div class="button-container">
@@ -166,3 +161,21 @@
   </ng-container>
 
 </div>
+
+</ng-container>
+
+<ng-template #failureOrLading>
+  <div class="failureOrLading-container">
+    <ng-container *ngIf="errorMessage; else loading">
+      <div class="failure">
+        {{errorMessage}}
+      </div>
+    </ng-container>
+    <ng-template #loading>
+      <div class="Lading">
+        <mat-spinner>Chargement...</mat-spinner>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>
+

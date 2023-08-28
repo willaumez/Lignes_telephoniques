@@ -1,17 +1,11 @@
 package com.telephone.backendlignestelephoniques.services.LigneTelephonique;
 
-import com.telephone.backendlignestelephoniques.dtos.LigneTelephoniqueDto;
 import com.telephone.backendlignestelephoniques.entities.*;
-import com.telephone.backendlignestelephoniques.enums.EtatType;
-import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
-import com.telephone.backendlignestelephoniques.mappers.LigneMappers;
 import com.telephone.backendlignestelephoniques.repositories.*;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -144,5 +138,20 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
         Set<LigneTelephonique> lignesTelephoniques = ligneTelephoniqueRepository.findLigneTelephoniqueByTypeId(typeLigneId);
         return new ArrayList<>(lignesTelephoniques);
     }
+
+
+    //Rapprochement
+    @Override
+    public List<Rapprochement> rapprochementList() {
+        List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueRepository.findAll();
+        return ligneTelephoniques.stream().map(ligneTelephonique -> {
+            Rapprochement rapprochement = new Rapprochement();
+            rapprochement.setNumero(ligneTelephonique.getNumeroLigne());
+            rapprochement.setMontant(ligneTelephonique.getMontant());
+            return rapprochement;
+        }).collect(Collectors.toList());
+    }
+
+
 }
 

@@ -128,3 +128,25 @@
   }
 }
 
+
+//Erreur et chargement
+.failureOrLading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; // Hauteur totale de la vue
+}
+.failure {
+  color: red;
+  font-size: 24px;
+  text-align: center;
+}
+.Lading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  mat-spinner {
+    width: 50px;
+    height: 50px;
+  }
+}

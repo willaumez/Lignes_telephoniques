@@ -5,6 +5,7 @@ import {LigneTelephonique} from "../Models/LigneTelephonique";
 import {catchError, Observable, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Attribut} from "../Models/Attribut";
+import {Rapprochement} from "../Models/Rapprochement";
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,15 @@ export class LigneTelephoniqueService {
           return throwError(error);
         })
       );
+  }
+
+  //Rapprochement
+  getLignesRapprochement() {
+    return this.http.get<Array<Rapprochement>>(environment.backEndHost+"/rapprochement").pipe(
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
 }

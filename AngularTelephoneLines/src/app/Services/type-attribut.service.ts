@@ -70,6 +70,15 @@ export class TypeAttributService {
         })
       );
   }
+  //Attribut By TypeId
+  getAllAttributNamesByType(typeId: number): Observable<string[]> {
+    return this.http.get<string[]>(environment.backEndHost+"/attributs/names/"+typeId)
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
 
 
   //TypeLigne Services
@@ -82,7 +91,14 @@ export class TypeAttributService {
         })
       );
   }
-
+  getTypeLigne(typeId: number): Observable<TypeLigne> {
+    return this.http.get<TypeLigne>(environment.backEndHost + "/typeLigne/"+typeId)
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
   saveTypeLigne(typeData: TypeLigne): Observable<any> {
     return this.http.post<string>(environment.backEndHost + "/typeLigne/save/"+this.operateur, typeData)
       .pipe(

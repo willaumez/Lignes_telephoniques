@@ -1,33 +1,27 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {UserAddEditComponent} from "../utilisateurs/user-add-edit/user-add-edit.component";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 import {MatDialog} from "@angular/material/dialog";
-import {LigneAddEditComponent} from "./ligne-add-edit/ligne-add-edit.component";
 import {CoreService} from "../../core/core.service";
 import {LigneTelephoniqueService} from "../../Services/ligne-telephonique.service";
 import {TypeAttributService} from "../../Services/type-attribut.service";
-import {MatTableDataSource} from "@angular/material/table";
 import {LigneTelephonique} from "../../Models/LigneTelephonique";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
+import {LigneAddEditComponent} from "../lignes-telephonique/ligne-add-edit/ligne-add-edit.component";
+import {TypeLigne} from "../../Models/TypeLigne";
+import {Attribut} from "../../Models/Attribut";
 
 @Component({
-  selector: 'app-lignes-telephonique',
-  templateUrl: './lignes-telephonique.component.html',
-  styleUrls: ['./lignes-telephonique.component.scss'],
-  animations: [
-    trigger('slideInOut', [
-      transition(':enter', [
-        style({transform: 'translateX(100%)', transformOrigin: 'right center'}),
-        animate('0.3s ease-out', style({transform: 'translateX(0%)'}))
-      ]),
-      transition(':leave', [
-        animate('0.3s ease-in', style({transform: 'translateX(100%)'}))
-      ])
-    ]),
-  ]
+  selector: 'app-type-ligne',
+  templateUrl: './type-ligne.component.html',
+  styleUrls: ['./type-ligne.component.scss']
 })
-export class LignesTelephoniqueComponent implements OnInit {
+export class TypeLigneComponent implements OnInit{
+  typeLignes!: TypeLigne[];
+  selectedTypeLigne!: TypeLigne;
+  typeLigneAttributs!: Attribut[]
+
+
   errorMessage!: string;
   columnsInit: string[] = ['idLigne', 'typeLigne.nomType', 'numeroLigne', 'affectation', 'poste', 'etat', 'dateLivraison', 'numeroSerie', 'montant', 'createdDate'];
   displayedColumns: string[] = [];
@@ -40,10 +34,12 @@ export class LignesTelephoniqueComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private _dialog: MatDialog, private _coreService: CoreService, private ligneService: LigneTelephoniqueService,
-              private attributService: TypeAttributService) {
+              private attributService: TypeAttributService, private typeAttributService: TypeAttributService) {
   }
 
   ngOnInit(): void {
+    this.getAllTypesLignes();
+    //this.getTypesLigne();
     this.getLignesTelephonique();
   }
 
@@ -66,7 +62,6 @@ export class LignesTelephoniqueComponent implements OnInit {
     }
     this.buttonActionState = 'in';
   }
-
   EditLigne() {
     if (this.ligneRow) {
       const data: any = this.ligneRow;
@@ -84,20 +79,19 @@ export class LignesTelephoniqueComponent implements OnInit {
       });
     }
   }
-
   DeleteLigne(idLigne: number | undefined): void {
     let conf: boolean = confirm("Êtes-vous sure de supprimer cette Ligne Téléphonique ?")
     if (!conf) return;
     if (this.ligneRow && idLigne) {
       this.ligneService.deleteTypeLigne(idLigne).subscribe({
-        next: (data: any): void => {
-          this.getLignesTelephonique();
-          this._coreService.openSnackBar("Ligne Téléphonique  supprimé avec succès !");
-        },
-        error: (error) => {
-          this._coreService.openSnackBar(error.error.message);
+          next: (data: any): void => {
+            this.getLignesTelephonique();
+            this._coreService.openSnackBar("Ligne Téléphonique  supprimé avec succès !");
+          },
+          error: (error) => {
+            this._coreService.openSnackBar(error.error.message);
+          }
         }
-      }
       );
     }
   }
@@ -106,18 +100,14 @@ export class LignesTelephoniqueComponent implements OnInit {
   isObjectEmpty(obj: any): boolean {
     return Object.keys(obj).length === 0;
   }
-
   //zoom table
   zoomLevel: number = 1;
-
   zoomIn(): void {
     this.zoomLevel += 0.1;  // Augmente de 10%
   }
-
   zoomInit(): void {
     this.zoomLevel = 1;  // Augmente de 10%
   }
-
   zoomOut(): void {
     if (this.zoomLevel > 0.1) {  // On ne peut pas avoir un zoomLevel inférieur à 0.1 (10%)
       this.zoomLevel -= 0.1;  // Diminue de 10%
@@ -141,6 +131,38 @@ export class LignesTelephoniqueComponent implements OnInit {
 
 
   //fonctions
+  getAllTypesLignes(): void {
+    this.typeAttributService.getAllTypesLigne().subscribe({
+        next: (data: any[]): void => {
+          this.typeLignes = data;
+          console.log("getAllTypesLignes--  "+JSON.stringify(this.typeLignes))
+        },
+        error: (error) => {
+          this.errorMessage = ('Erreur lors de la récupération des types de ligne: ' + error.error.message)
+          this._coreService.openSnackBar('Erreur lors de la récupération des types de ligne:' + error.error.message);
+        }
+      }
+    );
+  }
+  getTypesLigne(): void {
+    this.typeAttributService.getTypeLigne(1).subscribe({
+        next: (data: TypeLigne): void => {
+          this.selectedTypeLigne = data;
+          this.getAttributNames();
+        },
+        error: (error) => {
+          this.errorMessage = ('Erreur lors de la récupération des types de ligne: ' + error.error.message)
+          this._coreService.openSnackBar('Erreur lors de la récupération des types de ligne:' + error.error.message);
+        }
+      }
+    );
+  }
+  // Méthode pour définir le type de ligne sélectionné
+  selectTypeLigne(typeLigne: TypeLigne): void {
+    this.selectedTypeLigne = typeLigne;
+    console.log("selectTypeLigne-- "+JSON.stringify(this.selectedTypeLigne));
+    this.getAttributNames();
+  }
   getLignesTelephonique(): void {
     this.getAttributNames();
     this.ligneService.getAllLignes().subscribe({
@@ -159,21 +181,16 @@ export class LignesTelephoniqueComponent implements OnInit {
     );
   }
   getAttributNames(): void {
-    this.attributService.getAllAttributNames().subscribe({
-        next: (data: string[]): void => {
-          if (data && data.length > 0) {
-            this.attributNames = [];
-            this.displayedColumns = [];
-            this.attributNames = data;
-            this.displayedColumns = [...this.columnsInit, ...this.attributNames];
-          }
-        },
-        error: (error) => {
-          this._coreService.openSnackBar('Erreur lors de la récupération des noms des attributs:');
-          this.errorMessage = 'Erreur lors de la récupération des noms des attributs:' + error.error.message;
-        }
+    if (this.typeLignes){
+      this.typeLigneAttributs = this.selectedTypeLigne.attributs;
+      if (this.typeLigneAttributs) {
+        this.typeLigneAttributs.forEach((attribut:Attribut) => {
+          this.attributNames.push(attribut.nomAttribut);
+        });
+        this.displayedColumns = [...this.columnsInit, ...this.attributNames];
       }
-    );
+    }
+
   }
 
   findAttributValue(ligneAttributs: any[], attributName: string): string {
@@ -190,6 +207,7 @@ export class LignesTelephoniqueComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
 
 
 }

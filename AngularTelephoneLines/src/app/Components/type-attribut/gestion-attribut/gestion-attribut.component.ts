@@ -20,6 +20,7 @@ import {MatMenuTrigger} from "@angular/material/menu";
   styleUrls: ['./gestion-attribut.component.scss']
 })
 export class GestionAttributComponent implements OnInit {
+  errorMessage!: string;
   addOnBlur: boolean = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   selectAdd: boolean = false;
@@ -69,13 +70,14 @@ export class GestionAttributComponent implements OnInit {
   handleDelete(idAttribut: number): void {
     let conf: boolean = confirm("Es-tu sure de supprimer cet Attribut ?")
     if (!conf) return;
-    this.typeAttributService.deleteAttribut(idAttribut).subscribe(
-      (response): void => {
-        this.getAttributs();
-        this._coreService.openSnackBar("Attribut supprimé avec succès !");
-      },
-      (error) => {
-        this._coreService.openSnackBar(error.error.message);
+    this.typeAttributService.deleteAttribut(idAttribut).subscribe({
+        next: (responce): void => {
+          this.getAttributs();
+          this._coreService.openSnackBar("Attribut supprimé avec succès !");
+        },
+        error: (error) => {
+          this._coreService.openSnackBar(error.error.message);
+        }
       }
     );
   }
@@ -106,8 +108,8 @@ export class GestionAttributComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       },
       error: (error) => {
+        this.errorMessage = ('Erreur lors de la récupération des attributs: ' + error.error.message)
         this._coreService.openSnackBar('Erreur lors de la récupération des attributs:');
-        console.error('Erreur lors de la récupération des attributs:', error.error.message);
       }
     });
   }

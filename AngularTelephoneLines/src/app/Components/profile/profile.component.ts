@@ -12,7 +12,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-
+  errorMessage: string = "Aucune donnée utilisateur disponible!";
   userData: User | any;
   showPasswordEdit:boolean = false;
   showInfosEdit:boolean = false;

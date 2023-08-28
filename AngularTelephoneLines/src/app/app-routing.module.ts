@@ -15,6 +15,7 @@ import {HistoriquesComponent} from "./Components/historiques/historiques.compone
 import {CorbeilleComponent} from "./Components/corbeille/corbeille.component";
 import {TypeAttributComponent} from "./Components/type-attribut/type-attribut.component";
 import {LignesTelephoniqueComponent} from "./Components/lignes-telephonique/lignes-telephonique.component";
+import {TypeLigneComponent} from "./Components/type-ligne/type-ligne.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -27,6 +28,7 @@ const routes: Routes = [
       // Routes enfants pour l'administration si nécessaire
       {path: 'accueil', component: AccueilComponent},
       {path: 'lignes', component: LignesTelephoniqueComponent},
+      {path: 'types-Ligne', component: TypeLigneComponent},
       {path: '', redirectTo: 'accueil', pathMatch: 'full'},
 
       {path: 'utilisateurs', component: UtilisateursComponent},

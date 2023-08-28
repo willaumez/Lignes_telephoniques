@@ -51,6 +51,7 @@ import { LignesTelephoniqueComponent } from './Components/lignes-telephonique/li
 import {CdkDrag, DragDropModule} from "@angular/cdk/drag-drop";
 import { LigneAddEditComponent } from './Components/lignes-telephonique/ligne-add-edit/ligne-add-edit.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { TypeLigneComponent } from './Components/type-ligne/type-ligne.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     GestionAttributComponent,
     LignesTelephoniqueComponent,
     LigneAddEditComponent,
+    TypeLigneComponent,
   ],
     imports: [
         BrowserModule,

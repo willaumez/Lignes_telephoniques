@@ -14,7 +14,7 @@ import {LoginService} from "../../Services/login.service";
   styleUrls: ['./historiques.component.scss']
 })
 export class HistoriquesComponent implements OnInit {
-
+  errorMessage!: string;
   displayedColumns: string[] = [
     'idHistorique', 'actionEffectue', 'dateAction', 'nomOperateur', 'elementCible', 'ACTIONS'];
 
@@ -42,6 +42,7 @@ export class HistoriquesComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       },
       error: err => {
+        this.errorMessage = ('Erreur lors de la récupération des types de ligne: '+err.error.message)
         this._coreService.openSnackBar('Erreur lors de la récupération des historique:! \n ', err);
       }
     });
