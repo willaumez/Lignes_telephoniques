@@ -19,8 +19,8 @@ import {MatMenuTrigger} from "@angular/material/menu";
   templateUrl: './gestion-attribut.component.html',
   styleUrls: ['./gestion-attribut.component.scss']
 })
-export class GestionAttributComponent implements OnInit{
-  addOnBlur:boolean = true;
+export class GestionAttributComponent implements OnInit {
+  addOnBlur: boolean = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   selectAdd: boolean = false;
   selectUpdate: boolean = false;
@@ -48,12 +48,13 @@ export class GestionAttributComponent implements OnInit{
     });
     this.dataSource = new MatTableDataSource<Attribut>();
   }
+
   ngOnInit(): void {
     this.getAttributs();
   }
 
   //handle
-  handleAdd():void {
+  handleAdd(): void {
     this.selectAdd = !this.selectAdd;
     this.handleResetUpdate()
     this.attributForm.reset({
@@ -64,11 +65,12 @@ export class GestionAttributComponent implements OnInit{
       enumeration: []
     });
   }
-  handleDelete(idAttribut: number):void {
-    let conf:boolean = confirm("Es-tu sure de supprimer cet Attribut ?")
+
+  handleDelete(idAttribut: number): void {
+    let conf: boolean = confirm("Es-tu sure de supprimer cet Attribut ?")
     if (!conf) return;
     this.typeAttributService.deleteAttribut(idAttribut).subscribe(
-      (response):void => {
+      (response): void => {
         this.getAttributs();
         this._coreService.openSnackBar("Attribut supprimé avec succès !");
       },
@@ -77,79 +79,83 @@ export class GestionAttributComponent implements OnInit{
       }
     );
   }
-  handleEdit(attribut: Attribut):void {
+
+  handleEdit(attribut: Attribut): void {
     this.attributForm.patchValue({
       idAttribut: attribut.idAttribut,
       nomAttribut: attribut.nomAttribut,
       type: attribut.type,
       valeurAttribut: attribut.valeurAttribut || null,
-      enumeration:  []
+      enumeration: []
     });
     this.enumerations = new Set<string>(attribut.enumeration);
     this.selectUpdate = true;
   }
+
   handleResetUpdate() {
     this.selectUpdate = false;
   }
 
 
-
   //Fonctions
   getAttributs(): void {
-    this.typeAttributService.getAllAttributs().subscribe(
-      (data: any[]):void => {
+    this.typeAttributService.getAllAttributs().subscribe({
+      next: (data: any[]) => {
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
-      (error):void => {
+      error: (error) => {
         this._coreService.openSnackBar('Erreur lors de la récupération des attributs:');
         console.error('Erreur lors de la récupération des attributs:', error.error.message);
       }
-    );
+    });
   }
+
   onAttributSubmit(): void {
     if (this.attributForm.valid) {
       const formData = this.attributForm.value;
 
-      this.typeAttributService.saveAttribut(formData).subscribe(
-        (response):void => {
-          this._coreService.openSnackBar("Attribut enregistré avec succès !");
-          this.getAttributs();
-          this.handleAdd();
-        },
-        (error) => {
-          this.handleAdd();
-          this._coreService.openSnackBar(error.error.message);
-          console.log(error)
+      this.typeAttributService.saveAttribut(formData).subscribe({
+          next: (data: any) => {
+            this._coreService.openSnackBar("Attribut enregistré avec succès !");
+            this.getAttributs();
+            this.handleAdd();
+          },
+          error: (error) => {
+            this.handleAdd();
+            this._coreService.openSnackBar(error.error.message);
+            console.log(error)
+          }
         }
       );
     }
   }
+
   onAttributUpdate(): void {
     if (this.attributForm.valid) {
       const formData = this.attributForm.value;
       // Mise à jour des valeurs d'énumération dans le formulaire
       formData.enumeration = Array.from(this.enumerations);
-      this.typeAttributService.updateAttribut(formData).subscribe(
-        (response):void => {
-          this._coreService.openSnackBar("Attribut mis à jour avec succès !");
-          this.enumerations = new Set<string>();
-          this.getAttributs();
-          this.handleResetUpdate();
-        },
-        (error) => {
-          this.handleAdd();
-          this._coreService.openSnackBar(error.error.message);
+      this.typeAttributService.updateAttribut(formData).subscribe({
+          next: (data: any) => {
+            this._coreService.openSnackBar("Attribut mis à jour avec succès !");
+            this.enumerations = new Set<string>();
+            this.getAttributs();
+            this.handleResetUpdate();
+          },
+          error: (error) => {
+            this.handleResetUpdate();
+            this._coreService.openSnackBar(error.error.message);
+          }
         }
       );
     }
   }
 
 
-
   //Recherche
-  applyFilter(event: Event):void {
+  applyFilter(event: Event): void {
     this.selectAdd = false;
     this.selectUpdate = false;
     const filterValue = (event.target as HTMLInputElement).value;
@@ -172,6 +178,7 @@ export class GestionAttributComponent implements OnInit{
     // Effacer la valeur de l'input
     event.chipInput!.clear();
   }
+
   removeEnum(enumValue: string): void {
     const enumeration = this.attributForm.get('enumeration')!.value;
     const index = enumeration.indexOf(enumValue);
@@ -184,6 +191,7 @@ export class GestionAttributComponent implements OnInit{
       }
     }
   }
+
   edit(enumValue: string, newValue: string): void {
     const enumeration = this.attributForm.get('enumeration')!.value;
     const index = enumeration.indexOf(enumValue);
@@ -191,8 +199,6 @@ export class GestionAttributComponent implements OnInit{
       enumeration[index] = newValue.trim();
     }
   }
-
-
 
 
 }

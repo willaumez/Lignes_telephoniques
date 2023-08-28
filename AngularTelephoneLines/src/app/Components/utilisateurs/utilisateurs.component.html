@@ -1,7 +1,6 @@
+<div class="row"><h1 class="listUser">Utilisateurs</h1></div>
+<ng-container *ngIf="dataSource ; else failureOrLading">
 <div class="main-body">
-
-  <div class="row"><h1 class="listUser">Utilisateurs</h1></div>
-
   <div class="container-fluid">
     <mat-form-field class="filter" appearance="fill">
       <mat-label>Filter</mat-label>
@@ -11,6 +10,7 @@
       AJOUTER
     </button>
   </div>
+
 
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
@@ -71,13 +71,25 @@
 
     </table>
     <div></div>
-
   </div>
-
   <div class="customer-container">
     <div class="customer-total" *ngIf="dataSource?.data">Total:   {{dataSource.data.length}}</div>
     <mat-paginator class="custom-paginator" [pageSizeOptions]="[10, 20, 30]" aria-label="Selectionner une page"></mat-paginator>
   </div>
-
-
 </div>
+</ng-container>
+
+<ng-template #failureOrLading>
+  <div class="failureOrLading-container">
+    <ng-container *ngIf="errorMessage; else loading">
+      <div class="failure">
+        {{errorMessage}}
+      </div>
+    </ng-container>
+    <ng-template #loading>
+      <div class="Lading">
+        <mat-spinner>Chargement...</mat-spinner>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>

@@ -50,6 +50,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import { LignesTelephoniqueComponent } from './Components/lignes-telephonique/lignes-telephonique.component';
 import {CdkDrag, DragDropModule} from "@angular/cdk/drag-drop";
 import { LigneAddEditComponent } from './Components/lignes-telephonique/ligne-add-edit/ligne-add-edit.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -104,6 +105,7 @@ import { LigneAddEditComponent } from './Components/lignes-telephonique/ligne-ad
         MatSlideToggleModule,
         FormsModule,
         MatCheckboxModule,
+        MatProgressSpinnerModule,
 
     ],
   providers: [

@@ -11,10 +11,13 @@ public interface TypeLigneService {
     //=============================================  TypeLigne  ========================================================//
     void saveTypeLigne(TypeLigne typeLigne, String operateur);
     TypeLigne getTypeLigne(Long typeLigneId) throws ElementNotFoundException;
+
+    String getTypeLigneNomType(Long typeLigneId) throws ElementNotFoundException;
+
     void deleteTypeLigne(Long id, String operateur) throws ElementNotFoundException;
     void updateTypeLigne(TypeLigne typeLigne, String operateur);
     List<TypeLigne> listTypeLigne();
 
-    void associateAttributesWithType(Long typeLigneId, List<Long> attributs) throws ElementNotFoundException;
+    //void associateAttributesWithType2(Long typeLigneId, List<Long> attributs) throws ElementNotFoundException;
 
 }

@@ -37,7 +37,7 @@
 
 // Styles pour les entêtes de colonnes
 .mat-mdc-header-row {
-  border-bottom: 2px solid #1b6ca8;  // Bordure inférieure
+  border-bottom: 3px solid #1b6ca8;  // Bordure inférieure
   font-size: 17px;  // Taille de la police
   font-weight: bold;  // Gras
 }
@@ -124,3 +124,28 @@ td.mat-cell {
   box-shadow: 0 0 0 2px #5e00a1 inset;
 }
 */
+
+//Erreur et chargement
+.failureOrLading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; // Hauteur totale de la vue
+}
+.failure {
+  color: red;
+  font-size: 24px;
+  text-align: center;
+}
+.Lading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  mat-spinner {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+
+

@@ -31,6 +31,7 @@ public class AttributRestController {
             Attribut attribut = attributService.getAttribut(attributId);
             return ResponseEntity.ok(attribut);
         } catch (ElementNotFoundException e) {
+            log.error("Attribut not found", e);
             return ResponseEntity.notFound().build();
         }
     }
@@ -40,12 +41,13 @@ public class AttributRestController {
         try {
             attributService.deleteAttribut(attributId, operateur);
         } catch (ElementNotFoundException e) {
+            log.error("Failed to delete attribut", e);
         }
     }
 
     @PutMapping("/update/{operateur}")
-    public void updateAttribut(@PathVariable String operateur, @RequestBody Attribut attribut) {
-            attributService.updateAttribut(attribut, operateur);
+    public void updateAttribut(@PathVariable String operateur, @RequestBody Attribut attribut) throws ElementNotFoundException {
+        attributService.updateAttribut(attribut, operateur);
     }
 
     @GetMapping

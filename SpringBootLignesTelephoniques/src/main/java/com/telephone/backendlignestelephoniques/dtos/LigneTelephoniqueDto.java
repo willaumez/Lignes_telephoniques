@@ -1,15 +1,13 @@
 package com.telephone.backendlignestelephoniques.dtos;
 
-import com.telephone.backendlignestelephoniques.entities.LigneAttribut;
-import com.telephone.backendlignestelephoniques.entities.TypeLigne;
 import com.telephone.backendlignestelephoniques.enums.EtatType;
-import lombok.Data;
-
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class LigneTelephoniqueDto {
     private Long idLigne;
     private String numeroLigne;
@@ -20,6 +18,6 @@ public class LigneTelephoniqueDto {
     private String numeroSerie;
     private Double montant;
     private Date createdDate;
-    private TypeLigneDto typeLigne;
+    private Long typeId;  // Utilisez Long pour l'ID du TypeLigne
     private Set<LigneAttributDto> ligneAttributs;
 }

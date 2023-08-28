@@ -21,7 +21,7 @@ public interface AttributService {
     void deleteAttribut(Long attributId, String operateur) throws ElementNotFoundException;
 
     // Met à jour un attribut
-    Attribut updateAttribut(Attribut attribut, String operateur);
+    Attribut updateAttribut(Attribut attribut, String operateur) throws ElementNotFoundException;
 
     // Récupère la liste de tous les attributs
     List<Attribut> listAttribut();

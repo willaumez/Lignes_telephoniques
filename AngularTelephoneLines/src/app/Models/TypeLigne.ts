@@ -1,9 +1,9 @@
 import {Attribut} from "./Attribut";
 
 export interface TypeLigne {
-  idType: number;
+  idType?: number;
   nomType: string;
-  descriptionType: string;
+  descriptionType?: string;
   createdDate: Date;
-  attributs: Attribut[] | null;
+  attributs: Attribut[];
 }

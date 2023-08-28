@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {TypeAttributService} from "../../../Services/type-attribut.service";
 import {CoreService} from "../../../core/core.service";
@@ -8,22 +8,27 @@ import {AbstractControl, FormArray, FormBuilder, FormGroup, isFormGroup, Validat
 import {MatSelectChange} from "@angular/material/select";
 import {EtatType} from "../../../Models/LigneTelephonique";
 import {LigneTelephoniqueService} from "../../../Services/ligne-telephonique.service";
-import {MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {LigneAttribut} from "../../../Models/LigneAttributs";
+import {parseJson} from "@angular/cli/src/utilities/json-file";
 
 @Component({
   selector: 'app-ligne-add-edit',
   templateUrl: './ligne-add-edit.component.html',
   styleUrls: ['./ligne-add-edit.component.scss']
 })
-export class LigneAddEditComponent implements OnInit{
-
+export class LigneAddEditComponent implements OnInit {
+  errorMessage!: string;
   ligneForm: FormGroup;
   etatTypes = Object.values(EtatType);
   typesLigne: TypeLigne[] = [];
+
   constructor(private typeAttributService: TypeAttributService, private _coreService: CoreService,
-              private ligneService: LigneTelephoniqueService, private fb: FormBuilder, private _dialogRef: MatDialogRef<LigneAddEditComponent> ) {
+              private ligneService: LigneTelephoniqueService, private fb: FormBuilder, private _dialogRef: MatDialogRef<LigneAddEditComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
     this.ligneForm = this.fb.group({
       idLigne: [''],
+      typeId: [''],
       numeroLigne: ['', Validators.required],
       affectation: [''],
       poste: [''],
@@ -32,6 +37,7 @@ export class LigneAddEditComponent implements OnInit{
       numeroSerie: [''],
       montant: [''],
       createdDate: [''],
+      ligneAttributs: this.fb.array([]),
       typeLigne: this.fb.group({
         idType: ['', Validators.required],
         nomType: [''],
@@ -44,23 +50,51 @@ export class LigneAddEditComponent implements OnInit{
 
   ngOnInit(): void {
     this.getTypesLigne();
+    if (this.data && this.data.ligneAttributs) {
+      this.ligneForm.patchValue(this.data);
+      this.ligneForm.get('typeLigne.idType')?.disable();
+      // Récupérer le FormArray 'ligneAttributs' du formulaire principal
+      const ligneAttributsArray = this.ligneForm.get('ligneAttributs') as FormArray;
+
+      // Parcourir chaque 'LigneAttribut' dans les données
+      this.data.ligneAttributs.forEach((ligneAttr: LigneAttribut) => {
+        // Créer un groupe de formulaires pour cette 'LigneAttribut'
+        const ligneAttrGroup = this.fb.group({
+          id: [ligneAttr.id, Validators.required], // ID de la ligne attribut
+          attribut: this.fb.group({  // Groupe pour les attributs
+            idAttribut: [ligneAttr.attribut.idAttribut, Validators.required],
+            nomAttribut: [ligneAttr.attribut.nomAttribut],
+            type: [ligneAttr.attribut.type],
+            enumeration: [ligneAttr.attribut.enumeration]
+          }),
+          valeurAttribut: [ligneAttr.valeurAttribut] // Valeur de l'attribut pour cette ligne
+        });
+        // Ajouter ce groupe au FormArray 'ligneAttributs'
+        ligneAttributsArray.push(ligneAttrGroup);
+      });
+    }
   }
+
 
   //get Type Ligne
   getTypesLigne(): void {
     this.typeAttributService.getAllTypesLigne().subscribe(
-      (data: any[]):void => {
+      (data: any[]): void => {
         this.typesLigne = data;
-        console.log(this.typesLigne)
       },
-      (error):void => {
-        this._coreService.openSnackBar('Erreur lors de la récupération des types de ligne:'+ error.error.message);
+      (error): void => {
+        this._coreService.openSnackBar('Erreur lors de la récupération des types de ligne:' + error.error.message);
+        this.errorMessage = ('Erreur lors de la récupération des types de ligne: ' + error.error.message)
         console.error(error.error.message);
       }
     );
   }
+
   get attributs() {
     return (this.ligneForm.get('typeLigne.attributs') as FormArray);
+  }// Ajout de la méthode get pour accéder à ligneAttributs
+  get ligneAttributs(): FormArray {
+    return this.ligneForm.get('ligneAttributs') as FormArray;
   }
 
   onTypeChange(event: MatSelectChange) {
@@ -69,7 +103,7 @@ export class LigneAddEditComponent implements OnInit{
     const attributsArray = this.ligneForm.get('typeLigne.attributs') as FormArray;
     if (selectedType && selectedType.attributs) {
       attributsArray.clear();
-      selectedType.attributs.forEach(attr => {
+      selectedType.attributs.forEach((attr: Attribut) => {
         const attrGroup = this.fb.group({
           idAttribut: [attr.idAttribut, Validators.required],
           nomAttribut: [attr.nomAttribut, Validators.required],
@@ -88,31 +122,49 @@ export class LigneAddEditComponent implements OnInit{
         attributsArray.push(attrGroup);
       });
     }
-
   }
+
   onFormSubmit() {
-    console.log(this.ligneForm.value);
     if (this.ligneForm.valid) {
       const formData = this.ligneForm.value;
-      this.ligneService.saveLigneTelephonique(formData).subscribe(
-        (response):void => {
-          this._coreService.openSnackBar("Ligne téléphonique enregistré avec succès !");
-          this._dialogRef.close(true);
-        },
-        (error) => {
-          this._coreService.openSnackBar(error.error.message);
-          console.log(error)
-        }
-      );
+      if (this.data) {
+        this.ligneService.updateLigneTelephonique(formData).subscribe(
+          (response): void => {
+            this._coreService.openSnackBar("Ligne téléphonique mise à jour avec succès !");
+            this._dialogRef.close(true);
+          },
+          (error) => {
+            this._coreService.openSnackBar(error.error.message);
+            console.log(error)
+          }
+        );
+      } else {
+        this.ligneService.saveLigneTelephonique(formData).subscribe(
+          (response): void => {
+            this._coreService.openSnackBar("Ligne téléphonique enregistré avec succès !");
+            this._dialogRef.close(true);
+          },
+          (error) => {
+            this._coreService.openSnackBar(error.error.message);
+            console.log(error)
+          }
+        );
+      }
+
     }
-    // Votre logique pour envoyer les données
   }
+
   isFormGroup(control: AbstractControl): control is FormGroup {
     return control instanceof FormGroup;
   }
   isFormValid() {
     return this.ligneForm.valid && this.ligneForm.get('typeLigne')?.get('attributs')?.valid;
   }
+
+  isFormLigneAttributValid() {
+    return this.ligneForm.valid && this.ligneForm.get('ligneAttributs')?.valid;
+  }
+
   isEmptyEnumeration(enumeration: any): boolean {
     if (enumeration === null) {
     } else if (enumeration === undefined) {

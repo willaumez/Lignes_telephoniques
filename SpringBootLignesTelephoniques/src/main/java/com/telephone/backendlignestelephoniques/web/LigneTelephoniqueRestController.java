@@ -23,7 +23,7 @@ public class LigneTelephoniqueRestController {
 
     //====================  list ======================//
     @GetMapping
-    public List<LigneTelephoniqueDto> listLigneTelephoniques() {
+    public List<LigneTelephonique> listLigneTelephoniques() {
         return ligneTelephoniqueService.listLigneTelephonique();
     }
 
@@ -36,26 +36,25 @@ public class LigneTelephoniqueRestController {
     //====================  save  ======================//
     @PostMapping("/save/{operateur}")
     public void saveLigneTelephonique(@PathVariable String operateur, @RequestBody LigneTelephonique telephonique) throws ElementNotFoundException {
-        Gson gson = new Gson();
-        System.out.println("saveLigneTelephonique " + gson.toJson(telephonique));
-        this.ligneTelephoniqueService.saveLigneTelephonique(telephonique, operateur);
+        System.out.println("\n\n\n\n\n\nSauvegarde de la ligne téléphonique en cours...----- "+telephonique+"\n\n\n\n\n\n");
+        ligneTelephoniqueService.saveLigneTelephonique(telephonique, operateur);
     }
 
     //====================  delete  ======================//
     @DeleteMapping("/delete/{id}/{operateur}")
     public void deleteLigneTelephonique(@PathVariable Long id, @PathVariable String operateur) throws ElementNotFoundException {
-        this.ligneTelephoniqueService.deleteLigneTelephonique(id, operateur);
+        ligneTelephoniqueService.deleteLigneTelephonique(id, operateur);
     }
 
     //====================  update  ======================//
     @PutMapping("/update/{operateur}")
-    public LigneTelephonique updateLigneTelephonique(@PathVariable String operateur, @RequestBody LigneTelephonique telephonique) {
-        return ligneTelephoniqueService.updateLigneTelephonique(telephonique, operateur);
+    public void updateLigneTelephonique(@PathVariable String operateur, @RequestBody LigneTelephonique telephonique) throws ElementNotFoundException {
+        ligneTelephoniqueService.updateLigneTelephonique(telephonique, operateur);
     }
 
     //====================  Lignes par type  ======================//
     @GetMapping("/type/{typeId}")
-    public List<LigneTelephonique> listLigneTelephoniqueByType(@PathVariable Long typeId){
+    public List<LigneTelephonique> listLigneTelephoniqueByType(@PathVariable Long typeId) {
         return ligneTelephoniqueService.listLigneTelephoniqueByType(typeId);
     }
 

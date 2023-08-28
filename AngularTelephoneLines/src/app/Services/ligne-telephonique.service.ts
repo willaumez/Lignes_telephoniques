@@ -26,8 +26,27 @@ export class LigneTelephoniqueService {
         })
       );
   }
+
+  updateLigneTelephonique(ligneData: LigneTelephonique):Observable<any> {
+    console.log(ligneData)
+    return this.http.put<string>(environment.backEndHost + "/telephonique/update/"+this.operateur, ligneData)
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
   getAllLignes(): Observable<LigneTelephonique[]> {
     return this.http.get<LigneTelephonique[]>(environment.backEndHost + "/telephonique")
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+
+  deleteTypeLigne(ligneId: number): Observable<any> {
+    return this.http.delete<any>(environment.backEndHost + "/telephonique/delete/"+ligneId+"/"+this.operateur)
       .pipe(
         catchError(error => {
           return throwError(error);

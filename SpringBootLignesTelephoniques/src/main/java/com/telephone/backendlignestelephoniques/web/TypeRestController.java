@@ -27,14 +27,20 @@ public class TypeRestController {
 
     //====================  get  ======================//
     @GetMapping("/{typeId}")
-    public TypeLigne getTypeLigne(@PathVariable Long typeId) throws ElementNotFoundException {
-        return typeLigneService.getTypeLigne(typeId);
+    public ResponseEntity<TypeLigne> getTypeLigne(@PathVariable Long typeId) {
+        try {
+            TypeLigne typeLigne = typeLigneService.getTypeLigne(typeId);
+            return ResponseEntity.ok(typeLigne);
+        } catch (ElementNotFoundException e) {
+            log.error("TypeLigne not found", e);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     //====================  save  ======================//
     @PostMapping("/save/{operateur}")
-    public void saveTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne){
-        this.typeLigneService.saveTypeLigne(typeLigne, operateur);
+    public void saveTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne) {
+        typeLigneService.saveTypeLigne(typeLigne, operateur);
     }
 
     //====================  delete  ======================//
@@ -43,13 +49,14 @@ public class TypeRestController {
         try {
             typeLigneService.deleteTypeLigne(id, operateur);
         } catch (ElementNotFoundException e) {
+            log.error("Failed to delete TypeLigne", e);
         }
     }
 
     //====================  update  ======================//
     @PutMapping("/update/{operateur}")
     public void updateTypeLigne(@PathVariable String operateur, @RequestBody TypeLigne typeLigne) {
-        System.out.println(typeLigne);
+        log.info("Updating TypeLigne: {}", typeLigne);
         typeLigneService.updateTypeLigne(typeLigne, operateur);
     }
 

@@ -1,17 +1,22 @@
 package com.telephone.backendlignestelephoniques.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.telephone.backendlignestelephoniques.enums.EtatType;
-import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.telephone.backendlignestelephoniques.enums.EtatType;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
+
 @Entity
-@Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,11 +44,16 @@ public class LigneTelephonique {
     @CreatedDate
     private Date createdDate;
 
+    @Column(name = "id_type_ligne", insertable = false, updatable = false)
+    private Long typeId;
+
     @ManyToOne
+    @JoinColumn(name = "id_type_ligne")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private TypeLigne typeLigne;
 
-    @OneToMany(mappedBy = "ligneTelephonique", cascade = CascadeType.ALL)
-    @EqualsAndHashCode.Exclude
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ligne_id", referencedColumnName = "idLigne")
     private Set<LigneAttribut> ligneAttributs = new HashSet<>();
-}
 
+}

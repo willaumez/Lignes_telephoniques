@@ -2,10 +2,16 @@ package com.telephone.backendlignestelephoniques.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class LigneAttribut {
@@ -13,13 +19,11 @@ public class LigneAttribut {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @EqualsAndHashCode.Exclude
-    @JsonBackReference
-    private LigneTelephonique ligneTelephonique;
+    @Column(name = "ligne_id")
+    private Long ligneId;
+
 
     @ManyToOne
-    @EqualsAndHashCode.Exclude
     private Attribut attribut;
 
     private String valeurAttribut;

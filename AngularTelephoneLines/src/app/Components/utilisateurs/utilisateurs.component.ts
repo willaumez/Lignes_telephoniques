@@ -15,7 +15,7 @@ import {User} from "../../Models/User";
   styleUrls: ['./utilisateurs.component.scss']
 })
 export class UtilisateursComponent implements OnInit{
-
+  errorMessage!: string;
   displayedColumns: string[] = [
     'id', 'username', 'email', 'createdDate', 'role', 'ACTIONS'];
   userData : User = this.loginService.getUserData();
@@ -41,7 +41,7 @@ export class UtilisateursComponent implements OnInit{
         this.dataSource.paginator = this.paginator;
       },
       (error):void => {
-        console.error('Erreur lors de la récupération des utilisateurs:', error);
+        this.errorMessage = ('Erreur lors de la récupération des utilisateurs: '+error)
       }
     );
   }
@@ -88,7 +88,6 @@ export class UtilisateursComponent implements OnInit{
     const dialogRef = this._dialog.open(UserAddEditComponent, {
       data,
     });
-
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {

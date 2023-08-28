@@ -11,8 +11,15 @@ import java.util.Set;
 
 @Repository
 public interface LigneTelephoniqueRepository extends JpaRepository<LigneTelephonique, Long> {
+    //@Query("SELECT ligne FROM LigneTelephonique ligne WHERE ligne.typeLigne.idType = :id")
+    //Set<LigneTelephonique> findLigneTelephoniqueByTypeId(long id);
+
     @Query("SELECT ligne FROM LigneTelephonique ligne WHERE ligne.typeLigne.idType = :id")
+    List<LigneTelephonique> findByTypeId(long id);
+
     Set<LigneTelephonique> findLigneTelephoniqueByTypeId(long id);
+
+    List<LigneTelephonique> findByTypeLigneIdType(Long idType);
     //List<LigneTelephonique> findByTypeLigne(TypeLigne typeLigneFromDB);
 
 

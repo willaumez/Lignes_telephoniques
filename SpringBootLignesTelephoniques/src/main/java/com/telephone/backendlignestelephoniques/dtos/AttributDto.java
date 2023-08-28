@@ -1,10 +1,13 @@
 package com.telephone.backendlignestelephoniques.dtos;
 
-import lombok.Data;
 
 import java.util.List;
 
-@Data
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class AttributDto {
     private Long idAttribut;
     private String nomAttribut;

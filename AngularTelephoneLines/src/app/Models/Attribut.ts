@@ -1,9 +1,9 @@
 export interface Attribut {
-  idAttribut: number;
+  idAttribut?: number;
   nomAttribut: string;
   type: TypeVariable;
-  valeurAttribut: string;
-  enumeration: string[] | null;
+  valeurAttribut?: string;
+  enumeration: string[];
 }
 
 export enum TypeVariable {
