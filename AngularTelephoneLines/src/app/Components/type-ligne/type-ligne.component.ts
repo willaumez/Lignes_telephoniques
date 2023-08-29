@@ -7,14 +7,27 @@ import {CoreService} from "../../core/core.service";
 import {LigneTelephoniqueService} from "../../Services/ligne-telephonique.service";
 import {TypeAttributService} from "../../Services/type-attribut.service";
 import {LigneTelephonique} from "../../Models/LigneTelephonique";
-import {LigneAddEditComponent} from "../lignes-telephonique/ligne-add-edit/ligne-add-edit.component";
 import {TypeLigne} from "../../Models/TypeLigne";
 import {Attribut} from "../../Models/Attribut";
+import {animate, style, transition, trigger} from "@angular/animations";
+import {LigneAddEditComponent} from "../lignes-telephonique/ligne-add-edit/ligne-add-edit.component";
+import {TypeLigneAddEditComponent} from "./type-ligne-add-edit/type-ligne-add-edit.component";
 
 @Component({
   selector: 'app-type-ligne',
   templateUrl: './type-ligne.component.html',
-  styleUrls: ['./type-ligne.component.scss']
+  styleUrls: ['./type-ligne.component.scss'],
+  animations: [
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({transform: 'translateX(100%)', transformOrigin: 'right center'}),
+        animate('0.3s ease-out', style({transform: 'translateX(0%)'}))
+      ]),
+      transition(':leave', [
+        animate('0.3s ease-in', style({transform: 'translateX(100%)'}))
+      ])
+    ]),
+  ]
 })
 export class TypeLigneComponent implements OnInit{
   typeLignes!: TypeLigne[];
@@ -43,6 +56,25 @@ export class TypeLigneComponent implements OnInit{
     this.getLignesTelephonique();
   }
 
+  //Forme Add Edit
+  openAddEditLignForm() {
+    const data: any = { add: true, typeLigne: this.selectedTypeLigne };
+    //data.add(add);
+    const dialogRef = this._dialog.open(TypeLigneAddEditComponent, {
+      data
+    });
+    dialogRef.afterClosed().subscribe({
+      next: (val) => {
+        if (val) {
+          this.selectedRowIndex = -1;
+          this.ligneRow = {} as LigneTelephonique;
+          this.getLignesTelephonique();
+        }
+      },
+    });
+    //this.getListLignes();
+  }
+
   //ligneRow: {} = {};
   ligneRow: LigneTelephonique = {} as LigneTelephonique;
 
@@ -64,8 +96,9 @@ export class TypeLigneComponent implements OnInit{
   }
   EditLigne() {
     if (this.ligneRow) {
-      const data: any = this.ligneRow;
-      const dialogRef = this._dialog.open(LigneAddEditComponent, {
+      const data: any = { edit: true, ligne: this.ligneRow };
+      //data.push(add);
+      const dialogRef = this._dialog.open(TypeLigneAddEditComponent, {
         data,
       });
       dialogRef.afterClosed().subscribe({
@@ -97,6 +130,7 @@ export class TypeLigneComponent implements OnInit{
   }
 
 
+  //Pour le zoom
   isObjectEmpty(obj: any): boolean {
     return Object.keys(obj).length === 0;
   }
@@ -114,28 +148,17 @@ export class TypeLigneComponent implements OnInit{
     }
   }
 
-  //Forme Add Edit
-  openAddEditLignForm() {
-    const dialogRef = this._dialog.open(LigneAddEditComponent, {});
-    dialogRef.afterClosed().subscribe({
-      next: (val) => {
-        if (val) {
-          this.selectedRowIndex = -1;
-          this.ligneRow = {} as LigneTelephonique;
-          this.getLignesTelephonique();
-        }
-      },
-    });
-    //this.getListLignes();
-  }
-
 
   //fonctions
   getAllTypesLignes(): void {
     this.typeAttributService.getAllTypesLigne().subscribe({
         next: (data: any[]): void => {
           this.typeLignes = data;
-          console.log("getAllTypesLignes--  "+JSON.stringify(this.typeLignes))
+          if (this.typeLignes && this.typeLignes.length > 0) {
+            this.selectedTypeLigne = this.typeLignes[0];
+            this.getLignesTelephonique();
+          }
+          //console.log("getAllTypesLignes--  "+JSON.stringify(this.typeLignes))
         },
         error: (error) => {
           this.errorMessage = ('Erreur lors de la récupération des types de ligne: ' + error.error.message)
@@ -160,12 +183,15 @@ export class TypeLigneComponent implements OnInit{
   // Méthode pour définir le type de ligne sélectionné
   selectTypeLigne(typeLigne: TypeLigne): void {
     this.selectedTypeLigne = typeLigne;
+    this.displayedColumns = [];
+    this.currentIndex = this.typeLignes.indexOf(typeLigne);
+    this.elementSelected();
     console.log("selectTypeLigne-- "+JSON.stringify(this.selectedTypeLigne));
-    this.getAttributNames();
+    this.getLignesTelephonique();
   }
   getLignesTelephonique(): void {
     this.getAttributNames();
-    this.ligneService.getAllLignes().subscribe({
+    this.ligneService.getAllLignesByType(this.selectedTypeLigne.idType).subscribe({
         next: (data: any[]): void => {
           this.dataSource = new MatTableDataSource(data);
 
@@ -182,6 +208,7 @@ export class TypeLigneComponent implements OnInit{
   }
   getAttributNames(): void {
     if (this.typeLignes){
+      this.attributNames = [];
       this.typeLigneAttributs = this.selectedTypeLigne.attributs;
       if (this.typeLigneAttributs) {
         this.typeLigneAttributs.forEach((attribut:Attribut) => {
@@ -192,7 +219,6 @@ export class TypeLigneComponent implements OnInit{
     }
 
   }
-
   findAttributValue(ligneAttributs: any[], attributName: string): string {
     const attributObj = ligneAttributs.find(attr => attr.attribut.nomAttribut === attributName);
     return attributObj ? attributObj.valeurAttribut : '   ';
@@ -207,6 +233,48 @@ export class TypeLigneComponent implements OnInit{
       this.dataSource.paginator.firstPage();
     }
   }
+
+
+  // Variable pour suivre l'index de l'élément sélectionné
+  currentIndex: number = 0;
+  firstElement() {
+    this.currentIndex = 0;
+    this.selectedTypeLigne = this.typeLignes[this.currentIndex];
+    this.elementSelected();
+    this.getLignesTelephonique();
+  }
+  previousElement() {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.selectedTypeLigne = this.typeLignes[this.currentIndex];
+      this.elementSelected();
+      this.getLignesTelephonique();
+    }
+  }
+  nextElement() {
+    if (this.currentIndex < this.typeLignes.length - 1) {
+      this.currentIndex++;
+      this.selectedTypeLigne = this.typeLignes[this.currentIndex];
+      this.elementSelected();
+      this.getLignesTelephonique();
+    }
+  }
+  lastElement() {
+    this.currentIndex = this.typeLignes.length - 1;
+    this.selectedTypeLigne = this.typeLignes[this.currentIndex];
+    this.elementSelected();
+    this.getLignesTelephonique();
+  }
+  elementSelected(){
+    if (this.selectedTypeLigne.idType !== undefined) {
+      // Faites défiler le bouton dans la vue
+      const element = document.getElementById(this.selectedTypeLigne.idType.toString());
+      element?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+  }
+
+
+
 
 
 

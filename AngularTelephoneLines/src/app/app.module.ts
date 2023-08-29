@@ -52,6 +52,7 @@ import {CdkDrag, DragDropModule} from "@angular/cdk/drag-drop";
 import { LigneAddEditComponent } from './Components/lignes-telephonique/ligne-add-edit/ligne-add-edit.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { TypeLigneComponent } from './Components/type-ligne/type-ligne.component';
+import { TypeLigneAddEditComponent } from './Components/type-ligne/type-ligne-add-edit/type-ligne-add-edit.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { TypeLigneComponent } from './Components/type-ligne/type-ligne.component
     LignesTelephoniqueComponent,
     LigneAddEditComponent,
     TypeLigneComponent,
+    TypeLigneAddEditComponent,
   ],
     imports: [
         BrowserModule,

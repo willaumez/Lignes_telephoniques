@@ -64,4 +64,14 @@ export class LigneTelephoniqueService {
     );
   }
 
+  getAllLignesByType(idType: number | undefined): Observable<LigneTelephonique[]> {
+    return this.http.get<LigneTelephonique[]>(environment.backEndHost + "/telephonique/type/"+idType)
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+
+
 }

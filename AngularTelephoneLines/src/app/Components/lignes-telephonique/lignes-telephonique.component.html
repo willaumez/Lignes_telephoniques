@@ -5,7 +5,7 @@
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. nom" #input>
     </mat-form-field>
-    <button mat-raised-button color="primary" (click)="openAddEditLignForm()" matTooltip="Ajouter un utilisateur"
+    <button mat-raised-button color="primary" (click)="openAddEditLignForm()" matTooltip="Ajouter une ligne téléphonique"
             [matTooltipShowDelay]="1000">
       AJOUTER
     </button>
@@ -22,7 +22,7 @@
 
       <!-- Colonne Nom du Type de Ligne -->
       <ng-container matColumnDef="typeLigne.nomType">
-        <th mat-header-cell *matHeaderCellDef> Nom du Type de Ligne</th>
+        <th mat-header-cell *matHeaderCellDef> Nom/Type-Ligne</th>
         <td mat-cell *matCellDef="let element"> {{element.typeLigne.nomType}} </td>
       </ng-container>
 

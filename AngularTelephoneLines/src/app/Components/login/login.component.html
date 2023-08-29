@@ -1,9 +1,9 @@
 <div class="content-body">
-  <mat-card>
-    <mat-card-content>
-      <div class="header">
-        <P>Authentification</P>
-      </div>
+  <div class="custom-card" *ngIf="!connecter; else loadingOrFailure">
+    <div class="header">
+      <h1>Authentification</h1>
+    </div>
+    <div class="custom-card-content">
       <form (ngSubmit)="handleLogin()" name="loginForm" [formGroup]="formLogin">
         <div class="emailInput">
           <mat-form-field class="full-width" appearance="outline">
@@ -18,14 +18,13 @@
             </mat-error>
           </mat-form-field>
         </div>
-
         <div>
           <mat-form-field class="full-width" appearance="outline">
             <mat-label>Mot de Passe</mat-label>
             <input formControlName="password" matInput [type]=" hide ? 'password' : 'text'" required/>
 
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide Password'"
-               [attr.aria-pressed]="hide">
+            <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide Password'"
+                    [attr.aria-pressed]="hide">
               <mat-icon>
                 {{hide ? 'visibility_off' : 'visibility'}}
               </mat-icon>
@@ -36,11 +35,25 @@
             </mat-error>
           </mat-form-field>
         </div>
-
-        <button mat-flat-button color="primary">Connexion</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="formLogin.invalid">Connexion</button>
       </form>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </div>
+
+
+  <ng-template #loadingOrFailure>
+    <div class="failureOrLading-container">
+      <ng-container *ngIf="errorMessage; else loading">
+        <div class="failure">
+          {{errorMessage}}
+        </div>
+      </ng-container>
+      <ng-template #loading>
+        <div class="Loading">
+          <mat-spinner>Chargement...</mat-spinner>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
 </div>
-
-

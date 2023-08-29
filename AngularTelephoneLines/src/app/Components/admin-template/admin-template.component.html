@@ -2,7 +2,6 @@
   <button class="togglebtn" (click)="drawer.toggle()" mat-icon-button matTooltip="Menu" [matTooltipShowDelay]="1000">
     <mat-icon>menu</mat-icon>
   </button>
-
   <!--  <span><img ngSrc="assets/logo3.webp" alt="logo" height="34" width="150"> </span>-->
   <span routerLink="accueil">Lignes-Téléphonique</span>
   <span class="example-spacer"></span>
@@ -21,7 +20,7 @@
 <mat-drawer-container autosize>
 
 <!--  mode="over"  mode="push"  mode="side" -->
-  <mat-drawer #drawer opened="true" mode="side" position="start">
+  <mat-drawer #drawer opened="true" mode="over" position="start">
     <mat-nav-list>
       <mat-list-item>
         <button routerLink="accueil" mat-button
