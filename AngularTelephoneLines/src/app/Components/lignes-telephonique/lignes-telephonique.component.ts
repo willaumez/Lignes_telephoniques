@@ -76,8 +76,6 @@ export class LignesTelephoniqueComponent implements OnInit {
       dialogRef.afterClosed().subscribe({
         next: (val) => {
           if (val) {
-            //this.selectedRowIndex = -1;
-            //this.ligneRow = {} as LigneTelephonique;
             this.getLignesTelephonique();
           }
         },
@@ -130,8 +128,6 @@ export class LignesTelephoniqueComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.selectedRowIndex = -1;
-          this.ligneRow = {} as LigneTelephonique;
           this.getLignesTelephonique();
         }
       },
@@ -142,6 +138,8 @@ export class LignesTelephoniqueComponent implements OnInit {
 
   //fonctions
   getLignesTelephonique(): void {
+    this.selectedRowIndex = -1;
+    this.ligneRow = {} as LigneTelephonique;
     this.getAttributNames();
     this.ligneService.getAllLignes().subscribe({
         next: (data: any[]): void => {

@@ -1,1 +1,140 @@
-<p>type-ligne-add-edit works!</p>
+<div class="content">
+  <div mat-dialog-title>
+    <h1 *ngIf="this.data?.add">Ajouter une ligne</h1>
+    <h1 *ngIf="this.data?.edit">Modifier la ligne: <span style="color: blue"> {{data.numeroLigne}}</span></h1>
+  </div>
+  <mat-divider></mat-divider>
+    <form [formGroup]="ligneForm" (ngSubmit)="onFormSubmit()">
+      <!-- Champs pour LigneTelephonique -->
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Numéro de ligne</mat-label>
+          <input matInput formControlName="numeroLigne">
+          <mat-error *ngIf="ligneForm.get('numeroLigne')?.invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Affectation</mat-label>
+          <input matInput formControlName="affectation">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Poste</mat-label>
+          <input matInput formControlName="poste">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>État</mat-label>
+          <mat-select formControlName="etat">
+            <mat-option *ngFor="let etat of etatTypes" [value]="etat">
+              {{ etat }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="col" appearance="outline" style="max-width: 350px">
+          <mat-label>Date de livraison: MM/DD/YYYY</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dateLivraison">
+          <mat-datepicker-toggle matTooltip="Entrer une date" [matTooltipShowDelay]="1000" matIconSuffix
+                                 [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker startView="year" [startAt]="startDate()"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Numéro de série</mat-label>
+          <input matInput formControlName="numeroSerie">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Montant</mat-label>
+          <input matInput type="number" formControlName="montant">
+        </mat-form-field>
+      </div>
+      <mat-divider style="margin: 10px"></mat-divider>
+
+      <div formGroupName="typeLigne" class="row" style="width: auto">
+        <div class="typeLigneSelected">
+          <span>Type de ligne :  </span><strong>{{ data?.typeLigne?.nomType }}</strong>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <ng-container *ngIf="this.data?.add">
+          <!-- Pour les Attributs -->
+          <div formArrayName="attributs" class="form-row">
+            <div *ngFor="let attribut of attributs.controls">
+              <ng-container *ngIf="isFormGroup(attribut)">
+                <div [formGroup]="attribut">
+
+                  <!-- Input standard si pas d'énumération -->
+                  <mat-form-field *ngIf="isEmptyEnumeration(attribut.get('enumeration')?.value)" appearance="outline">
+                    <mat-label>{{ attribut.get('nomAttribut')?.value }}</mat-label>
+                    <input matInput type="text" formControlName="valeurAttribut">
+                    <mat-error
+                      *ngIf="attribut.get('valeurAttribut')?.invalid && (attribut.get('valeurAttribut')?.dirty || attribut.get('valeurAttribut')?.touched)">
+                      Ce champ est requis.
+                    </mat-error>
+                  </mat-form-field>
+
+                  <!-- Select si énumération -->
+                  <mat-form-field *ngIf="!isEmptyEnumeration(attribut.get('enumeration')?.value)" appearance="outline"
+                                  class="col">
+                    <mat-label>{{ attribut.get('nomAttribut')?.value }}</mat-label>
+                    <mat-select formControlName="valeurAttribut">
+                      <mat-option *ngFor="let enumValue of attribut.get('enumeration')?.value" [value]="enumValue">
+                        {{enumValue}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="attribut.get('valeurAttribut')?.invalid && (attribut.get('valeurAttribut')?.dirty || attribut.get('valeurAttribut')?.touched)">
+                      Vous devez sélectionner une option.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <ng-container *ngIf="this.data?.edit">
+        <!-- Pour les ligneAttributs -->
+        <div formArrayName="ligneAttributs" class="form-row">
+          <div *ngFor="let ligneAttribut of ligneAttributs.controls">
+            <ng-container *ngIf="isFormGroup(ligneAttribut)">
+              <div [formGroup]="ligneAttribut">
+
+                <!-- Input standard si pas d'énumération -->
+                <mat-form-field *ngIf="isEmptyEnumeration(ligneAttribut.get('attribut.enumeration')?.value)" appearance="outline">
+                  <mat-label>{{ ligneAttribut.get('attribut.nomAttribut')?.value }}</mat-label>
+                  <input matInput type="text" formControlName="valeurAttribut">
+                  <mat-error *ngIf="ligneAttribut.get('valeurAttribut')?.invalid && (ligneAttribut.get('valeurAttribut')?.dirty || ligneAttribut.get('valeurAttribut')?.touched)">
+                    Ce champ est requis.
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Select si énumération -->
+                <mat-form-field *ngIf="!isEmptyEnumeration(ligneAttribut.get('attribut.enumeration')?.value)" appearance="outline">
+                  <mat-label>{{ ligneAttribut.get('attribut.nomAttribut')?.value }}</mat-label>
+                  <mat-select formControlName="valeurAttribut">
+                    <mat-option *ngFor="let enumValue of ligneAttribut.get('attribut.enumeration')?.value" [value]="enumValue">
+                      {{enumValue}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="ligneAttribut.get('valeurAttribut')?.invalid && (ligneAttribut.get('valeurAttribut')?.dirty || ligneAttribut.get('valeurAttribut')?.touched)">
+                    Vous devez sélectionner une option.
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+
+      <mat-divider></mat-divider>
+      <div mat-dialog-actions class="button-container action">
+        <button mat-raised-button class="col" [mat-dialog-close]="false">Annuler</button>
+        <button mat-raised-button class="col" color="primary" type="submit"
+                [disabled]="!isFormValid()">{{data ? 'Modifier' : 'Ajouter'}}</button>
+      </div>
+    </form>
+
+</div>

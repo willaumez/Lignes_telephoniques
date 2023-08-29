@@ -78,14 +78,15 @@ export class LigneAddEditComponent implements OnInit {
 
   //get Type Ligne
   getTypesLigne(): void {
-    this.typeAttributService.getAllTypesLigne().subscribe(
-      (data: any[]): void => {
-        this.typesLigne = data;
-      },
-      (error): void => {
-        this._coreService.openSnackBar('Erreur lors de la récupération des types de ligne:' + error.error.message);
-        this.errorMessage = ('Erreur lors de la récupération des types de ligne: ' + error.error.message)
-        console.error(error.error.message);
+    this.typeAttributService.getAllTypesLigne().subscribe({
+        next: (data: any[]): void => {
+          this.typesLigne = data;
+        },
+        error: (error) => {
+          this._coreService.openSnackBar('Erreur lors de la récupération des types de ligne:' + error.error.message);
+          this.errorMessage = ('Erreur lors de la récupération des types de ligne: ' + error.error.message)
+          console.error(error.error.message);
+        }
       }
     );
   }
@@ -128,25 +129,27 @@ export class LigneAddEditComponent implements OnInit {
     if (this.ligneForm.valid) {
       const formData = this.ligneForm.value;
       if (this.data) {
-        this.ligneService.updateLigneTelephonique(formData).subscribe(
-          (response): void => {
-            this._coreService.openSnackBar("Ligne téléphonique mise à jour avec succès !");
-            this._dialogRef.close(true);
-          },
-          (error) => {
-            this._coreService.openSnackBar(error.error.message);
-            console.log(error)
+        this.ligneService.updateLigneTelephonique(formData).subscribe({
+            next: (response): void => {
+              this._coreService.openSnackBar("Ligne téléphonique mise à jour avec succès !");
+              this._dialogRef.close(true);
+            },
+            error: (error) => {
+              this._coreService.openSnackBar(error.error.message);
+              console.log(error)
+            }
           }
         );
       } else {
-        this.ligneService.saveLigneTelephonique(formData).subscribe(
-          (response): void => {
-            this._coreService.openSnackBar("Ligne téléphonique enregistré avec succès !");
-            this._dialogRef.close(true);
-          },
-          (error) => {
-            this._coreService.openSnackBar(error.error.message);
-            console.log(error)
+        this.ligneService.saveLigneTelephonique(formData).subscribe({
+            next: (response): void => {
+              this._coreService.openSnackBar("Ligne téléphonique enregistré avec succès !");
+              this._dialogRef.close(true);
+            },
+            error: (error) => {
+              this._coreService.openSnackBar(error.error.message);
+              console.log(error)
+            }
           }
         );
       }
@@ -157,6 +160,7 @@ export class LigneAddEditComponent implements OnInit {
   isFormGroup(control: AbstractControl): control is FormGroup {
     return control instanceof FormGroup;
   }
+
   isFormValid() {
     return this.ligneForm.valid && this.ligneForm.get('typeLigne')?.get('attributs')?.valid;
   }
@@ -173,6 +177,7 @@ export class LigneAddEditComponent implements OnInit {
     }
     return !enumeration || (Array.isArray(enumeration) && enumeration.length === 0);
   }
+
   startDate() {
     //return (new Date(2023, 0, 1));
     return new Date(Date.now());

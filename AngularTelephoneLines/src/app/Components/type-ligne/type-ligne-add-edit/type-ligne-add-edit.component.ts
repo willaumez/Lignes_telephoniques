@@ -1,10 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {TypeAttributService} from "../../../Services/type-attribut.service";
 import {CoreService} from "../../../core/core.service";
 import {LigneTelephoniqueService} from "../../../Services/ligne-telephonique.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {LigneAttribut} from "../../../Models/LigneAttributs";
+import {Attribut} from "../../../Models/Attribut";
+import {EtatType} from "../../../Models/LigneTelephonique";
 
 @Component({
   selector: 'app-type-ligne-add-edit',
@@ -13,6 +15,7 @@ import {LigneAttribut} from "../../../Models/LigneAttributs";
 })
 export class TypeLigneAddEditComponent implements OnInit {
   ligneForm: FormGroup;
+  etatTypes = Object.values(EtatType);
 
   constructor(private typeAttributService: TypeAttributService, private _coreService: CoreService,
               private ligneService: LigneTelephoniqueService, private fb: FormBuilder, private _dialogRef: MatDialogRef<TypeLigneAddEditComponent>,
@@ -41,20 +44,47 @@ export class TypeLigneAddEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data?.add) {
-      console.log("Add--  --  "+JSON.stringify(this.data?.typeLigne));
+
+      // Initialiser les valeurs de typeLigne à partir de this.data?.typeLigne
+      this.ligneForm.get('typeLigne')?.patchValue(this.data?.typeLigne);
+
+      // Gérer les attributs
+      const attributsArray = this.ligneForm.get('typeLigne.attributs') as FormArray;
+      if (this.data?.typeLigne?.attributs) {
+        attributsArray.clear();
+        this.data?.typeLigne?.attributs.forEach((attr: Attribut) => {
+          const attrGroup = this.fb.group({
+            idAttribut: [attr.idAttribut, Validators.required],
+            nomAttribut: [attr.nomAttribut, Validators.required],
+            type: [attr.type, Validators.required],
+            valeurAttribut: [''],
+            enumeration: [attr.enumeration]
+          });
+          // Mettre à jour les validateurs pour 'valeurAttribut'
+          if (attr.enumeration && attr.enumeration.length > 0) {
+            attrGroup.get('valeurAttribut')?.setValidators([Validators.required]);
+          } else {
+            attrGroup.get('valeurAttribut')?.setValidators(null);
+          }
+          attrGroup.get('valeurAttribut')?.updateValueAndValidity();
+          attributsArray.push(attrGroup);
+        });
+      }
+      console.log("Add--  --  " + JSON.stringify(this.data?.typeLigne));
     }
     if (this.data?.edit) {
-      this.ligneForm.patchValue(this.data);
+      this.ligneForm.patchValue(this.data.ligne);
+      console.log("Edit this.ligneForm.value--  --  " + JSON.stringify(this.ligneForm.value));
       this.ligneForm.get('typeLigne.idType')?.disable();
-      // Récupérer le FormArray 'ligneAttributs' du formulaire principal
+      // Réinitialiser et remplir le FormArray 'ligneAttributs'
       const ligneAttributsArray = this.ligneForm.get('ligneAttributs') as FormArray;
-
+      ligneAttributsArray.clear();
       // Parcourir chaque 'LigneAttribut' dans les données
-      this.data.ligneAttributs.forEach((ligneAttr: LigneAttribut) => {
+      this.data.ligne.ligneAttributs.forEach((ligneAttr: LigneAttribut) => {
         // Créer un groupe de formulaires pour cette 'LigneAttribut'
         const ligneAttrGroup = this.fb.group({
           id: [ligneAttr.id, Validators.required], // ID de la ligne attribut
-          attribut: this.fb.group({  // Groupe pour les attributs
+          attribut: this.fb.group({ // Groupe pour les attributs
             idAttribut: [ligneAttr.attribut.idAttribut, Validators.required],
             nomAttribut: [ligneAttr.attribut.nomAttribut],
             type: [ligneAttr.attribut.type],
@@ -65,9 +95,73 @@ export class TypeLigneAddEditComponent implements OnInit {
         // Ajouter ce groupe au FormArray 'ligneAttributs'
         ligneAttributsArray.push(ligneAttrGroup);
       });
-      console.log("Edit--  --  "+JSON.stringify(this.data?.ligne));
+      console.log("Edit--  --  " + JSON.stringify(this.data?.ligne));
+    }
+
+  }
+
+  onFormSubmit() {
+    if (this.ligneForm.valid) {
+      const formData = this.ligneForm.value;
+      if (this.data?.edit) {
+        console.log("updateLigneTelephonique--    ",JSON.stringify(formData));
+        this.ligneService.updateLigneTelephonique(formData).subscribe({
+            next: (response): void => {
+              this._coreService.openSnackBar("Ligne téléphonique mise à jour avec succès !");
+              this._dialogRef.close(true);
+            },
+            error: (error) => {
+              this._coreService.openSnackBar(error.error.message);
+              console.log(error)
+            }
+          }
+        );
+      } else {
+        console.log("saveLigneTelephonique--    ",formData);
+        this.ligneService.saveLigneTelephonique(formData).subscribe({
+            next: (response): void => {
+              this._coreService.openSnackBar("Ligne téléphonique enregistré avec succès !");
+              this._dialogRef.close(true);
+            },
+            error: (error) => {
+              this._coreService.openSnackBar(error.error.message);
+              console.log(error)
+            }
+          }
+        );
+      }
     }
   }
+  startDate() {
+    //return (new Date(2023, 0, 1));
+    return new Date(Date.now());
+  }
+  get attributs() {
+    return (this.ligneForm.get('typeLigne.attributs') as FormArray);
+  }// Ajout de la méthode get pour accéder à ligneAttributs
+  get ligneAttributs(): FormArray {
+    return this.ligneForm.get('ligneAttributs') as FormArray;
+  }
+  isFormGroup(control: AbstractControl): control is FormGroup {
+    return control instanceof FormGroup;
+  }
+  isFormValid() {
+    return this.ligneForm.valid && this.ligneForm.get('typeLigne')?.get('attributs')?.valid;
+  }
+
+  isFormLigneAttributValid() {
+    return this.ligneForm.valid && this.ligneForm.get('ligneAttributs')?.valid;
+  }
+
+  isEmptyEnumeration(enumeration: any): boolean {
+    if (enumeration === null) {
+    } else if (enumeration === undefined) {
+    } else if (Array.isArray(enumeration) && enumeration.length === 0) {
+    } else {
+    }
+    return !enumeration || (Array.isArray(enumeration) && enumeration.length === 0);
+  }
+
 
 
 

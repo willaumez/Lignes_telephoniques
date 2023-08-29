@@ -56,10 +56,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
 
         savedLigne.setLigneAttributs(ligneAttributs);
         ligneTelephoniqueRepository.save(savedLigne);
-        System.out.println("Attributs associés à la ligne: " + ligneAttributs);
-
         historiqueService.saveHistoriques("Ajout [Ligne-Téléphonique]", savedLigne.getNumeroLigne(), operateur);
-        System.out.println("Historique sauvegardé pour la nouvelle ligne.");
     }
 
 
@@ -88,11 +85,14 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
 
     @Override
     public void updateLigneTelephonique(LigneTelephonique updatedLigne, String operateur) throws EntityNotFoundException {
-        System.out.println("Mise à jour de la ligne téléphonique en cours..." + updatedLigne);
+        System.out.println("\n\n\n\nMise à jour de la ligne téléphonique en cours..." + updatedLigne+"\n\n\n\n");
 
         // Étape 1: Trouver la ligne téléphonique existante par son ID
         LigneTelephonique existingLigne = ligneTelephoniqueRepository.findById(updatedLigne.getIdLigne())
                 .orElseThrow(() -> new EntityNotFoundException("Ligne téléphonique introuvable"));
+
+        System.out.println("\n\n\n\nexistingLigne       ..." + existingLigne+"\n\n\n\n");
+
         //charger les donneés
         existingLigne.setNumeroLigne(updatedLigne.getNumeroLigne());
         existingLigne.setAffectation(updatedLigne.getAffectation());
