@@ -57,7 +57,7 @@ export class LigneTelephoniqueService {
 
   //Rapprochement
   getLignesRapprochement() {
-    return this.http.get<Array<Rapprochement>>(environment.backEndHost+"/rapprochement").pipe(
+    return this.http.get<Array<Rapprochement>>(environment.backEndHost+"/telephonique/rapprochement").pipe(
       catchError(error => {
         return throwError(error);
       })

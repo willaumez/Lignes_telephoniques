@@ -11,38 +11,188 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
+  .titre {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    border-bottom: 6px solid #1b6ca8;
+  }
+
+  .container {
+    margin: 1rem auto;
+    max-height: 100%; // Hauteur minimale pour occuper tout l'écran
+
+    .example-tab-icon {
+      margin-right: 10px;
+    }
+
+    .container-infos, .container-import, .container-traitement {
+      width: 100%;
+      height: 100%;
+      margin: 1rem auto;
+      padding: 1rem;
+
+      .container-template {
+        max-height: 100%; // Hauteur minimale
+      }
+
+      .button-select {
+        width: 80%;
+        border-radius: 1rem;
+        margin: 1rem auto;
+        flex-direction: row;
+        display: flex;
+        justify-content: space-between;
+
+        button {
+          border: none;
+          background-color: transparent;
+          cursor: pointer;
+          font-size: 1rem;
+          color: #4050b5;
+
+          &.single-button {
+            margin-left: auto;
+          }
+
+          mat-icon {
+            margin: 0 7px;
+          }
+        }
+      }
+
+      .container-template {
+        display: flex; // Utilisation de Flexbox
+        flex-wrap: wrap; // Permet aux éléments de passer à la ligne si nécessaire
+      }
+
+      .info-section {
+        flex: 1;
+        min-width: 300px;
+
+        .example-card {
+          mat-card-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem;
+
+            mat-card-title {
+              flex: 1;
+              text-align: center;
+            }
+          }
+
+          img[mat-card-image] {
+            object-fit: cover; // Remplit l'élément parent tout en maintenant le ratio de l'image
+            width: 100%;
+            height: auto;
+
+            @media (max-width: 768px) {
+              min-width: 100px;
+              max-height: 400px;
+            }
+          }
+
+          @media (max-width: 768px) {
+            min-width: 100%;
+            height: auto;
+          }
+        }
+
+        @media (max-width: 768px) {
+          min-width: 100%; // Prend toute la largeur sur les petits écrans
+        }
+      }
+
+      // Section de résultat à droite
+      .result-section {
+        flex: 1;
+        min-width: 300px;
+        margin: 1rem;
+        padding: 1rem;
+
+        p {
+          font-size: 16px;
+          color: #f80000;
+          margin: 0;
+          padding: 10px;
+
+          @media (max-width: 768px) {
+            font-size: 14px; // Réduction de la taille de police pour les petits écrans
+          }
+        }
+
+        .result-title {
+          text-decoration: underline;
+          text-align: center;
+          margin: 1rem;
+          color: #1b6ca8;
+        }
+
+        mat-list {
+          margin: 1rem;
+          height: auto;
+
+          mat-list-item {
+            margin: 1rem auto;
+            height: auto;
+
+            div {
+              height: auto;
+              white-space: normal; // Permet les retours à la ligne
+              margin: 1rem;
+              overflow-wrap: break-word; // Permet de casser les mots trop longs pour s'adapter au conteneur
+              word-wrap: break-word;
+            }
+
+            &.item-success mat-icon,
+            &.item-success div {
+              color: green;
+            }
+
+            &.item-fail mat-icon,
+            &.item-fail div {
+              color: red;
+            }
+
+            &.item-warning mat-icon,
+            &.item-warning div {
+              color: orange;
+            }
+
+            &.item-error mat-icon,
+            &.item-error div {
+              color: purple;
+            }
+          }
+        }
+
+
+        // Media Query pour les écrans plus petits
+        @media (max-width: 768px) {
+          min-width: 100%; // Prend toute la largeur sur les petits écrans
+        }
+      }
+
+
+    }
+
+  }
 }
 
-.titre {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  text-align: center;
-  border-bottom: 6px solid #1b6ca8;
-}
 
-.container-fluid {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
+//scss import
 .center-container {
   width: 70%;
   display: flex;
-  flex-direction: column; /* Ajout de la direction de colonne pour centrer le contenu */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: auto;
   height: 50vh;
-}
-
-.centered-form {
-  max-width: 100%;
-  padding: 20px;
-  background-color: #f7f7f7;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 .label-file {
@@ -50,10 +200,11 @@
   border-radius: 1rem;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.3s; // Transition pour le changement de couleur d'arrière-plan
 }
 
 .input-file {
-  display: block;
+  display: none; // Masqué par défaut
 }
 
 .file-drop-area {
@@ -65,120 +216,114 @@
   margin-top: 10px;
   position: relative;
   border-radius: 1rem;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s; // Transition pour le changement de couleur d'arrière-plan
+
+  &:hover { // Changement de couleur lors du survol
+    background-color: #f0f0f0;
+  }
 }
 
-.drag-over {
-  background-color: #be0000;
-}
-
-.custom-spinner,
-.drag-text {
+.custom-spinner, .drag-text {
   font-size: 20px;
   color: #aaa;
-  margin: 1rem; /* Réduire la marge pour un espacement plus compact */
+  margin: 1rem;
 }
-
-.custom-spinner {
-  color: blue;
-}
-
-.file-drop-area.drag-over {
-  border-color: #007bff;
-}
-
-.submit-button {
-  margin: 2rem auto;
-}
-
-.custom-progress-bar {
-  height: 10px;
-  margin-top: 10px;
-}
-
 
 .excel-icon {
   font-size: 35px;
-  margin: auto auto;
+  margin: auto;
 }
-//button importé
+
 .parent-container {
+  margin: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Autres styles si nécessaire */
+
+  button {
+    border: 1px solid;
+  }
 }
 
 .submit-button {
   width: 50%;
+  margin: 2rem auto;
 }
 
-
-/// Table
-
-.mat-mdc-table {
-  max-height: 700px;
-  overflow: auto;
-}
-.mat-table{
-  width: auto;
-}
-
-.mat-column-name {
-  height: 100px;
-}
-.container-table{
-  height: auto;
-  border-collapse: collapse;
-  border: 1px solid #ccc;
-  margin: 2rem;
-  text-align: center;
-  flex: 1;
-}
-th {
-  background-color: #f2f2f2;
-}
-tr {
-  &:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-
-  &:hover {
-    background-color: #e0e0e0;
-  }
-}
-
-td, th {
-  width: 50%;
-  height: auto;
-  align-content: center;
+//Chargement
+.Loading {
+  display: flex;
+  justify-content: center;
   align-items: center;
-}
-th{
-  font-size: 1rem;
+
+  mat-spinner {
+    width: 50px;
+    height: 50px;
+  }
 }
 
-.customer-total{
-  margin: 1.5rem;
-  display: inline-block;
-  font-size: 1.5rem;
-  color: #263238;
-}
-.h2{
-  text-align: center;
-  color: #263238;
-}
-.filter{
+//Traitement des données
+.verification {
   width: 100%;
+  border: 2px solid #2d3a81;
+  min-height: 50vh;
+  margin: 1rem;
+  padding: 1rem;
+  // Styles de base pour la zone de vérification
+  font-size: 20px;
+
+  .file-info {
+    margin: 10px auto;
+    p{
+      margin: 1rem auto;
+    }
+  }
+  .fileValid {
+    margin:1rem auto;
+  }
+  .traitement-btn{
+    margin-top: 50px;
+    height: auto;
+    button{
+      &.active {
+        background-color: #4050b5;
+        color: #ffff;
+        &:hover {
+          color: #ffff;
+        }
+      }
+    }
+  }
+  .spinner-progress {
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    mat-spinner {
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  i {
+    margin-right: 8px;
+  }
+
+  // Style pour l'icône de succès
+  .fa-check-circle {
+    color: green;
+  }
+
+  // Style pour l'icône d'erreur
+  .fa-exclamation-circle {
+    color: red;
+  }
 }
 
-.anulbtn{
-  width: 300px;
-  margin: auto;
-}
 
-.mat-divider{
-  border-bottom: 6px solid #1b6ca8;
-  margin: 10px 0;
-}
+
+
+
+
+
 

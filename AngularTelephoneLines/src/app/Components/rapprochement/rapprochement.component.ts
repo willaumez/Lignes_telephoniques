@@ -1,56 +1,128 @@
-import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {Rapprochement} from "../../Models/Rapprochement";
+import {Rapprochement, VerificationResult} from "../../Models/Rapprochement";
 import {MatSort} from "@angular/material/sort";
 import {LigneTelephoniqueService} from "../../Services/ligne-telephonique.service";
 import {RapprochementService} from "../../Services/rapprochement.service";
+import {MatTabGroup} from "@angular/material/tabs";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-rapprochement',
   templateUrl: './rapprochement.component.html',
   styleUrls: ['./rapprochement.component.scss']
 })
-export class RapprochementComponent {
+export class RapprochementComponent implements OnInit {
+  indexTab: number = 0;
+  @ViewChild('tabGroup') tabGroup!: MatTabGroup;
+
+  //Variable importation
   dataFromExcel: Rapprochement[] = [];
   dataFromDataBase: Rapprochement[] = [];
 
+  //pointeurs
+  isLoading: boolean = false;
+  errorMessage!: string;
+  verificationFile?: VerificationResult;
+  isFileDragging: boolean = false;
+  selectedFile!: File | null;
+  traitement: boolean = false;
+  traitementFinit: boolean = false;
+
+  //Données rapprochement
   dataCorresponding: Rapprochement[] = [];
   dataMontantNoCor: Rapprochement[] = [];
   dataNoExistDB: Rapprochement[] = [];
   dataNoExistExcel: Rapprochement[] = [];
 
-
-  isLoading: boolean = false;
-  isFileDragging: boolean = false;
-  selectedFile!: File | null;
-  traitement:boolean = false;
-
-
-  //Table
-  displayedColumns: string[] = ['numero', 'montant'];
-  dataSource!: MatTableDataSource<any>;
-  dataBase!: MatTableDataSource<any>;
-  tableCorresponding!: MatTableDataSource<any>;
-  tableMontantNoCor!: MatTableDataSource<any>;
-  tableNoExistDB!: MatTableDataSource<any>;
-  tableNoExistExcel!: MatTableDataSource<any>;
-  //@ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataFromExcel);
-    //this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.getListLignes();
+    this.indexTab = 0;
+    this.getListLignesRapprochement();
   }
 
-  constructor(private rapService: RapprochementService, private cdRef: ChangeDetectorRef,private ligneService: LigneTelephoniqueService) {
-    // Create 100 users
-    //const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
+  constructor(private cdRef: ChangeDetectorRef, private rapService: RapprochementService, private ligneService: LigneTelephoniqueService ) {
 
-    // Assign the data to the data source for the table to render
-    //this.dataSource = new MatTableDataSource(users);
+  }
+
+  //DataBase
+  getListLignesRapprochement() {
+    this.ligneService.getLignesRapprochement().subscribe({
+      next: (data) => {
+        this.dataFromDataBase = data;
+        //this.dataBase = new MatTableDataSource(data);
+        //this.dataSource.sort = this.sort;
+        //this.dataSource.paginator = this.paginator;
+      },
+      error: err => {
+        this.errorMessage = "Erreur lors de la récupération des lignes téléphoniques"+err.error.message;
+        console.log(err);
+      }
+    });
+  }
+
+  // Fonction pour passer à l'onglet suivant
+  nextTab() {
+    if (this.tabGroup && this.indexTab < this.tabGroup._tabs.length - 1) {
+      this.indexTab++;  // Augmenter indexTab
+      this.tabGroup.selectedIndex = this.indexTab;
+    }
+    this.cdRef.detectChanges();  // Forcer la détection des changements
+  }
+
+  previousTab() {
+    this.resetImport();
+    if (this.tabGroup && this.indexTab > 0) {
+      this.indexTab--;  // Réduire indexTab
+      this.tabGroup.selectedIndex = this.indexTab;
+    }
+    this.cdRef.detectChanges();  // Forcer la détection des changements
+  }
+
+  isTabDisabled(index: number): boolean {
+    return index !== this.indexTab;
+  }
+
+
+  //Fonctions Importation
+  getFile(event: any): void {
+    if (event.target.files[0]) {
+      this.isLoading = true;
+      this.selectedFile = event.target.files[0];
+      if (this.selectedFile) {
+
+     /*   this.rapService.importDataFromExcel(this.selectedFile).subscribe({
+            next: (data: Rapprochement[]): void => {
+              this.dataFromExcel = data;
+              console.log("dataFromExcel :::   " + JSON.stringify(this.dataFromExcel));
+            },
+            error: (error) => {
+              console.error('Une erreur est survenue lors de l\'importation des données depuis Excel', error);
+            }
+          }
+        );*/
+
+        this.rapService.verifyExcelFile(this.selectedFile).subscribe({
+            next: (data: VerificationResult): void => {
+              this.verificationFile = data;
+              if (this.verificationFile.isValid){
+                this.extractDataFromExcel();
+              }
+              console.log("dataFromExcel :::   " + JSON.stringify(this.verificationFile));
+            },
+            error: (error) => {
+              console.error('Une erreur est survenue lors de l\'importation des données depuis Excel', error);
+            }
+          }
+        );
+
+        //console.log("dataFromExcel :::   " + this.dataFromExcel);
+        //console.log("valide--   --     "+this.rapService.isExcelFileValid(this.selectedFile))
+        this.isLoading = false;
+      } else {
+        this.errorMessage = "Aucun fichier détecté."
+      }
+      this.isLoading = false;
+    }
   }
 
   preventDefault(event: Event): void {
@@ -64,117 +136,82 @@ export class RapprochementComponent {
     this.isFileDragging = false;
     event.preventDefault();
   }
+
   onFileDrop(event: DragEvent): void {
     this.isFileDragging = false;
     event.preventDefault();
-
-    const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
-      this.selectedFile = files[0];
-      //this.dataFromExcel = this.rapService.importDataFromExcel(this.selectedFile);
-    }
-  }
-  getFile(event: any): void {
-    this.selectedFile = event.target.files[0];
-
-    if (this.selectedFile) {
-      //this.dataFromExcel = this.rapService.importDataFromExcel(this.selectedFile);
-    } else {
-      console.error("No file selected.");
-    }
-  }
-
-  getListLignes() {
-    this.ligneService.getLignesRapprochement().subscribe({
-      next: (data) => {
-        this.dataFromDataBase = data;
-        this.dataBase = new MatTableDataSource(data);
-        //this.dataSource.sort = this.sort;
-        //this.dataSource.paginator = this.paginator;
-      },
-      error: err => {
-        console.log(err);
+    if (event.dataTransfer?.files) {
+      this.isLoading = true;
+      const files = event.dataTransfer?.files;
+      if (files && files.length > 0) {
+        this.selectedFile = files[0];
+        this.isLoading = false;
+        //this.dataFromExcel = this.rapService.importDataFromExcel(this.selectedFile);
+      } else {
+        this.errorMessage = "Erreur d'insertion du fichier s'il vous plaît réessayer!"
       }
-    });
+      this.isLoading = false;
+    }
   }
 
-  onFormSubmit(): void {
-    if (this.selectedFile) {
-      this.rapService.importDataFromExcel(this.selectedFile).subscribe(
-        (data) => {
-          this.dataFromExcel = data;
-          this.dataSource = new MatTableDataSource(data);
-          this.dataSource.sort = this.sort;
-          //this.dataSource.paginator = this.paginator;
+  resetImport() {
+    this.dataFromExcel = [];
+    this.isLoading = false;
+    this.isFileDragging = false;
+    this.selectedFile = null;
+    this.traitement = false;
+    this.traitementFinit = false;
+    this.errorMessage = '';
 
-          // Trigger manual change detection
-          this.cdRef.detectChanges();
-        },
-        (error) => {
-          console.error('Erreur lors de l\'importation du fichier :', error);
+    //data
+    this.dataCorresponding = [];
+    this.dataMontantNoCor = [];
+    this.dataNoExistDB = [];
+    this.dataNoExistExcel = [];
+  }
+
+  extractDataFromExcel(): void {
+    if (this.selectedFile) {
+      this.rapService.importDataFromExcel(this.selectedFile).subscribe({
+          next: (data: Rapprochement[]): void => {
+            this.dataFromExcel = data;
+            console.log("dataFromExcel        " + this.dataFromExcel);
+            //this.dataSource.sort = this.sort;
+            //this.dataSource.paginator = this.paginator;
+            // Trigger manual change detection
+            this.cdRef.detectChanges();
+          },
+          error: (error) => {
+            console.error('Erreur lors de l\'importation du fichier :', error);
+          }
         }
       );
     }
   }
 
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
-  resetPage() {
-    this.dataFromExcel = [];
-    this.isLoading = false;
-    this.isFileDragging = false;
-    this.selectedFile = null;
-
-    this.dataCorresponding = [];
-    this.dataMontantNoCor = [];
-    this.dataNoExistDB = [];
-    this.dataNoExistExcel = [];
-
-    this.dataSource = new MatTableDataSource<any>();
-    this.dataBase = new MatTableDataSource<any>();
-    this.tableCorresponding = new MatTableDataSource<any>();
-    this.tableMontantNoCor = new MatTableDataSource<any>();
-    this.tableNoExistDB = new MatTableDataSource<any>();
-    this.tableNoExistExcel = new MatTableDataSource<any>();
-
-    this.traitement  = false;
-  }
-
-
-  /*traitementBtn() {
-    //comparaison des numeros
-    for (const excelItem of this.dataFromExcel) {
-      for (const dbItem of this.dataFromDataBase) {
-        if (excelItem.numero === dbItem.numero) {
-          this.dataCorresponding.push(excelItem);
-          break; // Passer au prochain élément de dataFromExcel dès qu'une correspondance est trouvée
+  validerTraitement2(): void {
+    if (this.selectedFile) {
+      this.rapService.importDataFromExcel(this.selectedFile).subscribe({
+          next: (data: Rapprochement[]): void => {
+            this.dataFromExcel = data;
+            console.log("dataFromExcel        " + this.dataFromExcel);
+            //this.dataSource.sort = this.sort;
+            //this.dataSource.paginator = this.paginator;
+            // Trigger manual change detection
+            this.cdRef.detectChanges();
+          },
+          error: (error) => {
+            console.error('Erreur lors de l\'importation du fichier :', error);
+          }
         }
-      }
+      );
     }
-    this.tableCorresponding = new MatTableDataSource(this.dataCorresponding);
-    console.log('this.dataCorresponding :', this.dataCorresponding);
-    //comparaison des numeros montant
-    for (const correspondingItem of this.dataCorresponding) {
-      const excelItem = this.dataFromExcel.find(excelItem => excelItem.numero === correspondingItem.numero);
+  }
 
-      if (excelItem && excelItem.montant !== correspondingItem.montant) {
-        this.dataMontantNoCor.push(correspondingItem);
-      }
-    }
-    this.tableMontantNoCor = new MatTableDataSource(this.dataMontantNoCor);
-    console.log('this.dataMontantNoCor :', this.dataMontantNoCor);
-
-  }*/
-
-  traitementBtn() {
-
+  //Traitement
+  validerTraitement() {
+    this.traitement = true;
     // Comparaison des numeros
     for (const excelItem of this.dataFromExcel) {
       let numeroExisteDansDB = false;
@@ -218,16 +255,19 @@ export class RapprochementComponent {
     }
 
     // Mettre à jour les sources de données pour les tables
-    this.tableCorresponding = new MatTableDataSource(this.dataCorresponding);
-    this.tableMontantNoCor = new MatTableDataSource(this.dataMontantNoCor);
-    this.tableNoExistDB = new MatTableDataSource(this.dataNoExistDB);
-    this.tableNoExistExcel = new MatTableDataSource(this.dataNoExistExcel);
+    //this.tableCorresponding = new MatTableDataSource(this.dataCorresponding);
+    //this.tableMontantNoCor = new MatTableDataSource(this.dataMontantNoCor);
+    //this.tableNoExistDB = new MatTableDataSource(this.dataNoExistDB);
+    //this.tableNoExistExcel = new MatTableDataSource(this.dataNoExistExcel);
 
     //
-    this.traitement  = true;
+    setTimeout(() => {
+      this.traitement = false;
+      this.traitementFinit = true;
+    }, 5000);
+
+
   }
-
-
 
 
 

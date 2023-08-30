@@ -1,237 +1,210 @@
 <div class="main-body">
-  <div class="row">
-    <h1 class="titre">Rapprochement</h1>
-    <button mat-raised-button class="anulbtn" *ngIf="selectedFile" (click)="resetPage()">ANNULER
-    </button>
-  </div>
-  <div class="container-fluid row">
-    <div class="center-container" *ngIf="dataFromExcel.length === 0">
-      <form>
-        <button mat-raised-button type="button" color="primary" class="btn label-file" (click)="fileInput.click()">
-          Importer un fichier excel
-        </button>
-        <input type="file" id="file" class="input-file" accept=".xlsx" (change)="getFile($event)" #fileInput
-               style="display: none"/>
-        <div class="file-drop-area"
-             (dragover)="onFileDragOver($event); preventDefault($event)"
-             (dragleave)="onFileDragLeave($event)"
-             (drop)="onFileDrop($event); preventDefault($event)">
-          <ng-container class="container">
-            <p class="drag-text" *ngIf="!isLoading && !selectedFile">--- Glissez et déposez un fichier excel ici ---</p>
-            <mat-spinner diameter="60" class="custom-spinner" *ngIf="isLoading"></mat-spinner>
-            <mat-icon size="1" class="excel-icon" *ngIf="!isLoading && selectedFile" aria-hidden="false"
-                      aria-label="Fichier Excel">insert_drive_file
-            </mat-icon>
-            <div *ngIf="selectedFile" class="file-info">
-              <p><strong>Nom du fichier:</strong> {{ selectedFile.name }}</p>
-              <p><strong>Type:</strong> {{ selectedFile.type }}</p>
-              <p><strong>Taille:</strong> {{ selectedFile.size }}</p>
+  <h1 class="titre">Rapprochement</h1>
+
+  <div class="container">
+    <ng-container *ngIf="dataFromDataBase; else failureOrLading">
+      <mat-tab-group #tabGroup dynamicHeight>
+        <mat-tab [disabled]="isTabDisabled(0)">
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">info_outline</mat-icon>
+            Informations sur le rapprochement
+          </ng-template>
+          <div class="container-infos">
+            <div class="container-template">
+              <div class="info-section">
+                <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Exemple de données Excel</mat-card-title>
+                  </mat-card-header>
+                  <img mat-card-image src="assets/rapprochementInfos.png" alt="Exemple de données Excel" width="100%"
+                       height="auto">
+                </mat-card>
+              </div>
+              <div class="result-section">
+                <p>
+                  Les données importées doivent correspondre à la structure illustrée ci-dessus.
+                  Elles doivent inclure deux colonnes : "Numéro de Ligne" et "Montant de la Ligne".
+                  La première ligne sera ignorée dans la mesure où elle contient des en-têtes.
+                </p>
+                <h2 class="result-title">Résultats possibles du rapprochement</h2>
+                <mat-list>
+                  <mat-list-item class="item-success">
+                    <mat-icon matListItemIcon>check_circle</mat-icon>
+                    <div>Nombre de lignes correspondantes</div>
+                  </mat-list-item>
+                  <mat-list-item class="item-fail">
+                    <mat-icon matListItemIcon>cancel</mat-icon>
+                    <div>Nombre de lignes non correspondantes</div>
+                  </mat-list-item>
+                  <mat-list-item class="item-warning">
+                    <mat-icon matListItemIcon>compare_arrows</mat-icon>
+                    <div>Numéros correspondants mais montants différents</div>
+                  </mat-list-item>
+                  <mat-list-item class="item-error">
+                    <mat-icon matListItemIcon>error</mat-icon>
+                    <div>Nombre de lignes avec des erreurs de format</div>
+                  </mat-list-item>
+                  <mat-list-item class="item-error">
+                    <mat-icon matListItemIcon>error</mat-icon>
+                    <div>Les éléments figurant dans le fichier excel mais pas dans la base de données</div>
+                  </mat-list-item>
+                  <mat-list-item class="item-error">
+                    <mat-icon matListItemIcon>error</mat-icon>
+                    <div>Les éléments existant dans la base de données mais pas dans le fichier excel</div>
+                  </mat-list-item>
+                </mat-list>
+              </div>
             </div>
-          </ng-container>
-        </div>
-        <div class="parent-container">
-          <button mat-raised-button type="button" class="submit-button" (click)="onFormSubmit()" *ngIf="selectedFile">Importer ?</button>
-        </div>
-      </form>
-    </div>
+
+            <div class="button-select">
+              <button mat-raised-button matTooltip="Importer le fichier Excel" [matTooltipShowDelay]="500"
+                      (click)="nextTab()" class="single-button">
+                <mat-icon>chevron_right</mat-icon>
+                <mat-icon>last_page</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab [disabled]="isTabDisabled(1)">
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">upload_file</mat-icon>
+            Importer le fichier Excel
+          </ng-template>
+          <div class="container-import">
+            <div class="container-template">
+              <div class="center-container">
+                <button mat-raised-button type="button" color="primary" class="btn label-file"
+                        (click)="fileInput.click()">
+                  Importer un fichier excel
+                </button>
+                <input type="file" id="file" class="input-file" accept=".xlsx" (change)="getFile($event)" #fileInput
+                       style="display: none"/>
+                <div class="file-drop-area"
+                     (dragover)="onFileDragOver($event); preventDefault($event)"
+                     (dragleave)="onFileDragLeave($event)"
+                     (drop)="onFileDrop($event); preventDefault($event)">
+                  <ng-container class="container">
+                    <p class="drag-text" *ngIf="!isLoading && !selectedFile">--- Glissez et déposez un fichier excel ici
+                      ---</p>
+                    <mat-spinner diameter="60" class="custom-spinner" *ngIf="isLoading"></mat-spinner>
+                    <mat-icon size="1" class="excel-icon" *ngIf="!isLoading && selectedFile" aria-hidden="false"
+                              aria-label="Fichier Excel">insert_drive_file
+                    </mat-icon>
+                    <div *ngIf="selectedFile" class="file-info">
+                      <p><strong>Nom du fichier:</strong> {{ selectedFile.name }}</p>
+                      <p><strong>Type:</strong> {{ selectedFile.type }}</p>
+                      <p><strong>Taille:</strong> {{ selectedFile.size }}</p>
+                    </div>
+                    <ng-container *ngIf="!selectedFile && isLoading">
+                      <div class="Loading">
+                        <mat-spinner>Chargement...</mat-spinner>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+                <div class="parent-container">
+                  <button mat-button color="warn" type="button" (click)="resetImport()"
+                          *ngIf="selectedFile || errorMessage">Annuler
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="button-select">
+              <button mat-raised-button matTooltip="Informations sur le rapprochement" [matTooltipShowDelay]="500"
+                      (click)="previousTab()">
+                <mat-icon>first_page</mat-icon>
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <button mat-raised-button matTooltip="Traitement des données" [matTooltipShowDelay]="500"
+                      (click)="nextTab()" *ngIf="selectedFile">
+                <mat-icon>chevron_right</mat-icon>
+                <mat-icon>last_page</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab [disabled]="isTabDisabled(2)">
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Traitement des données
+          </ng-template>
+          <div class="container-traitement">
+            <div class="container-template">
+              <div class="verification" *ngIf="verificationFile && selectedFile">
+                <div *ngIf="selectedFile" class="file-info">
+                  <mat-icon size="1" class="excel-icon" aria-hidden="false" aria-label="Fichier Excel">
+                    insert_drive_file
+                  </mat-icon>
+                  <p><strong>Nom du fichier:</strong> {{ selectedFile.name }}</p>
+                  <p><strong>Type:</strong> {{ selectedFile.type }}</p>
+                  <p><strong>Taille:</strong> {{ selectedFile.size }}</p>
+                </div>
+                <div *ngIf="verificationFile?.isValid" class="fileValid">
+                  <p style="color: #008800"><strong><i class="fas fa-check-circle"></i> Le fichier est valide</strong>
+                  </p>
+                </div>
+                <div *ngIf="!verificationFile?.isValid" class="fileValid">
+                  <p style="color: #bb0000">
+                    <i class="fas fa-exclamation-circle"></i> Le fichier est invalide ! :   {{verificationFile.message}}
+                  </p>
+                </div>
+                <div class="traitement-btn" *ngIf="verificationFile.isValid">
+                  <button mat-raised-button matTooltip="Traitement des données" [matTooltipShowDelay]="500"
+                          (click)="validerTraitement()" [ngClass]="{'active': traitement || traitementFinit}">
+                    <mat-icon class="example-tab-icon">settings</mat-icon>
+                    Commencer le traitement des données
+                  </button>
+                </div>
+                <div class="traitement-btn" *ngIf="!verificationFile.isValid">
+                  <button mat-button style="color: #d30000">
+                    <mat-icon class="example-tab-icon">settings</mat-icon>
+                    Traitement des données impossible
+                  </button>
+                </div>
+                <div class="spinner-progress" *ngIf="traitement">
+                  <mat-spinner></mat-spinner>
+                </div>
+                <div class="spinner-progress" *ngIf="traitementFinit">
+                  <p style="color: #008300"><strong><i class="fas fa-check-circle"></i> Traitement terminé</strong></p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="button-select">
+              <button mat-raised-button matTooltip="Importer le fichier Excel" [matTooltipShowDelay]="500"
+                      (click)="previousTab()">
+                <mat-icon>first_page</mat-icon>
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <button color="primary" mat-raised-button matTooltip="Résultats du traitement..." [matTooltipShowDelay]="500" *ngIf="traitementFinit">
+                Résultats du traitement...
+              </button>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+    <ng-template #failureOrLading>
+      <div class="failureOrLading-container">
+        <ng-container *ngIf="errorMessage; else loading">
+          <div class="failure">
+            {{errorMessage}}
+          </div>
+        </ng-container>
+        <ng-template #loading>
+          <div class="Loading">
+            <mat-spinner>Chargement...</mat-spinner>
+          </div>
+        </ng-template>
+      </div>
+    </ng-template>
+
   </div>
-  <div class="row" *ngIf="dataFromExcel.length > 0">
-    <div class="container-table">
-      <h2>Fichier Excel :</h2>
-      <div class="container-fluid">
-        <mat-form-field class="filter" appearance="fill">
-          <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. 212**********" #input>
-        </mat-form-field>
-      </div>
-
-      <div class="container">
-        <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-auto-width" matSort>
-          <!-- ID Column -->
-          <ng-container matColumnDef="numero">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
-            <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
-          </ng-container>
-          <!-- Type Column -->
-          <ng-container matColumnDef="montant">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant</th>
-            <td mat-cell *matCellDef="let row">{{ row.montant }}</td>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="2">Aucune donnée pour le filtre "{{ input.value }}"</td>
-          </tr>
-        </mat-table>
-        <div class="customer-total" *ngIf="dataSource?.data">Total: {{ dataSource.data.length }}</div>
-      </div>
-    </div>
-    <div class="container-table">
-      <h2>Base des données :</h2>
-      <div class="container-fluid">
-        <mat-form-field class="filter" appearance="fill">
-          <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. 212**********" #input>
-        </mat-form-field>
-      </div>
-
-      <div class="container">
-        <mat-table [dataSource]="dataBase" class="mat-elevation-z8 mat-table-auto-width" matSort>
-          <!-- ID Column -->
-          <ng-container matColumnDef="numero">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
-            <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
-          </ng-container>
-          <!-- Type Column -->
-          <ng-container matColumnDef="montant">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant</th>
-            <td mat-cell *matCellDef="let row">{{ row.montant }}</td>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="2">Aucune donnée pour le filtre "{{ input.value }}"</td>
-          </tr>
-        </mat-table>
-        <div class="customer-total" *ngIf="dataBase?.data">Total: {{ dataBase.data.length }}</div>
-      </div>
-    </div>
-  </div>
-  <button mat-raised-button class="anulbtn" color="primary" *ngIf="dataFromExcel.length > 0 && !traitement" (click)="traitementBtn()">TRAITEMENT</button>
-  <mat-divider></mat-divider>
-  <h2 class="titre" *ngIf="traitement">Traitement</h2>
-
-  <div class="row" *ngIf="tableCorresponding && tableMontantNoCor && traitement">
-    <div class="container-table">
-      <h2>Donnés Correspondant</h2>
-      <div class="container-fluid">
-        <mat-form-field class="filter" appearance="fill">
-          <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. 212**********" #input>
-        </mat-form-field>
-      </div>
-
-      <div class="container">
-        <mat-table [dataSource]="tableCorresponding" class="mat-elevation-z8 mat-table-auto-width" matSort>
-          <!-- ID Column -->
-          <ng-container matColumnDef="numero">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
-            <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
-          </ng-container>
-          <!-- Type Column -->
-          <ng-container matColumnDef="montant">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant</th>
-            <td mat-cell *matCellDef="let row">{{ row.montant }}</td>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="2" *ngIf="tableCorresponding.data.length > 0">Aucune donnée pour le filtre "{{ input.value }}"</td>
-            <td class="mat-cell" colspan="2" *ngIf="tableCorresponding.data.length == 0" style="color: red">Aucune donnée... "{{ input.value }}"</td>
-          </tr>
-        </mat-table>
-        <div class="customer-total" *ngIf="tableCorresponding?.data">Total: {{ tableCorresponding.data.length }}</div>
-      </div>
-    </div>
-    <div class="container-table">
-      <h2>Donnés Montant Non-Correspondant</h2>
-      <div class="container-fluid">
-        <mat-form-field class="filter" appearance="fill">
-          <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. 212**********" #input>
-        </mat-form-field>
-      </div>
-
-      <div class="container">
-        <mat-table [dataSource]="tableMontantNoCor" class="mat-elevation-z8 mat-table-auto-width" matSort>
-          <!-- ID Column -->
-          <ng-container matColumnDef="numero">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
-            <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
-          </ng-container>
-          <!-- Type Column -->
-          <ng-container matColumnDef="montant">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant</th>
-            <td mat-cell *matCellDef="let row" style="color: red">{{ row.montant }}</td>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="2" *ngIf="tableMontantNoCor.data.length > 0">Aucune donnée pour le filtre "{{ input.value }}"</td>
-            <td class="mat-cell" colspan="2" *ngIf="tableMontantNoCor.data.length == 0" style="color: red">Aucune donnée... "{{ input.value }}"</td>
-          </tr>
-        </mat-table>
-        <div class="customer-total" *ngIf="tableMontantNoCor?.data">Total: {{ tableMontantNoCor.data.length }}</div>
-      </div>
-    </div>
-  </div>
-  <div class="row" *ngIf="tableCorresponding && tableMontantNoCor && traitement">
-    <div class="container-table">
-      <h2>Donnés Inexistant dans la Base de Données</h2>
-      <div class="container-fluid">
-        <mat-form-field class="filter" appearance="fill">
-          <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. 212**********" #input>
-        </mat-form-field>
-      </div>
-
-      <div class="container">
-        <mat-table [dataSource]="tableNoExistDB" class="mat-elevation-z8 mat-table-auto-width" matSort>
-          <!-- ID Column -->
-          <ng-container matColumnDef="numero">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
-            <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
-          </ng-container>
-          <!-- Type Column -->
-          <ng-container matColumnDef="montant">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant</th>
-            <td mat-cell *matCellDef="let row">{{ row.montant }}</td>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="2" *ngIf="tableNoExistDB.data.length > 0">Aucune donnée pour le filtre "{{ input.value }}"</td>
-            <td class="mat-cell" colspan="2" *ngIf="tableNoExistDB.data.length == 0" style="color: red">Aucune donnée... "{{ input.value }}"</td>
-          </tr>
-        </mat-table>
-        <div class="customer-total" *ngIf="tableNoExistDB?.data">Total: {{ tableNoExistDB.data.length }}</div>
-      </div>
-    </div>
-    <div class="container-table">
-      <h2>Donnés Inexistant dans le fichier Excel</h2>
-      <div class="container-fluid">
-        <mat-form-field class="filter" appearance="fill">
-          <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. 212**********" #input>
-        </mat-form-field>
-      </div>
-
-      <div class="container">
-        <mat-table [dataSource]="tableNoExistExcel" class="mat-elevation-z8 mat-table-auto-width" matSort>
-          <!-- ID Column -->
-          <ng-container matColumnDef="numero">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
-            <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
-          </ng-container>
-          <!-- Type Column -->
-          <ng-container matColumnDef="montant">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant</th>
-            <td mat-cell *matCellDef="let row">{{ row.montant }}</td>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="2" *ngIf="tableNoExistExcel.data.length > 0">Aucune donnée pour le filtre "{{ input.value }}"</td>
-            <td class="mat-cell" colspan="2" *ngIf="tableNoExistExcel.data.length == 0" style="color: red">Aucune donnée... "{{ input.value }}"</td>
-          </tr>
-        </mat-table>
-        <div class="customer-total" *ngIf="tableNoExistExcel?.data">Total: {{ tableNoExistExcel.data.length }}</div>
-      </div>
-    </div>
-  </div>
-
-
 </div>
+
 
 
 
