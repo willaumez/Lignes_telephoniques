@@ -5,6 +5,7 @@ import {MatSort} from "@angular/material/sort";
 import {LigneTelephoniqueService} from "../../Services/ligne-telephonique.service";
 import {RapprochementService} from "../../Services/rapprochement.service";
 import {MatTabGroup} from "@angular/material/tabs";
+import * as XLSX from 'xlsx';
 import {Observable} from "rxjs";
 
 @Component({
@@ -28,12 +29,25 @@ export class RapprochementComponent implements OnInit {
   selectedFile!: File | null;
   traitement: boolean = false;
   traitementFinit: boolean = false;
+  resultats: boolean = false;
+  titreResultats!: string;
 
   //Données rapprochement
   dataCorresponding: Rapprochement[] = [];
+  dataNotCorresponding: Rapprochement[] = [];
   dataMontantNoCor: Rapprochement[] = [];
   dataNoExistDB: Rapprochement[] = [];
   dataNoExistExcel: Rapprochement[] = [];
+
+  //Table
+  @ViewChild(MatSort) sort!: MatSort;
+  displayedColumns: string[] = ['numero', 'montant'];
+  dataSource!: MatTableDataSource<any>;
+  /*dataBase!: MatTableDataSource<any>;
+  tableCorresponding!: MatTableDataSource<any>;
+  tableMontantNoCor!: MatTableDataSource<any>;
+  tableNoExistDB!: MatTableDataSource<any>;
+  tableNoExistExcel!: MatTableDataSource<any>;*/
 
   ngOnInit(): void {
     this.indexTab = 0;
@@ -189,7 +203,6 @@ export class RapprochementComponent implements OnInit {
     }
   }
 
-
   validerTraitement2(): void {
     if (this.selectedFile) {
       this.rapService.importDataFromExcel(this.selectedFile).subscribe({
@@ -210,7 +223,7 @@ export class RapprochementComponent implements OnInit {
   }
 
   //Traitement
-  validerTraitement() {
+  validerTraitement():void {
     this.traitement = true;
     // Comparaison des numeros
     for (const excelItem of this.dataFromExcel) {
@@ -267,6 +280,81 @@ export class RapprochementComponent implements OnInit {
     }, 5000);
 
 
+  }
+
+  //Resultats Traitement
+  resultatsTraitement():void{
+    this.resultats = true;
+  }
+  //Charger les données
+  dataOfBase():void{
+    this.titreResultats = "Lignes téléphoniques de la base de donnée";
+    this.dataSource = new MatTableDataSource(this.dataFromDataBase);
+    this.dataSource.sort = this.sort;
+  }
+  dataOfExcel():void{
+    this.titreResultats = "Lignes téléphoniques du fichier Excel";
+    this.dataSource = new MatTableDataSource(this.dataFromExcel);
+    this.dataSource.sort = this.sort;
+  }
+  dataCorresp():void{
+    this.titreResultats = "Lignes téléphoniques correspondantes";
+    this.dataSource = new MatTableDataSource(this.dataCorresponding);
+    this.dataSource.sort = this.sort;
+  }
+  dataNotCorresp():void{
+    this.titreResultats = "Lignes téléphoniques non correspondantes";
+    this.dataSource = new MatTableDataSource(this.dataNotCorresponding);
+    this.dataSource.sort = this.sort;
+  }
+  dataNotCorrespMontant():void{
+    this.titreResultats = "Numéros correspondants mais montants différents";
+    this.dataSource = new MatTableDataSource(this.dataMontantNoCor);
+    this.dataSource.sort = this.sort;
+  }
+  dataNotExistDataBase():void{
+    this.titreResultats = "Lignes téléphoniques dans le fichier Excel et non dans la base de donnée";
+    this.dataSource = new MatTableDataSource(this.dataNoExistDB);
+    this.dataSource.sort = this.sort;
+  }
+  dataNotExistExcel():void{
+    this.titreResultats = "Numéros de téléphone dans la base de donnée, mais pas dans le fichier Excel";
+    this.dataSource = new MatTableDataSource(this.dataNoExistExcel);
+    this.dataSource.sort = this.sort;
+  }
+
+  //Recherche table
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+//Exportation
+  /*exportToExcel() {
+    // Accéder aux données réelles depuis MatTableDataSource
+    const rawData:Rapprochement[] = this.dataSource.data;
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rawData);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'rapprochement.xlsx');
+  }*/
+  exportToExcel() {
+    // Accéder aux données réelles depuis MatTableDataSource
+    const rawData = this.dataSource.data;
+
+    // Créer un WorkSheet
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([
+      ["Numéro (String)", "Montant (Double)"], // Les en-têtes des colonnes
+      ...rawData.map(x => [String(x.numero), Number(x.montant)]) // Les données
+    ]);
+
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'rapprochement.xlsx');
   }
 
 

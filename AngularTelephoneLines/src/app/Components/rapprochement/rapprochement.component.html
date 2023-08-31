@@ -1,7 +1,7 @@
 <div class="main-body">
   <h1 class="titre">Rapprochement</h1>
 
-  <div class="container">
+  <div class="container" *ngIf="!resultats">
     <ng-container *ngIf="dataFromDataBase; else failureOrLading">
       <mat-tab-group #tabGroup dynamicHeight>
         <mat-tab [disabled]="isTabDisabled(0)">
@@ -40,17 +40,17 @@
                     <mat-icon matListItemIcon>compare_arrows</mat-icon>
                     <div>Numéros correspondants mais montants différents</div>
                   </mat-list-item>
+                  <!-- <mat-list-item class="item-error">
+                     <mat-icon matListItemIcon>error</mat-icon>
+                     <div>Nombre de lignes avec des erreurs de format</div>
+                   </mat-list-item>-->
                   <mat-list-item class="item-error">
                     <mat-icon matListItemIcon>error</mat-icon>
-                    <div>Nombre de lignes avec des erreurs de format</div>
+                    <div>Les éléments figurant dans le fichier excel mais pas dans la base de donnée</div>
                   </mat-list-item>
                   <mat-list-item class="item-error">
                     <mat-icon matListItemIcon>error</mat-icon>
-                    <div>Les éléments figurant dans le fichier excel mais pas dans la base de données</div>
-                  </mat-list-item>
-                  <mat-list-item class="item-error">
-                    <mat-icon matListItemIcon>error</mat-icon>
-                    <div>Les éléments existant dans la base de données mais pas dans le fichier excel</div>
+                    <div>Les éléments existant dans la base de donnée mais pas dans le fichier excel</div>
                   </mat-list-item>
                 </mat-list>
               </div>
@@ -170,16 +170,17 @@
                   <p style="color: #008300"><strong><i class="fas fa-check-circle"></i> Traitement terminé</strong></p>
                 </div>
               </div>
-
             </div>
-
             <div class="button-select">
               <button mat-raised-button matTooltip="Importer le fichier Excel" [matTooltipShowDelay]="500"
                       (click)="previousTab()">
                 <mat-icon>first_page</mat-icon>
                 <mat-icon>chevron_left</mat-icon>
               </button>
-              <button color="primary" mat-raised-button matTooltip="Résultats du traitement..." [matTooltipShowDelay]="500" *ngIf="traitementFinit">
+              <button color="primary" mat-raised-button matTooltip="Résultats du traitement..."
+                      [matTooltipShowDelay]="500" *ngIf="traitementFinit"
+                      (click)="resultatsTraitement()"
+              >
                 Résultats du traitement...
               </button>
             </div>
@@ -201,8 +202,98 @@
         </ng-template>
       </div>
     </ng-template>
-
   </div>
+
+  <div class="resultats-traitement" *ngIf="resultats">
+    <div class="type-select-Container">
+      <button class="type-button single-line" (click)="dataOfBase()"
+              [ngClass]="{'active': titreResultats == 'Lignes téléphoniques de la base de donnée'}">
+        Lignes téléphoniques de la base de donnée: [ <span>{{dataFromDataBase.length}}</span> ]
+      </button>
+
+      <button class="type-button single-line" (click)="dataOfExcel()"
+              [ngClass]="{'active': titreResultats == 'Lignes téléphoniques du fichier Excel'}">
+        Lignes téléphoniques du fichier Excel: [ <span>{{dataFromExcel.length}}</span> ]
+      </button>
+      <button class="type-button single-line" (click)="dataCorresp()"
+              [ngClass]="{'active': titreResultats == 'Lignes téléphoniques correspondantes'}">
+        Lignes téléphoniques correspondantes: [ <span>{{dataCorresponding.length}}</span> ]
+      </button>
+      <button class="type-button single-line" (click)="dataNotCorresp()"
+              [ngClass]="{'active': titreResultats == 'Lignes téléphoniques non correspondantes'}">
+        Lignes téléphoniques non correspondantes: [ <span>{{dataNotCorresponding.length}}</span> ]
+      </button>
+      <button class="type-button single-line" (click)="dataNotCorrespMontant()"
+              [ngClass]="{'active': titreResultats == 'Numéros correspondants mais montants différents'}">
+        Numéros correspondants mais montants différents: [ <span>{{dataMontantNoCor.length}}</span> ]
+      </button>
+      <button class="type-button single-line" (click)="dataNotExistDataBase()"
+              [ngClass]="{'active': titreResultats == 'Lignes téléphoniques dans le fichier Excel et non dans la base de donnée'}">
+        Lignes téléphoniques dans le fichier Excel et non dans la base de
+        donnée:  [ <span>{{dataNoExistDB.length}}</span> ]
+      </button>
+      <button class="type-button single-line" (click)="dataNotExistExcel()"
+              [ngClass]="{'active': titreResultats == 'Numéros de téléphone dans la base de donnée, mais pas dans le fichier Excel'}">
+        Numéros de téléphone dans la base de donnée, mais pas dans le fichier Excel:  [ <span>{{dataNoExistExcel.length}}</span> ]
+      </button>
+    </div>
+
+    <div class="main-container">
+      <div class="container-table">
+        <h2 class="titreResultats">{{titreResultats}}</h2>
+        <div class="container-fluid">
+          <mat-form-field class="filter" appearance="fill">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. 212**********" #input>
+          </mat-form-field>
+        </div>
+        <div class="container">
+          <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-auto-width" matSort>
+            <!-- ID Column -->
+            <ng-container matColumnDef="numero">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
+              <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
+            </ng-container>
+            <!-- Type Column -->
+            <ng-container matColumnDef="montant">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant</th>
+              <td mat-cell *matCellDef="let row">{{ row.montant }}</td>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="2" *ngIf="dataSource.data.length > 0">Aucune donnée pour le filtre "{{ input.value }}"</td>
+              <td class="mat-cell" colspan="2" *ngIf="dataSource.data.length == 0" style="color: red">Aucune donnée... "{{ input.value }}"</td>
+            </tr>
+          </mat-table>
+          <div class="customer-total" *ngIf="dataSource?.data">Total: {{ dataSource.data.length }}</div>
+        </div>
+      </div>
+      <div class="exportation">
+        <h2 class="titreResultats">Exportation:  {{titreResultats}}</h2>
+        <div class="container">
+          <p>
+            Il est possible d'exporter les données du tableau vers un fichier Excel.
+            Le fichier généré respectera la structure du tableau actuel, incluant les colonnes et les valeurs.
+            Le fichier généré comportera les éléments suivants :
+          </p>
+          <ul>
+            <li>Une feuille de calcul nommée "Sheet1".</li>
+            <li>Deux colonnes :
+              <ul>
+                <li>"Numéro" qui contiendra des données de type chaîne de caractères (string).</li>
+                <li>"Montant" qui contiendra des données numériques en virgule flottante (double).</li>
+              </ul>
+            </li>
+            <li>Les données seront triées dans l'ordre dans lequel elles apparaissent dans le tableau actuel.</li>
+            <li>Le fichier sera au format .xlsx, compatible avec Microsoft Excel et d'autres logiciels de feuilles de calcul.</li>
+          </ul>
+          <button (click)="exportToExcel()">Exporter vers Excel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 
