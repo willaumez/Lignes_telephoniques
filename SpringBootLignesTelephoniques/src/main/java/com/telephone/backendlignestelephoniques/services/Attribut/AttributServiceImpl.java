@@ -89,7 +89,7 @@ public class AttributServiceImpl implements AttributService {
     }
 
     private void validateUpdate(Attribut existingAttribut, Attribut newAttribut) {
-        Attribut attributWithSameName = attributRepository.findByNomAttribut(newAttribut.getNomAttribut());
+        Attribut attributWithSameName = attributRepository.findByNomAttribut(newAttribut.getNomAttribut()).orElse(null);
         if (attributWithSameName != null && !attributWithSameName.getIdAttribut().equals(existingAttribut.getIdAttribut())) {
             throw new IllegalArgumentException("Un attribut du même nom existe déjà.");
         }

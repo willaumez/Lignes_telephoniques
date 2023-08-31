@@ -11,11 +11,13 @@ import java.util.Optional;
 
 @Repository
 public interface TypeLigneRepository extends JpaRepository<TypeLigne, Long> {
-    TypeLigne findByNomType(String nomType);
+    //TypeLigne findByNomType(String nomType);
     boolean existsByNomType(String nomAttribut);
 
     @Query("SELECT tl FROM TypeLigne tl JOIN tl.attributs a WHERE a.idAttribut = :id")
     List<TypeLigne> findByAttributId(@Param("id") long id);
 
     Optional<TypeLigne> findByIdType(Long idType);
+
+    Optional<TypeLigne> findByNomType(String nomType);
 }

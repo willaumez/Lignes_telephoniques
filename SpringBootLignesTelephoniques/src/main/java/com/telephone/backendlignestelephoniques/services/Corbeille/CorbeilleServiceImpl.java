@@ -1,20 +1,32 @@
 package com.telephone.backendlignestelephoniques.services.Corbeille;
 
-import com.telephone.backendlignestelephoniques.entities.LigneTelephonique;
-import com.telephone.backendlignestelephoniques.entities.Corbeille;
+import com.telephone.backendlignestelephoniques.dtos.LigneAttributDto;
+import com.telephone.backendlignestelephoniques.embeddable.AttributValeur;
+import com.telephone.backendlignestelephoniques.entities.*;
+import com.telephone.backendlignestelephoniques.enums.EtatType;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
+import com.telephone.backendlignestelephoniques.mappers.LigneMappers;
+import com.telephone.backendlignestelephoniques.repositories.AttributRepository;
 import com.telephone.backendlignestelephoniques.repositories.CorbeilleRepository;
+import com.telephone.backendlignestelephoniques.repositories.TypeLigneRepository;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
 import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueService;
+import com.telephone.backendlignestelephoniques.services.LigneTelephonique.LigneTelephoniqueServiceImpl;
+import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -22,48 +34,8 @@ import java.util.List;
 @Slf4j
 public class CorbeilleServiceImpl implements CorbeilleService {
 
-    //@Autowired
     private CorbeilleRepository corbeilleRepository;
-    private LigneTelephoniqueService ligneTelephoniqueService;
     private HistoriqueService historiqueService;
-
-    @Override
-    public void saveRestoration(Corbeille corbeille, String operateur) {
-        corbeille.setDateSuppression(new Date());
-        corbeilleRepository.save(corbeille);
-    }
-
-    @Override
-    public Corbeille getRestoration(Long restorationId) throws ElementNotFoundException {
-        return corbeilleRepository.findById(restorationId)
-                .orElseThrow(() -> new ElementNotFoundException("----- Corbeille non trouvée -----"));
-    }
-
-    @Override
-    public void deleteRestoration(Long id, String operateur) {
-        corbeilleRepository.deleteById(id);
-    }
-
-    @Override
-    public void restorer(Long id, String operateur) throws ElementNotFoundException {
-        Corbeille corbeille = corbeilleRepository.findById(id)
-                .orElseThrow(() -> new ElementNotFoundException("Corbeille with id " + id + " not found"));
-
-       /* Corbeille.Ligne restorationLigne = corbeille.getLigneTelephonique();
-        LigneTelephonique ligneTelephonique = new LigneTelephonique();
-        BeanUtils.copyProperties(restorationLigne, ligneTelephonique);*/
-
-       /* ligneTelephoniqueService.saveLigneTelephonique(ligneTelephonique, operateur);
-        deleteRestoration(id, operateur);
-
-        historiqueService.saveHistoriques("Corbeille de la ligne", ligneTelephonique.getNumeroLigne(), operateur);*/
-    }
-
-    @Override
-    public List<Corbeille> listRestoration() {
-        return corbeilleRepository.findAll();
-    }
-
 
     @Override
     public void deleteOldRestorations() {

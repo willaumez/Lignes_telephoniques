@@ -19,6 +19,8 @@ export class UtilisateursComponent implements OnInit {
   pageNumber: number = 1;
   pageSize: number = 10;
   keyword: string = '';
+
+
   pageSizeOptions: number[] = [10, 23, 33, 50,100];
   errorMessage!: string;
   displayedColumns: string[] = [

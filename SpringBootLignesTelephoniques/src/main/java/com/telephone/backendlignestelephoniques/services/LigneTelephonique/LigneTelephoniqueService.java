@@ -31,4 +31,14 @@ public interface LigneTelephoniqueService {
     //Rapprochement
     List<Rapprochement> rapprochementList();
 
+    //Corbeille
+    void saveInCorbeille(LigneTelephonique ligneTelephonique);
+
+    Corbeille getElementCorbeille(Long restorationId) throws ElementNotFoundException;
+
+    void deleteFromCorbeille(Long id, String operateur) throws ElementNotFoundException;
+
+    void restorationOfElement(Long id, String operateur) throws ElementNotFoundException;
+
+    List<Corbeille> listCorbeille();
 }

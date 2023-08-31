@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface CorbeilleRepository extends JpaRepository<Corbeille, Long> {
-
     List<Corbeille> findByDateSuppressionBefore(Date thresholdDate);
 
 }

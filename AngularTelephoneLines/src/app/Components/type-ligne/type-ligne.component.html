@@ -5,10 +5,10 @@
 <ng-container *ngIf="typeLignes; else failureOrLading">
   <div class="type-Container">
     <div class="button-select">
-      <button mat-icon-button (click)="firstElement()" matTooltip="Premier type" [matTooltipShowDelay]="1000">
+      <button mat-icon-button (click)="firstElement()" matTooltip="Premier type" [matTooltipShowDelay]="1000" [disabled]="typeLignes.length == 0">
         <mat-icon>first_page</mat-icon>
       </button>
-      <button mat-icon-button (click)="previousElement()" matTooltip="Type precedent" [matTooltipShowDelay]="1000">
+      <button mat-icon-button (click)="previousElement()" matTooltip="Type precedent" [matTooltipShowDelay]="1000"  [disabled]="typeLignes.length == 0">
         <mat-icon>chevron_left</mat-icon>
       </button>
     </div>
@@ -23,10 +23,10 @@
       </button>
     </div>
     <div class="button-select">
-      <button mat-icon-button (click)="nextElement()" matTooltip="Type suivant" [matTooltipShowDelay]="1000">
+      <button mat-icon-button (click)="nextElement()" matTooltip="Type suivant" [matTooltipShowDelay]="1000"  [disabled]="typeLignes.length == 0">
         <mat-icon>chevron_right</mat-icon>
       </button>
-      <button mat-icon-button (click)="lastElement()" matTooltip="Dernier type" [matTooltipShowDelay]="1000">
+      <button mat-icon-button (click)="lastElement()" matTooltip="Dernier type" [matTooltipShowDelay]="1000"  [disabled]="typeLignes.length == 0">
         <mat-icon>last_page</mat-icon>
       </button>
     </div>

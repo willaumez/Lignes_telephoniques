@@ -25,4 +25,5 @@ public class Attribut {
 
     @ElementCollection
     private List<String> enumeration = new ArrayList<>();
+
 }

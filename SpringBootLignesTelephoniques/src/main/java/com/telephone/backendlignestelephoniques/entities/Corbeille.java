@@ -1,16 +1,18 @@
 package com.telephone.backendlignestelephoniques.entities;
 
 
+import com.telephone.backendlignestelephoniques.dtos.LigneAttributDto;
+import com.telephone.backendlignestelephoniques.embeddable.AttributValeur;
 import com.telephone.backendlignestelephoniques.enums.EtatType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Table
@@ -20,48 +22,30 @@ import java.util.Map;
 public class Corbeille {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRestoration;
+    private Long idCorbeille;
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date dateSuppression;
 
-    //@Embedded
-    //private Ligne ligneTelephonique;
+    //ligne téléphonique
+    private String numeroLigne;
+    private String affectation;
+    private String poste;
+    @Enumerated(EnumType.STRING)
+    private EtatType etat;
+    private Date dateLivraison;
+    private String numeroSerie;
+    private Double montant;
+    private Date createdDate;
+    //type
+    private Long typeId;
+    private String nomType;
+    private String descriptionType;
 
-/*    @Embeddable
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Ligne {
-        @Column(unique = true, nullable = false)
-        private String numeroLigne;
-
-        @ManyToOne
-        private TypeLigne typeLigne;
-
-        private String affectation;
-        private String poste;
-
-        @Enumerated(EnumType.STRING)
-        private EtatType etat;
-
-        private Date dateLivraison;
-
-        @Column(unique = true, nullable = false)
-        private String numeroSerie;
-
-        private Double montant;
-
-        @CreatedDate
-        private Date createdDate;
-
-        @ElementCollection
-        @MapKeyColumn(name = "nomAttribut")
-        @Column(name = "valeur")
-        @CollectionTable(name = "ligne_attributs", joinColumns = @JoinColumn(name = "ligne_id"))
-        private Map<String, String> attributs = new HashMap<>();
-    }*/
+    //attribut
+    @ElementCollection
+    private Set<AttributValeur> attributValeurs = new HashSet<>();
 
 }
 

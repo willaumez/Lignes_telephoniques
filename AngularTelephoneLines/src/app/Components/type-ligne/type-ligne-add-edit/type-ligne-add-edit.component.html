@@ -133,7 +133,7 @@
       <div mat-dialog-actions class="button-container action">
         <button mat-raised-button class="col" [mat-dialog-close]="false">Annuler</button>
         <button mat-raised-button class="col" color="primary" type="submit"
-                [disabled]="!isFormValid()">{{data ? 'Modifier' : 'Ajouter'}}</button>
+                [disabled]="!isFormValid()">{{data?.edit ? 'Modifier' : 'Ajouter'}}</button>
       </div>
     </form>
 

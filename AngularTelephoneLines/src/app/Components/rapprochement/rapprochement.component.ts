@@ -23,6 +23,7 @@ export class RapprochementComponent implements OnInit {
 
   //pointeurs
   isLoading: boolean = false;
+  isExport: boolean = false;
   errorMessage!: string;
   verificationFile?: VerificationResult;
   isFileDragging: boolean = false;
@@ -42,19 +43,14 @@ export class RapprochementComponent implements OnInit {
   //Table
   @ViewChild(MatSort) sort!: MatSort;
   displayedColumns: string[] = ['numero', 'montant'];
-  dataSource!: MatTableDataSource<any>;
-  /*dataBase!: MatTableDataSource<any>;
-  tableCorresponding!: MatTableDataSource<any>;
-  tableMontantNoCor!: MatTableDataSource<any>;
-  tableNoExistDB!: MatTableDataSource<any>;
-  tableNoExistExcel!: MatTableDataSource<any>;*/
+  dataSource = new MatTableDataSource<any>([]);
 
   ngOnInit(): void {
     this.indexTab = 0;
     this.getListLignesRapprochement();
   }
 
-  constructor(private cdRef: ChangeDetectorRef, private rapService: RapprochementService, private ligneService: LigneTelephoniqueService ) {
+  constructor(private cdRef: ChangeDetectorRef, private rapService: RapprochementService, private ligneService: LigneTelephoniqueService) {
 
   }
 
@@ -63,12 +59,9 @@ export class RapprochementComponent implements OnInit {
     this.ligneService.getLignesRapprochement().subscribe({
       next: (data) => {
         this.dataFromDataBase = data;
-        //this.dataBase = new MatTableDataSource(data);
-        //this.dataSource.sort = this.sort;
-        //this.dataSource.paginator = this.paginator;
       },
       error: err => {
-        this.errorMessage = "Erreur lors de la récupération des lignes téléphoniques"+err.error.message;
+        this.errorMessage = "Erreur lors de la récupération des lignes téléphoniques" + err.error.message;
         console.log(err);
       }
     });
@@ -96,29 +89,16 @@ export class RapprochementComponent implements OnInit {
     return index !== this.indexTab;
   }
 
-
   //Fonctions Importation
   getFile(event: any): void {
     if (event.target.files[0]) {
       this.isLoading = true;
       this.selectedFile = event.target.files[0];
       if (this.selectedFile) {
-
-     /*   this.rapService.importDataFromExcel(this.selectedFile).subscribe({
-            next: (data: Rapprochement[]): void => {
-              this.dataFromExcel = data;
-              console.log("dataFromExcel :::   " + JSON.stringify(this.dataFromExcel));
-            },
-            error: (error) => {
-              console.error('Une erreur est survenue lors de l\'importation des données depuis Excel', error);
-            }
-          }
-        );*/
-
         this.rapService.verifyExcelFile(this.selectedFile).subscribe({
             next: (data: VerificationResult): void => {
               this.verificationFile = data;
-              if (this.verificationFile.isValid){
+              if (this.verificationFile.isValid) {
                 this.extractDataFromExcel();
               }
               console.log("dataFromExcel :::   " + JSON.stringify(this.verificationFile));
@@ -128,9 +108,6 @@ export class RapprochementComponent implements OnInit {
             }
           }
         );
-
-        //console.log("dataFromExcel :::   " + this.dataFromExcel);
-        //console.log("valide--   --     "+this.rapService.isExcelFileValid(this.selectedFile))
         this.isLoading = false;
       } else {
         this.errorMessage = "Aucun fichier détecté."
@@ -142,10 +119,12 @@ export class RapprochementComponent implements OnInit {
   preventDefault(event: Event): void {
     event.preventDefault();
   }
+
   onFileDragOver(event: DragEvent): void {
     this.isFileDragging = true;
     event.preventDefault();
   }
+
   onFileDragLeave(event: DragEvent): void {
     this.isFileDragging = false;
     event.preventDefault();
@@ -189,29 +168,6 @@ export class RapprochementComponent implements OnInit {
       this.rapService.importDataFromExcel(this.selectedFile).subscribe({
           next: (data: Rapprochement[]): void => {
             this.dataFromExcel = data;
-            console.log("dataFromExcel        " + this.dataFromExcel);
-            //this.dataSource.sort = this.sort;
-            //this.dataSource.paginator = this.paginator;
-            // Trigger manual change detection
-            this.cdRef.detectChanges();
-          },
-          error: (error) => {
-            console.error('Erreur lors de l\'importation du fichier :', error);
-          }
-        }
-      );
-    }
-  }
-
-  validerTraitement2(): void {
-    if (this.selectedFile) {
-      this.rapService.importDataFromExcel(this.selectedFile).subscribe({
-          next: (data: Rapprochement[]): void => {
-            this.dataFromExcel = data;
-            console.log("dataFromExcel        " + this.dataFromExcel);
-            //this.dataSource.sort = this.sort;
-            //this.dataSource.paginator = this.paginator;
-            // Trigger manual change detection
             this.cdRef.detectChanges();
           },
           error: (error) => {
@@ -223,7 +179,7 @@ export class RapprochementComponent implements OnInit {
   }
 
   //Traitement
-  validerTraitement():void {
+  validerTraitement(): void {
     this.traitement = true;
     // Comparaison des numeros
     for (const excelItem of this.dataFromExcel) {
@@ -236,7 +192,6 @@ export class RapprochementComponent implements OnInit {
           break; // Passer au prochain élément de dataFromExcel dès qu'une correspondance est trouvée
         }
       }
-
       if (!numeroExisteDansDB) {
         this.dataNoExistDB.push(excelItem);
       }
@@ -266,61 +221,68 @@ export class RapprochementComponent implements OnInit {
         this.dataNoExistExcel.push(dbItem);
       }
     }
-
-    // Mettre à jour les sources de données pour les tables
-    //this.tableCorresponding = new MatTableDataSource(this.dataCorresponding);
-    //this.tableMontantNoCor = new MatTableDataSource(this.dataMontantNoCor);
-    //this.tableNoExistDB = new MatTableDataSource(this.dataNoExistDB);
-    //this.tableNoExistExcel = new MatTableDataSource(this.dataNoExistExcel);
-
     //
     setTimeout(() => {
       this.traitement = false;
       this.traitementFinit = true;
-    }, 5000);
-
+    }, 1000);
 
   }
+
+
 
   //Resultats Traitement
-  resultatsTraitement():void{
+  resultatsTraitement(): void {
     this.resultats = true;
   }
+
+
   //Charger les données
-  dataOfBase():void{
+  chargerDataSource(data: Rapprochement[]): void {
+    this.isLoading = true;
+    this.dataSource = new MatTableDataSource(data);
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+    }
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
+  }
+
+  dataOfBase(): void {
     this.titreResultats = "Lignes téléphoniques de la base de donnée";
-    this.dataSource = new MatTableDataSource(this.dataFromDataBase);
-    this.dataSource.sort = this.sort;
+    this.chargerDataSource(this.dataFromDataBase);
   }
-  dataOfExcel():void{
+
+  dataOfExcel(): void {
+
     this.titreResultats = "Lignes téléphoniques du fichier Excel";
-    this.dataSource = new MatTableDataSource(this.dataFromExcel);
-    this.dataSource.sort = this.sort;
+    this.chargerDataSource(this.dataFromExcel);
   }
-  dataCorresp():void{
+
+  dataCorresp(): void {
     this.titreResultats = "Lignes téléphoniques correspondantes";
-    this.dataSource = new MatTableDataSource(this.dataCorresponding);
-    this.dataSource.sort = this.sort;
+    this.chargerDataSource(this.dataCorresponding);
   }
-  dataNotCorresp():void{
+
+  dataNotCorresp(): void {
     this.titreResultats = "Lignes téléphoniques non correspondantes";
-    this.dataSource = new MatTableDataSource(this.dataNotCorresponding);
-    this.dataSource.sort = this.sort;
+    this.chargerDataSource(this.dataNotCorresponding);
   }
-  dataNotCorrespMontant():void{
+
+  dataNotCorrespMontant(): void {
     this.titreResultats = "Numéros correspondants mais montants différents";
-    this.dataSource = new MatTableDataSource(this.dataMontantNoCor);
-    this.dataSource.sort = this.sort;
+    this.chargerDataSource(this.dataMontantNoCor);
   }
-  dataNotExistDataBase():void{
+
+  dataNotExistDataBase(): void {
     this.titreResultats = "Lignes téléphoniques dans le fichier Excel et non dans la base de donnée";
-    this.dataSource = new MatTableDataSource(this.dataNoExistDB);
-    this.dataSource.sort = this.sort;
+    this.chargerDataSource(this.dataNoExistDB);
   }
-  dataNotExistExcel():void{
+
+  dataNotExistExcel(): void {
     this.titreResultats = "Numéros de téléphone dans la base de donnée, mais pas dans le fichier Excel";
-    this.dataSource = new MatTableDataSource(this.dataNoExistExcel);
-    this.dataSource.sort = this.sort;
+    this.chargerDataSource(this.dataNoExistExcel);
   }
 
   //Recherche table
@@ -333,30 +295,47 @@ export class RapprochementComponent implements OnInit {
   }
 
 //Exportation
-  /*exportToExcel() {
-    // Accéder aux données réelles depuis MatTableDataSource
-    const rawData:Rapprochement[] = this.dataSource.data;
-
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rawData);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'rapprochement.xlsx');
-  }*/
-  exportToExcel() {
-    // Accéder aux données réelles depuis MatTableDataSource
+  exportToExcel(titre: string) {
+    this.isExport = true;
     const rawData = this.dataSource.data;
+    const ws: XLSX.WorkSheet = {};
 
-    // Créer un WorkSheet
-    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([
-      ["Numéro (String)", "Montant (Double)"], // Les en-têtes des colonnes
-      ...rawData.map(x => [String(x.numero), Number(x.montant)]) // Les données
-    ]);
+    ws['A1'] = {v: titre, t: 's'};
+    ws['!merges'] = [{s: {r: 0, c: 0}, e: {r: 0, c: 1}}];
 
+    ws['A2'] = {v: 'Numéro', t: 's'};
+    ws['B2'] = {v: 'Montant', t: 's'};
+
+    rawData.forEach((row, index) => {
+      const rowIndex = index + 3;
+      ws['A' + rowIndex] = {v: row.numero, t: 's'};
+      ws['B' + rowIndex] = {v: row.montant, t: 'n'};
+    });
+
+    const range = {s: {c: 0, r: 0}, e: {c: 1, r: rawData.length + 2}};
+    ws['!ref'] = XLSX.utils.encode_range(range);
+
+    ws['!cols'] = [
+      {wch: 38},
+      {wch: 38}
+    ];
+
+    // Appliquer le style de format "Text" à la première colonne
+    for (let i = 1; i <= rawData.length + 2; i++) {
+      const cell_address = {c: 0, r: i};
+      const cell_ref = XLSX.utils.encode_cell(cell_address);
+      if (!ws[cell_ref]) continue;
+      if (!ws[cell_ref].z) {
+        ws[cell_ref].z = '@';
+      }
+    }
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'rapprochement.xlsx');
+    setTimeout(() => {
+      this.isExport = false;
+    }, 1000);
   }
-
 
 
 

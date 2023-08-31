@@ -48,10 +48,10 @@
 
         button {
           border: none;
-          background-color: transparent;
+          //background-color: transparent;
           cursor: pointer;
           font-size: 1rem;
-          color: #4050b5;
+          //color: #4050b5;
 
           &.single-button {
             margin-left: auto;
@@ -366,6 +366,10 @@
       &.single-line {
         margin: 1rem auto; // Centré horizontalement avec des marges verticales de 10px
       }
+      span{
+        color: #008300;
+        font-weight: bold;
+      }
 
       @media (max-width: 768px) {
         width: 100%; // Largeur du bouton à 100% pour les petits écrans
@@ -381,6 +385,9 @@
       &.active {
         background-color: #4050b5; // Couleur de fond lorsque le bouton est actif
         color: #ffff; // Couleur du texte lorsque le bouton est actif
+        span{
+         color: #e3c300;
+        }
 
         // État hover (survol) du bouton actif
         &:hover {
@@ -533,6 +540,35 @@
 
 
 
+}
+
+
+//Erreur et chargement
+.failureOrLading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; // Hauteur totale de la vue
+}
+.span-message {
+  margin: 3rem;
+  width: 100%;
+  height: 100%;
+  color: red;
+  font-size: 24px;
+  text-align: center;
+  justify-content: center;
+}
+.Loading {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  mat-spinner {
+    margin: auto;
+    width: 50px;
+    height: 50px;
+  }
 }
 
 

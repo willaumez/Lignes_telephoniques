@@ -40,10 +40,6 @@
                     <mat-icon matListItemIcon>compare_arrows</mat-icon>
                     <div>Numéros correspondants mais montants différents</div>
                   </mat-list-item>
-                  <!-- <mat-list-item class="item-error">
-                     <mat-icon matListItemIcon>error</mat-icon>
-                     <div>Nombre de lignes avec des erreurs de format</div>
-                   </mat-list-item>-->
                   <mat-list-item class="item-error">
                     <mat-icon matListItemIcon>error</mat-icon>
                     <div>Les éléments figurant dans le fichier excel mais pas dans la base de donnée</div>
@@ -57,7 +53,7 @@
             </div>
 
             <div class="button-select">
-              <button mat-raised-button matTooltip="Importer le fichier Excel" [matTooltipShowDelay]="500"
+              <button color="primary" mat-raised-button matTooltip="Importer le fichier Excel" [matTooltipShowDelay]="500"
                       (click)="nextTab()" class="single-button">
                 <mat-icon>chevron_right</mat-icon>
                 <mat-icon>last_page</mat-icon>
@@ -111,12 +107,12 @@
               </div>
             </div>
             <div class="button-select">
-              <button mat-raised-button matTooltip="Informations sur le rapprochement" [matTooltipShowDelay]="500"
+              <button color="warn" mat-raised-button matTooltip="Informations sur le rapprochement" [matTooltipShowDelay]="500"
                       (click)="previousTab()">
                 <mat-icon>first_page</mat-icon>
                 <mat-icon>chevron_left</mat-icon>
               </button>
-              <button mat-raised-button matTooltip="Traitement des données" [matTooltipShowDelay]="500"
+              <button color="primary" mat-raised-button matTooltip="Traitement des données" [matTooltipShowDelay]="500"
                       (click)="nextTab()" *ngIf="selectedFile">
                 <mat-icon>chevron_right</mat-icon>
                 <mat-icon>last_page</mat-icon>
@@ -172,7 +168,7 @@
               </div>
             </div>
             <div class="button-select">
-              <button mat-raised-button matTooltip="Importer le fichier Excel" [matTooltipShowDelay]="500"
+              <button color="warn" mat-raised-button matTooltip="Importer le fichier Excel" [matTooltipShowDelay]="500"
                       (click)="previousTab()">
                 <mat-icon>first_page</mat-icon>
                 <mat-icon>chevron_left</mat-icon>
@@ -210,7 +206,6 @@
               [ngClass]="{'active': titreResultats == 'Lignes téléphoniques de la base de donnée'}">
         Lignes téléphoniques de la base de donnée: [ <span>{{dataFromDataBase.length}}</span> ]
       </button>
-
       <button class="type-button single-line" (click)="dataOfExcel()"
               [ngClass]="{'active': titreResultats == 'Lignes téléphoniques du fichier Excel'}">
         Lignes téléphoniques du fichier Excel: [ <span>{{dataFromExcel.length}}</span> ]
@@ -229,45 +224,54 @@
       </button>
       <button class="type-button single-line" (click)="dataNotExistDataBase()"
               [ngClass]="{'active': titreResultats == 'Lignes téléphoniques dans le fichier Excel et non dans la base de donnée'}">
-        Lignes téléphoniques dans le fichier Excel et non dans la base de
-        donnée:  [ <span>{{dataNoExistDB.length}}</span> ]
+        Lignes téléphoniques dans le fichier Excel et non dans la base de donnée: [ <span>{{dataNoExistDB.length}}</span> ]
       </button>
       <button class="type-button single-line" (click)="dataNotExistExcel()"
               [ngClass]="{'active': titreResultats == 'Numéros de téléphone dans la base de donnée, mais pas dans le fichier Excel'}">
-        Numéros de téléphone dans la base de donnée, mais pas dans le fichier Excel:  [ <span>{{dataNoExistExcel.length}}</span> ]
+        Numéros de téléphone dans la base de donnée, mais pas dans le fichier Excel: [
+        <span>{{dataNoExistExcel.length}}</span> ]
       </button>
     </div>
 
-    <div class="main-container">
+    <div class="main-container" *ngIf="(dataSource?.data?.length ?? 0) > 0">
       <div class="container-table">
         <h2 class="titreResultats">{{titreResultats}}</h2>
-        <div class="container-fluid">
-          <mat-form-field class="filter" appearance="fill">
-            <mat-label>Filter</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. 212**********" #input>
-          </mat-form-field>
+        <div class="Loading" *ngIf="isLoading">
+          <mat-spinner>Chargement...</mat-spinner>
         </div>
-        <div class="container">
-          <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-auto-width" matSort>
-            <!-- ID Column -->
-            <ng-container matColumnDef="numero">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
-              <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
-            </ng-container>
-            <!-- Type Column -->
-            <ng-container matColumnDef="montant">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant</th>
-              <td mat-cell *matCellDef="let row">{{ row.montant }}</td>
-            </ng-container>
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="2" *ngIf="dataSource.data.length > 0">Aucune donnée pour le filtre "{{ input.value }}"</td>
-              <td class="mat-cell" colspan="2" *ngIf="dataSource.data.length == 0" style="color: red">Aucune donnée... "{{ input.value }}"</td>
-            </tr>
-          </mat-table>
-          <div class="customer-total" *ngIf="dataSource?.data">Total: {{ dataSource.data.length }}</div>
-        </div>
+        <ng-container *ngIf="!isLoading">
+          <div class="container-fluid">
+            <mat-form-field class="filter" appearance="fill">
+              <mat-label>Filter</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ex. 212**********" #input>
+            </mat-form-field>
+          </div>
+          <div class="container">
+            <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-auto-width" matSort>
+              <!-- ID Column -->
+              <ng-container matColumnDef="numero">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
+                <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
+              </ng-container>
+              <!-- Type Column -->
+              <ng-container matColumnDef="montant">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant</th>
+                <td mat-cell *matCellDef="let row">{{ row.montant }}</td>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="2" *ngIf="dataSource.data.length > 0">Aucune donnée pour le filtre
+                  "{{ input.value }}"
+                </td>
+                <td class="mat-cell" colspan="2" *ngIf="dataSource.data.length == 0" style="color: red">Aucune donnée...
+                  "{{ input.value }}"
+                </td>
+              </tr>
+            </mat-table>
+            <div class="customer-total" *ngIf="dataSource?.data">Total: {{ dataSource.data.length }}</div>
+          </div>
+        </ng-container>
       </div>
       <div class="exportation">
         <h2 class="titreResultats">Exportation:  {{titreResultats}}</h2>
@@ -286,11 +290,23 @@
               </ul>
             </li>
             <li>Les données seront triées dans l'ordre dans lequel elles apparaissent dans le tableau actuel.</li>
-            <li>Le fichier sera au format .xlsx, compatible avec Microsoft Excel et d'autres logiciels de feuilles de calcul.</li>
+            <li>Le fichier sera au format .xlsx, compatible avec Microsoft Excel et d'autres logiciels de feuilles de
+              calcul.
+            </li>
           </ul>
-          <button (click)="exportToExcel()">Exporter vers Excel</button>
+          <button *ngIf="!isLoading" (click)="exportToExcel(titreResultats)">Exporter les données vers un fichier
+            Excel
+          </button>
+          <div class="Loading" *ngIf="isExport" style="margin: 1rem">
+            <mat-spinner>Chargement...</mat-spinner>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="main-container" *ngIf="(dataSource?.data?.length ?? 0) == 0">
+      <span class="span-message">
+        Aucune donnée... "  {{titreResultats}}  "
+      </span>
     </div>
   </div>
 

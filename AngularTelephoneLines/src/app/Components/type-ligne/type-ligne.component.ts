@@ -155,6 +155,8 @@ export class TypeLigneComponent implements OnInit{
           if (this.typeLignes && this.typeLignes.length > 0) {
             this.selectedTypeLigne = this.typeLignes[0];
             this.getLignesTelephonique();
+          }else {
+            this.errorMessage = "Aucun type de ligne téléphonique";
           }
           //console.log("getAllTypesLignes--  "+JSON.stringify(this.typeLignes))
         },
