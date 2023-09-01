@@ -2,6 +2,7 @@ package com.telephone.backendlignestelephoniques.services.Attribut;
 
 import com.telephone.backendlignestelephoniques.entities.Attribut;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,5 +30,7 @@ public interface AttributService {
     Set<String> listAttributNames();
 
     Set<String> listAttributNamesByType(long idType) throws ElementNotFoundException;
+
+    Page<Attribut> listAttributsPage(int page, int size, String kw);
 
 }

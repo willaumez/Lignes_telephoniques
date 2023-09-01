@@ -11,6 +11,7 @@ import {TypeLigne} from "../../Models/TypeLigne";
 import {Attribut} from "../../Models/Attribut";
 import {animate, style, transition, trigger} from "@angular/animations";
 import {TypeLigneAddEditComponent} from "./type-ligne-add-edit/type-ligne-add-edit.component";
+import {PagedResponse} from "../../Models/PagedResponse";
 
 @Component({
   selector: 'app-type-ligne',
@@ -30,6 +31,15 @@ import {TypeLigneAddEditComponent} from "./type-ligne-add-edit/type-ligne-add-ed
 })
 
 export class TypeLigneComponent implements OnInit{
+  // Initialisation des variables
+  pageSizeOptions: number[] = [10, 23, 33, 50, 100,500];
+  pageSize!: number;
+  currentPage: number = 0;
+  totalPages!: number;
+  totalItems!: number;
+  keyword: string = "";
+
+
   typeLignes!: TypeLigne[];
   selectedTypeLigne!: TypeLigne;
   typeLigneAttributs!: Attribut[]
@@ -51,8 +61,8 @@ export class TypeLigneComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.pageSize = this.pageSizeOptions[0];
     this.getAllTypesLignes();
-    //this.getLignesTelephonique();
   }
 
   //Forme Add Edit
@@ -102,8 +112,6 @@ export class TypeLigneComponent implements OnInit{
       dialogRef.afterClosed().subscribe({
         next: (val) => {
           if (val) {
-            //this.selectedRowIndex = -1;
-            //this.ligneRow = {} as LigneTelephonique;
             this.getLignesTelephonique();
           }
         },
@@ -172,20 +180,20 @@ export class TypeLigneComponent implements OnInit{
     this.displayedColumns = [];
     this.currentIndex = this.typeLignes.indexOf(typeLigne);
     this.elementSelected();
-    console.log("selectTypeLigne-- "+JSON.stringify(this.selectedTypeLigne));
     this.getLignesTelephonique();
   }
   getLignesTelephonique(): void {
     this.selectedRowIndex = -1;
     this.ligneRow = {} as LigneTelephonique;
     this.getAttributNames();
-    this.ligneService.getAllLignesByType(this.selectedTypeLigne.idType).subscribe({
-        next: (data: any[]): void => {
-          this.dataSource = new MatTableDataSource(data);
-
-          // Initialiser le paginator et le sort ici
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
+    this.ligneService.getAllLignesByTypePage(this.currentPage, this.pageSize, this.keyword, this.selectedTypeLigne.idType).subscribe({
+      next: (data: PagedResponse<LigneTelephonique>): void => {
+        this.dataSource = new MatTableDataSource(data.dataElements);
+        //this.dataSource.sort = this.sort;
+        this.currentPage = data.currentPage;
+        this.totalItems = data.totalItems;
+        this.totalPages = data.totalPages;
+        //console.log(JSON.stringify(data, null, 2));
         },
         error: (error) => {
           this.errorMessage = "Erreur lors de la récupération des types de ligne";
@@ -214,12 +222,13 @@ export class TypeLigneComponent implements OnInit{
 
   // Pour le filtre
   applyFilter(event: Event) {
+    // Récupérez la valeur du champ de filtre
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.pageSize = this.pageSizeOptions[0];
+    this.currentPage = 0;
+    // Affectez la valeur à la variable keyword
+    this.keyword = filterValue.trim();
+    this.getLignesTelephonique();
   }
 
 
@@ -262,6 +271,38 @@ export class TypeLigneComponent implements OnInit{
     }
   }
 
+  //pagination
+  firstPage():void {
+    this.currentPage = 0;
+    this.onDataChanged();
+  }
+  previousPage():void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.onDataChanged();
+    }
+  }
+  nextPage():void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.onDataChanged();
+    }
+  }
+  lastPage() {
+    this.currentPage = this.totalPages - 1;
+    this.onDataChanged();
+  }
+  // Méthode pour rafraîchir les données
+  onDataChanged():void {
+    this.getLignesTelephonique();
+  }
+  changePageSize(event: Event):void {
+    const selectElement = event.target as HTMLSelectElement;
+    const newSize = selectElement.value;
+    this.pageSize = +newSize;  // Convertir la chaîne en nombre
+    this.firstPage();
+    this.onDataChanged();
+  }
 
 
 

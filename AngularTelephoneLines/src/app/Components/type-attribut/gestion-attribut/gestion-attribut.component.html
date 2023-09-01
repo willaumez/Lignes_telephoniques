@@ -18,10 +18,10 @@
       <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
           <!-- ID Column -->
-          <ng-container matColumnDef="idAttribut">
+          <!--<ng-container matColumnDef="idAttribut">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> No</th>
             <td mat-cell *matCellDef="let attribut; let i = index"> {{ i + 1 }} </td>
-          </ng-container>
+          </ng-container>-->
           <!-- Name Column -->
           <ng-container matColumnDef="nomAttribut">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom</th>
@@ -74,8 +74,31 @@
         </table>
       </div>
       <div class="customer-container">
-        <div class="customer-total" *ngIf="dataSource?.data">Total:   {{dataSource.data.length}}</div>
-        <mat-paginator class="custom-paginator" [pageSizeOptions]="[11, 23, 33, 50]" aria-label="Sélectionner une page"></mat-paginator>
+        <div class="nombrePage">
+          <label for="pageSize">Éléments par page :</label>
+          <select id="pageSize" (change)="changePageSize($event)" [(ngModel)]="pageSize">
+            <option *ngFor="let sizeOption of pageSizeOptions" [value]="sizeOption">{{sizeOption}}</option>
+          </select>
+        </div>
+        <div class="custom-paginator">
+          <button mat-icon-button (click)="firstPage()" matTooltip="Première page" [matTooltipShowDelay]="1000"
+                  [disabled]="currentPage == 0">
+            <mat-icon>first_page</mat-icon>
+          </button>
+          <button mat-icon-button (click)="previousPage()" matTooltip="precedent" [matTooltipShowDelay]="1000"
+                  [disabled]="currentPage == 0">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <span>{{currentPage+1}}</span>
+          <button mat-icon-button (click)="nextPage()" matTooltip="suivant" [matTooltipShowDelay]="1000"
+                  [disabled]="currentPage == totalPages- 1">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+          <button mat-icon-button (click)="lastPage()" matTooltip="Dernière page" [matTooltipShowDelay]="1000"
+                  [disabled]="currentPage == totalPages- 1">
+            <mat-icon>last_page</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
   </ng-container>

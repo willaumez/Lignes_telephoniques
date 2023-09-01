@@ -1,4 +1,4 @@
-<div class="row"><h1 class="titre-liste">Lignes Téléphonique</h1></div>
+<div class="row"><h1 class="titre-liste">Lignes Téléphonique: <span>[  {{totalItems}}  ]</span></h1></div>
 <ng-container *ngIf="dataSource && attributNames; else failureOrLading">
   <div class="container-fluid">
     <mat-form-field class="filter" appearance="fill">
@@ -120,8 +120,30 @@
   </div>
 
   <div class="pagination-container">
-    <mat-paginator class="custom-paginator" [pageSizeOptions]="[10, 20, 30]"
-                   aria-label="Selectionner une page"></mat-paginator>
+    <div class="nombrePage">
+      <select id="pageSize" (change)="changePageSize($event)" [(ngModel)]="pageSize">
+        <option *ngFor="let sizeOption of pageSizeOptions" [value]="sizeOption">{{sizeOption}}</option>
+      </select>
+    </div>
+    <div class="custom-paginator">
+      <button mat-icon-button (click)="firstPage()" matTooltip="Première page" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == 0">
+        <mat-icon>first_page</mat-icon>
+      </button>
+      <button mat-icon-button (click)="previousPage()" matTooltip="precedent" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == 0">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span>{{currentPage+1}}</span>
+      <button mat-icon-button (click)="nextPage()" matTooltip="suivant" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == totalPages- 1">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <button mat-icon-button (click)="lastPage()" matTooltip="Dernière page" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == totalPages- 1">
+        <mat-icon>last_page</mat-icon>
+      </button>
+    </div>
   </div>
 </ng-container>
 

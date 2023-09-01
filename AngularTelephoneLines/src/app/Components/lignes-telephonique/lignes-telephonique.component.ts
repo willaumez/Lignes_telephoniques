@@ -10,6 +10,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {LigneTelephonique} from "../../Models/LigneTelephonique";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {PagedResponse} from "../../Models/PagedResponse";
 
 @Component({
   selector: 'app-lignes-telephonique',
@@ -28,6 +29,15 @@ import {MatSort} from "@angular/material/sort";
   ]
 })
 export class LignesTelephoniqueComponent implements OnInit {
+  // Initialisation des variables
+  pageSizeOptions: number[] = [10, 23, 33, 50, 100,500];
+  pageSize!: number;
+  currentPage: number = 0;
+  totalPages!: number;
+  totalItems!: number;
+  keyword: string = "";
+
+
   errorMessage!: string;
   columnsInit: string[] = ['idLigne', 'typeLigne.nomType', 'numeroLigne', 'affectation', 'poste', 'etat', 'dateLivraison', 'numeroSerie', 'montant', 'createdDate'];
   displayedColumns: string[] = [];
@@ -44,6 +54,7 @@ export class LignesTelephoniqueComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.pageSize = this.pageSizeOptions[0];
     this.getLignesTelephonique();
   }
 
@@ -132,7 +143,6 @@ export class LignesTelephoniqueComponent implements OnInit {
         }
       },
     });
-    //this.getListLignes();
   }
 
 
@@ -141,13 +151,15 @@ export class LignesTelephoniqueComponent implements OnInit {
     this.selectedRowIndex = -1;
     this.ligneRow = {} as LigneTelephonique;
     this.getAttributNames();
-    this.ligneService.getAllLignes().subscribe({
-        next: (data: any[]): void => {
-          this.dataSource = new MatTableDataSource(data);
-
+    this.ligneService.getAllLignes(this.currentPage, this.pageSize, this.keyword).subscribe({
+        next: (data: PagedResponse<LigneTelephonique>): void => {
+          this.dataSource = new MatTableDataSource(data.dataElements);
           // Initialiser le paginator et le sort ici
           this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
+          this.currentPage = data.currentPage;
+          this.totalItems = data.totalItems;
+          this.totalPages = data.totalPages;
+          //console.log(JSON.stringify(data, null, 2));
         },
         error: (error) => {
           this.errorMessage = "Erreur lors de la récupération des types de ligne";
@@ -181,13 +193,49 @@ export class LignesTelephoniqueComponent implements OnInit {
 
   // Pour le filtre
   applyFilter(event: Event) {
+    // Récupérez la valeur du champ de filtre
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.pageSize = this.pageSizeOptions[0];
+    this.currentPage = 0;
+    // Affectez la valeur à la variable keyword
+    this.keyword = filterValue.trim();
+    this.getLignesTelephonique();
+  }
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+  //pagination
+  firstPage():void {
+    this.currentPage = 0;
+    this.onDataChanged();
+  }
+  previousPage():void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.onDataChanged();
     }
   }
+  nextPage():void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.onDataChanged();
+    }
+  }
+  lastPage() {
+    this.currentPage = this.totalPages - 1;
+    this.onDataChanged();
+  }
+  // Méthode pour rafraîchir les données
+  onDataChanged():void {
+    this.getLignesTelephonique();
+  }
+  changePageSize(event: Event):void {
+    const selectElement = event.target as HTMLSelectElement;
+    const newSize = selectElement.value;
+    this.pageSize = +newSize;  // Convertir la chaîne en nombre
+    this.firstPage();
+    this.onDataChanged();
+  }
+
+
 
 
 }

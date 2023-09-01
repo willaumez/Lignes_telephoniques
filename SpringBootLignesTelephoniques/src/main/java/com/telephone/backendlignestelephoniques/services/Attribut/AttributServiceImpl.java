@@ -12,6 +12,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -64,6 +67,12 @@ public class AttributServiceImpl implements AttributService {
     @Override
     public List<Attribut> listAttribut() {
         return attributRepository.findAll();
+    }
+
+    @Override
+    public Page<Attribut> listAttributsPage(int page, int size, String kw) {
+        Pageable pageable = PageRequest.of(page, size);
+        return attributRepository.getAllAttributs(kw, pageable);
     }
 
     @Override

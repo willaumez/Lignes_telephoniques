@@ -63,10 +63,7 @@ export class UtilisateursComponent implements OnInit {
   getUtilisateurs(): void {
     this.userService.listUsers(this.currentPage, this.pageSize, this.keyword).subscribe({
       next: (data: PagedResponse<User>): void => {
-        // Utilisez data.users car "users" est un champ dans PagedResponse<User>
         this.dataSource = new MatTableDataSource(data.dataElements);
-
-        // Si vous souhaitez utiliser les métadonnées pour d'autres choses
         this.currentPage = data.currentPage;
         this.totalItems = data.totalItems;
         this.totalPages = data.totalPages;
@@ -133,35 +130,28 @@ export class UtilisateursComponent implements OnInit {
       },
     });
   }
-  //pagination
 
+  //pagination
   firstPage() {
     this.currentPage = 0;
     this.onDataChanged();
   }
-
   previousPage() {
     if (this.currentPage > 0) {
       this.currentPage--;
       this.onDataChanged();
     }
   }
-
   nextPage() {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
       this.onDataChanged();
     }
   }
-
   lastPage() {
     this.currentPage = this.totalPages - 1;
     this.onDataChanged();
   }
-
-
-// Méthode pour passer à la page suivante
-
   // Méthode pour rafraîchir les données
   onDataChanged() {
     this.getUtilisateurs();

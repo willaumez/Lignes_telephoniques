@@ -1,6 +1,8 @@
 package com.telephone.backendlignestelephoniques.repositories;
 
 import com.telephone.backendlignestelephoniques.entities.TypeLigne;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +22,15 @@ public interface TypeLigneRepository extends JpaRepository<TypeLigne, Long> {
     Optional<TypeLigne> findByIdType(Long idType);
 
     Optional<TypeLigne> findByNomType(String nomType);
+
+    @Query("SELECT t FROM TypeLigne t WHERE " +
+            "(LOWER(t.nomType) LIKE LOWER(CONCAT('%', :kw, '%'))) OR " +
+            "(LOWER(t.descriptionType) LIKE LOWER(CONCAT('%', :kw, '%'))) OR " +
+            "(:kw IS NULL OR STR(t.createdDate) LIKE CONCAT('%', :kw, '%'))")
+    Page<TypeLigne> getAllTypeLignes(@Param("kw") String keyword, Pageable pageable);
+
+
+
+
+
 }

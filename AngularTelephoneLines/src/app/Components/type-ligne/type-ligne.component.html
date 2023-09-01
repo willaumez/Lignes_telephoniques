@@ -1,5 +1,10 @@
-<div class="row"><h1 class="titre-liste">Type de lignes Téléphoniques: <span
-  *ngIf="selectedTypeLigne">{{selectedTypeLigne.nomType}}</span></h1>
+<div class="row">
+  <h1 class="titre-liste">Type de lignes Téléphoniques:
+    <span *ngIf="selectedTypeLigne">{{selectedTypeLigne.nomType}}
+      <span>[  {{totalItems}}  ]</span>
+    </span>
+  </h1>
+
 </div>
 <mat-divider class="first-divider"></mat-divider>
 <ng-container *ngIf="typeLignes; else failureOrLading">
@@ -51,8 +56,8 @@
       <!-- Colonne ID de la Ligne -->
       <ng-container matColumnDef="idLigne">
         <th mat-header-cell *matHeaderCellDef>N<sup>o</sup></th>
-        <td mat-cell *matCellDef="let element ; let i = index">
-          <div class="cell-content"> {{ i + 1 }} </div>
+        <td mat-cell *matCellDef="let element">
+          <div class="cell-content"> {{ element.idLigne }} </div>
         </td>
       </ng-container>
 
@@ -156,8 +161,30 @@
   </div>
 
   <div class="pagination-container">
-    <mat-paginator class="custom-paginator" [pageSizeOptions]="[10, 20, 30]"
-                   aria-label="Selectionner une page"></mat-paginator>
+    <div class="nombrePage">
+      <select id="pageSize" (change)="changePageSize($event)" [(ngModel)]="pageSize">
+        <option *ngFor="let sizeOption of pageSizeOptions" [value]="sizeOption">{{sizeOption}}</option>
+      </select>
+    </div>
+    <div class="custom-paginator">
+      <button mat-icon-button (click)="firstPage()" matTooltip="Première page" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == 0">
+        <mat-icon>first_page</mat-icon>
+      </button>
+      <button mat-icon-button (click)="previousPage()" matTooltip="precedent" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == 0">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span>{{currentPage+1}}</span>
+      <button mat-icon-button (click)="nextPage()" matTooltip="suivant" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == totalPages- 1">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <button mat-icon-button (click)="lastPage()" matTooltip="Dernière page" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == totalPages- 1">
+        <mat-icon>last_page</mat-icon>
+      </button>
+    </div>
   </div>
 </ng-container>
 <ng-template #failureOrLading>

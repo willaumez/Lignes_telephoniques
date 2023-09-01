@@ -1,18 +1,15 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Attribut, TypeVariable} from "../../../Models/Attribut";
-import {TypeLigne} from "../../../Models/TypeLigne";
-import {Section2} from "../gestion-type/gestion-type.component";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {TypeAttributService} from "../../../Services/type-attribut.service";
 import {CoreService} from "../../../core/core.service";
-import {Observable} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {MatMenuTrigger} from "@angular/material/menu";
+import {PagedResponse} from "../../../Models/PagedResponse";
 
 @Component({
   selector: 'app-gestion-attribut',
@@ -20,6 +17,13 @@ import {MatMenuTrigger} from "@angular/material/menu";
   styleUrls: ['./gestion-attribut.component.scss']
 })
 export class GestionAttributComponent implements OnInit {
+  pageSizeOptions: number[] = [10, 23, 33, 50, 100];
+  pageSize!: number;
+  currentPage: number = 0;
+  totalPages!: number;
+  totalItems!: number;
+  keyword: string = "";
+
   errorMessage!: string;
   addOnBlur: boolean = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
@@ -33,7 +37,7 @@ export class GestionAttributComponent implements OnInit {
   //attributs$!: Observable<Attribut[]>;
   @Input()
   dataSource!: MatTableDataSource<any>;
-  displayedColumns: string[] = ['idAttribut', 'nomAttribut', 'type', 'valeurAttribut', 'enumeration', 'ACTIONS'];
+  displayedColumns: string[] = ['nomAttribut', 'type', 'valeurAttribut', 'enumeration', 'ACTIONS'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -51,6 +55,7 @@ export class GestionAttributComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.pageSize = this.pageSizeOptions[0];
     this.getAttributs();
   }
 
@@ -101,11 +106,13 @@ export class GestionAttributComponent implements OnInit {
 
   //Fonctions
   getAttributs(): void {
-    this.typeAttributService.getAllAttributs().subscribe({
-      next: (data: any[]) => {
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+    this.typeAttributService.getAllAttributsPage(this.currentPage, this.pageSize, this.keyword).subscribe({
+      next: (data: PagedResponse<Attribut>) => {
+        this.dataSource = new MatTableDataSource(data.dataElements);
+        this.currentPage = data.currentPage;
+        this.totalItems = data.totalItems;
+        this.totalPages = data.totalPages;
+        //console.log(JSON.stringify(data, null, 2));
       },
       error: (error) => {
         this.errorMessage = ('Erreur lors de la récupération des attributs: ' + error.error.message)
@@ -157,14 +164,14 @@ export class GestionAttributComponent implements OnInit {
 
 
   //Recherche
-  applyFilter(event: Event): void {
-    this.selectAdd = false;
-    this.selectUpdate = false;
+  applyFilter(event: Event) {
+    // Récupérez la valeur du champ de filtre
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.pageSize = this.pageSizeOptions[0];
+    this.currentPage = 0;
+    // Affectez la valeur à la variable keyword
+    this.keyword = filterValue.trim();
+    this.getAttributs();
   }
 
 
@@ -201,6 +208,43 @@ export class GestionAttributComponent implements OnInit {
       enumeration[index] = newValue.trim();
     }
   }
+
+
+
+  //pagination
+  firstPage() {
+    this.currentPage = 0;
+    this.onDataChanged();
+  }
+  previousPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.onDataChanged();
+    }
+  }
+  nextPage() {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.onDataChanged();
+    }
+  }
+  lastPage() {
+    this.currentPage = this.totalPages - 1;
+    this.onDataChanged();
+  }
+  // Méthode pour rafraîchir les données
+  onDataChanged() {
+    this.getAttributs();
+  }
+  changePageSize(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const newSize = selectElement.value;
+    this.pageSize = +newSize;  // Convertir la chaîne en nombre
+    this.firstPage();
+    this.onDataChanged();
+  }
+
+
 
 
 }

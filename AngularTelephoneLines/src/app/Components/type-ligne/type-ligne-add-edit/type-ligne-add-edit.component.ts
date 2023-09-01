@@ -117,7 +117,6 @@ export class TypeLigneAddEditComponent implements OnInit {
           }
         );
       } else {
-        console.log("saveLigneTelephonique--    ",formData);
         this.ligneService.saveLigneTelephonique(formData).subscribe({
             next: (response): void => {
               this._coreService.openSnackBar("Ligne téléphonique enregistré avec succès !");

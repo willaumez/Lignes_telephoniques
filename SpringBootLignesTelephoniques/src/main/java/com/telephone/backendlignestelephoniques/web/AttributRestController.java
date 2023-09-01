@@ -1,15 +1,21 @@
 package com.telephone.backendlignestelephoniques.web;
 
 import com.telephone.backendlignestelephoniques.entities.Attribut;
+import com.telephone.backendlignestelephoniques.entities.User;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.services.Attribut.AttributService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.Attr;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -50,9 +56,24 @@ public class AttributRestController {
         attributService.updateAttribut(attribut, operateur);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Attribut> listAttributs() {
         return attributService.listAttribut();
+    }
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> listAttributsPage(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                 @RequestParam(name = "size", defaultValue = "10") int size,
+                                                                 @RequestParam(name = "kw", defaultValue = "") String kw) {
+        Page<Attribut> pageAttribut = attributService.listAttributsPage(page, size, kw);
+
+        List<Attribut> attributs = pageAttribut.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("dataElements", attributs);
+        response.put("currentPage", pageAttribut.getNumber());
+        response.put("totalItems", pageAttribut.getTotalElements());
+        response.put("totalPages", pageAttribut.getTotalPages());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

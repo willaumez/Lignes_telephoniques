@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {catchError, Observable, throwError} from "rxjs";
 import {LoginService} from "./login.service";
 import {environment} from "../../environments/environment";
 import {Attribut} from "../Models/Attribut";
 import {TypeLigne} from "../Models/TypeLigne";
+import {PagedResponse} from "../Models/PagedResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -36,13 +37,26 @@ export class TypeAttributService {
   }
 
   getAllAttributs(): Observable<Attribut[]> {
-    return this.http.get<Attribut[]>(environment.backEndHost + "/attributs")
+    return this.http.get<Attribut[]>(environment.backEndHost + "/attributs/all")
       .pipe(
         catchError(error => {
           return throwError(error);
         })
       );
   }
+  getAllAttributsPage(page: number = 0, size: number = 10, kw: string = ""): Observable<PagedResponse<Attribut>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('kw', kw);
+    return this.http.get<PagedResponse<Attribut>>(environment.backEndHost + "/attributs", { params })
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+
 
   updateAttribut(attributData: Attribut): Observable<string> {
     return this.http.put<any>(environment.backEndHost + "/attributs/update/"+this.operateur, attributData)
@@ -82,9 +96,20 @@ export class TypeAttributService {
 
 
   //TypeLigne Services
-
   getAllTypesLigne(): Observable<TypeLigne[]> {
-    return this.http.get<TypeLigne[]>(environment.backEndHost + "/typeLigne")
+    return this.http.get<TypeLigne[]>(environment.backEndHost + "/typeLigne/all")
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+  getTypesLignePage(page: number = 0, size: number = 10, kw: string = ""): Observable<PagedResponse<TypeLigne>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('kw', kw);
+    return this.http.get<PagedResponse<TypeLigne>>(environment.backEndHost + "/typeLigne", { params })
       .pipe(
         catchError(error => {
           return throwError(error);

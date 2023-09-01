@@ -1,20 +1,13 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Attribut, TypeVariable} from "../../../Models/Attribut";
 import {TypeLigne} from "../../../Models/TypeLigne";
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {TypeAttributService} from "../../../Services/type-attribut.service";
 import {CoreService} from "../../../core/core.service";
-import {MatChipInputEvent} from "@angular/material/chips";
+import {PagedResponse} from "../../../Models/PagedResponse";
 
-export interface Section2 {
-  name: string;
-  updated: Date;
-}
 
 @Component({
   selector: 'app-gestion-type',
@@ -22,6 +15,13 @@ export interface Section2 {
   styleUrls: ['./gestion-type.component.scss']
 })
 export class GestionTypeComponent implements OnInit {
+  pageSizeOptions: number[] = [10, 23, 33, 50, 100];
+  pageSize!: number;
+  currentPage: number = 0;
+  totalPages!: number;
+  totalItems!: number;
+  keyword: string = "";
+
   errorMessage!: string;
   selectAdd: boolean = false;
   selectUpdate: boolean = false;
@@ -29,15 +29,17 @@ export class GestionTypeComponent implements OnInit {
 
   typeAttributs: Set<Attribut> = new Set<Attribut>();
 
+
   attributs: Attribut[] = [];
 
   @Input()
   dataSource!: MatTableDataSource<any>;
-  displayedColumns: string[] = ['idType', 'nomType', 'createdDate', 'descriptionType', 'attributs', 'ACTIONS'];
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  displayedColumns: string[] = ['nomType', 'createdDate', 'descriptionType', 'attributs', 'ACTIONS'];
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private _fb: FormBuilder, private typeAttributService: TypeAttributService, private _coreService: CoreService
+  public selectedAttributsIds: number[] = [];
+  constructor(private _fb: FormBuilder, private typeAttributService: TypeAttributService, private _coreService: CoreService,
+              private cdRef:ChangeDetectorRef
   ) {
     this.typeLigneForm = this._fb.group({
       idType: [null],
@@ -50,7 +52,9 @@ export class GestionTypeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.pageSize = this.pageSizeOptions[0];
     this.getTypesLigne();
+    this.cdRef.detectChanges();
   }
 
   //handle
@@ -72,14 +76,14 @@ export class GestionTypeComponent implements OnInit {
     if (!conf) return;
     let confirmation: boolean = confirm("Supprimer aussi toutes les lignes téléphonique du type .")
     if (!confirmation) return;
-    this.typeAttributService.deleteTypeLigne(idType).subscribe(
-      (response): void => {
+    this.typeAttributService.deleteTypeLigne(idType).subscribe({
+      next: (response): void => {
         this.getTypesLigne();
         this._coreService.openSnackBar("Type et ligne téléphonique supprimés avec succès !");
       },
-      (error) => {
+      error: (error) => {
         this._coreService.openSnackBar(error.error.message);
-      }
+      }}
     );
   }
 
@@ -91,7 +95,13 @@ export class GestionTypeComponent implements OnInit {
       createdDate: typeLigne.createdDate || null,
       attributs: typeLigne.attributs
     });
-
+    this.selectedAttributsIds = [];
+    typeLigne.attributs.forEach(attr => {
+      if (attr.idAttribut !== undefined) {
+        this.selectedAttributsIds.push(attr.idAttribut);
+      }
+    });
+    console.log("this.editTypeAttributs      "+ JSON.stringify(this.selectedAttributsIds, null, 2));
     this.getAttributs();
     this.selectUpdate = true;
   }
@@ -103,11 +113,13 @@ export class GestionTypeComponent implements OnInit {
 
   //Fonctions
   getTypesLigne(): void {
-    this.typeAttributService.getAllTypesLigne().subscribe({
-        next: (data: any[]): void => {
-          this.dataSource = new MatTableDataSource(data);
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
+    this.typeAttributService.getTypesLignePage(this.currentPage, this.pageSize, this.keyword).subscribe({
+        next: (data: PagedResponse<TypeLigne>): void => {
+          this.dataSource = new MatTableDataSource(data.dataElements);
+          this.currentPage = data.currentPage;
+          this.totalItems = data.totalItems;
+          this.totalPages = data.totalPages;
+          //console.log(JSON.stringify(data, null, 2));
         },
         error: (error) => {
           this.errorMessage = ('Erreur lors de la récupération des types de ligne: ' + error.error.message)
@@ -167,14 +179,14 @@ export class GestionTypeComponent implements OnInit {
   }
 
   //Recherche
-  applyFilter(event: Event): void {
-    this.selectAdd = false;
-    this.selectUpdate = false;
+  applyFilter(event: Event) {
+    // Récupérez la valeur du champ de filtre
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.pageSize = this.pageSizeOptions[0];
+    this.currentPage = 0;
+    // Affectez la valeur à la variable keyword
+    this.keyword = filterValue.trim();
+    this.getTypesLigne();
   }
 
   edit(enumValue: string, newValue: string): void {
@@ -184,6 +196,42 @@ export class GestionTypeComponent implements OnInit {
       enumeration[index] = newValue.trim();
     }
   }
+
+  //pagination
+  firstPage() {
+    this.currentPage = 0;
+    this.onDataChanged();
+  }
+  previousPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.onDataChanged();
+    }
+  }
+  nextPage() {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.onDataChanged();
+    }
+  }
+  lastPage() {
+    this.currentPage = this.totalPages - 1;
+    this.onDataChanged();
+  }
+
+  // Méthode pour rafraîchir les données
+  onDataChanged() {
+    this.getTypesLigne();
+  }
+  changePageSize(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const newSize = selectElement.value;
+    this.pageSize = +newSize;
+    this.firstPage();
+    this.onDataChanged();
+  }
+
+
 
 
 }

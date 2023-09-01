@@ -2,6 +2,7 @@ package com.telephone.backendlignestelephoniques.services.LigneTelephonique;
 
 import com.telephone.backendlignestelephoniques.entities.*;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -22,7 +23,11 @@ public interface LigneTelephoniqueService {
     void updateLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur) throws ElementNotFoundException;
 
     // Récupère la liste de toutes les lignes téléphoniques
-    List<LigneTelephonique> listLigneTelephonique();
+    //List<LigneTelephonique> listLigneTelephonique();
+    Page<LigneTelephonique> listLigneTelephonique(int page, int size, String kw);
+
+    Page<LigneTelephonique> listLigneTelephoniqueByType(int page, int size, String kw, Long typeId);
+
 
     // Récupère la liste de lignes téléphoniques en fonction d'un type de ligne donné
     List<LigneTelephonique> listLigneTelephoniqueByType(long typeLigneId);
@@ -41,4 +46,6 @@ public interface LigneTelephoniqueService {
     void restorationOfElement(Long id, String operateur) throws ElementNotFoundException;
 
     List<Corbeille> listCorbeille();
+
+
 }

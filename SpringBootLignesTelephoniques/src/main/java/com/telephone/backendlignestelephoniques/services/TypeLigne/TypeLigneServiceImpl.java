@@ -15,6 +15,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -157,5 +160,15 @@ public class TypeLigneServiceImpl implements TypeLigneService {
     public List<TypeLigne> listTypeLigne() {
         return typeLigneRepository.findAll();
     }
+
+    @Override
+    public Page<TypeLigne> listTypeLignePage(int page, int size, String kw) {
+        Pageable pageable = PageRequest.of(page, size);
+        return typeLigneRepository.getAllTypeLignes(kw, pageable);
+    }
+
+
+
+
 }
 

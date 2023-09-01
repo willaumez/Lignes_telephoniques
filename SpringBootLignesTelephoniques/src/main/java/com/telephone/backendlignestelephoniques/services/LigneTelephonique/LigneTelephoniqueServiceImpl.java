@@ -9,6 +9,9 @@ import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueSe
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -129,12 +132,23 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
         System.out.println("Historique de la mise à jour sauvegardé.");
     }
 
-
-
-    @Override
+   /* @Override
     public List<LigneTelephonique> listLigneTelephonique() {
         System.out.println("Récupération de la liste des lignes téléphoniques en cours...");
         return ligneTelephoniqueRepository.findAll();
+    }*/
+
+    @Override
+    public Page<LigneTelephonique> listLigneTelephonique(int page, int size, String kw) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ligneTelephoniqueRepository.getAllLignesTelephoniques(kw, pageable);
+        //return ligneTelephoniqueRepository.findAll();
+    }
+
+    @Override
+    public Page<LigneTelephonique> listLigneTelephoniqueByType(int page, int size, String kw, Long typeId) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ligneTelephoniqueRepository.getAllLignesTelephoniquesByType(kw, typeId, pageable);
     }
 
     @Override

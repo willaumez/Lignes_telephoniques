@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {LoginService} from "./login.service";
 import {LigneTelephonique} from "../Models/LigneTelephonique";
 import {catchError, Observable, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Attribut} from "../Models/Attribut";
 import {Rapprochement} from "../Models/Rapprochement";
+import {PagedResponse} from "../Models/PagedResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,6 @@ export class LigneTelephoniqueService {
 
   //Attributs Services
   saveLigneTelephonique(ligneData: LigneTelephonique): Observable<any> {
-    console.log(ligneData)
     return this.http.post<string>(environment.backEndHost + "/telephonique/save/"+this.operateur, ligneData)
       .pipe(
         catchError(error => {
@@ -29,7 +29,6 @@ export class LigneTelephoniqueService {
   }
 
   updateLigneTelephonique(ligneData: LigneTelephonique):Observable<any> {
-    console.log(ligneData)
     return this.http.put<string>(environment.backEndHost + "/telephonique/update/"+this.operateur, ligneData)
       .pipe(
         catchError(error => {
@@ -37,8 +36,21 @@ export class LigneTelephoniqueService {
         })
       );
   }
-  getAllLignes(): Observable<LigneTelephonique[]> {
+  /*getAllLignes(): Observable<LigneTelephonique[]> {
     return this.http.get<LigneTelephonique[]>(environment.backEndHost + "/telephonique")
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }*/
+
+  getAllLignes(page: number = 0, size: number = 10, kw: string = ""): Observable<PagedResponse<LigneTelephonique>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('kw', kw);
+    return this.http.get<PagedResponse<LigneTelephonique>>(environment.backEndHost + "/telephonique", { params })
       .pipe(
         catchError(error => {
           return throwError(error);
@@ -66,6 +78,19 @@ export class LigneTelephoniqueService {
 
   getAllLignesByType(idType: number | undefined): Observable<LigneTelephonique[]> {
     return this.http.get<LigneTelephonique[]>(environment.backEndHost + "/telephonique/type/"+idType)
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+
+  getAllLignesByTypePage(page: number = 0, size: number = 10, kw: string = "", idType: number | undefined): Observable<PagedResponse<LigneTelephonique>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('kw', kw);
+    return this.http.get<PagedResponse<LigneTelephonique>>(environment.backEndHost + "/telephonique/typeId/"+idType, { params })
       .pipe(
         catchError(error => {
           return throwError(error);
