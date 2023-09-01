@@ -16,10 +16,10 @@
     <table mat-table [dataSource]="dataSource" matSort>
 
       <!-- ID Column -->
-      <ng-container matColumnDef="id">
+<!--      <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> No</th>
         <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
-      </ng-container>
+      </ng-container>-->
 
       <!-- Username -->
       <ng-container matColumnDef="username">
@@ -78,22 +78,26 @@
   <div class="customer-container">
     <div class="nombrePage">
       <label for="pageSize">Éléments par page :</label>
-      <select id="pageSize" (change)="changePageSize($event)">
-        <option *ngFor="let size of pageSizeOptions" [value]="size">{{size}}</option>
+      <select id="pageSize" (change)="changePageSize($event)" [(ngModel)]="pageSize">
+        <option *ngFor="let sizeOption of pageSizeOptions" [value]="sizeOption">{{sizeOption}}</option>
       </select>
     </div>
     <div class="custom-paginator">
-      <button mat-icon-button (click)="previousPage()" matTooltip="Première page" [matTooltipShowDelay]="1000">
+      <button mat-icon-button (click)="firstPage()" matTooltip="Première page" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == 0">
         <mat-icon>first_page</mat-icon>
       </button>
-      <button mat-icon-button (click)="previousPage()" matTooltip="precedent" [matTooltipShowDelay]="1000">
+      <button mat-icon-button (click)="previousPage()" matTooltip="precedent" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == 0">
         <mat-icon>chevron_left</mat-icon>
       </button>
-      <span>{{pageNumber}}</span>
-      <button mat-icon-button (click)="nextPage()" matTooltip="suivant" [matTooltipShowDelay]="1000">
+      <span>{{currentPage+1}}</span>
+      <button mat-icon-button (click)="nextPage()" matTooltip="suivant" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == totalPages- 1">
         <mat-icon>chevron_right</mat-icon>
       </button>
-      <button mat-icon-button (click)="nextPage()" matTooltip="Dernière page" [matTooltipShowDelay]="1000">
+      <button mat-icon-button (click)="lastPage()" matTooltip="Dernière page" [matTooltipShowDelay]="1000"
+              [disabled]="currentPage == totalPages- 1">
         <mat-icon>last_page</mat-icon>
       </button>
     </div>

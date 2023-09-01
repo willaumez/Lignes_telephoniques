@@ -8,6 +8,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +27,13 @@ public class UserServicesImpl implements UserServices {
     private final HistoriqueService historiqueService;
 
     @Override
-    public User saveUser(User user, String operateur) {
+    public void saveUser(User user, String operateur) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Un Utilisateur du même nom existe déjà.");
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Un Utilisateur avec le même Email existe déjà.");
+        }
         String password = user.getPassword();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(password);
@@ -33,7 +42,7 @@ public class UserServicesImpl implements UserServices {
         user.setCreatedDate(new Date());
         User savedUser = userRepository.save(user);
         historiqueService.saveHistoriques("Ajout [User]", savedUser.getUsername(), operateur);
-        return savedUser;
+        //return savedUser;
     }
 
     @Override
@@ -52,6 +61,9 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public User updateUser(User user, String operateur) {
+        if (user.getId() == null) {
+            throw new IllegalArgumentException("L'ID de l'utilisateur ne doit pas être null");
+        }
         User existingUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         user.setCreatedDate(existingUser.getCreatedDate());
@@ -69,9 +81,15 @@ public class UserServicesImpl implements UserServices {
         return updatedUser;
     }
 
-    @Override
+    /*@Override
     public List<User> listUsers() {
         return userRepository.findAll();
+    }*/
+    @Override
+    public Page<User> listUsers(int page, int size, String kw) {
+        Pageable pageable = PageRequest.of(page, size);
+        //return userRepository.findByUsernameContainsOrEmailContainsOrRoleContains(kw, kw, kw, pageable);
+        return userRepository.getAllUsers(kw, pageable);
     }
 
     @Override

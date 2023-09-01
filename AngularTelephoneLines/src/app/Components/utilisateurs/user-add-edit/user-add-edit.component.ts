@@ -69,7 +69,7 @@ export class UserAddEditComponent implements OnInit{
           },
           error: (err: any) => {
             console.log(err);
-            this._coreService.openSnackBar('Le Nom et l\'E-mail doivent être uniques !');
+            this._coreService.openSnackBar('Erreur: '+err.error.message);
           }
         });
       }else {
@@ -85,7 +85,7 @@ export class UserAddEditComponent implements OnInit{
             this._coreService.openSnackBar('Utilisateur mise à jour avec succès !');
           },
           error: (err: any) => {
-            this._coreService.openSnackBar('Le Nom et l\'E-mail doivent être uniques !');
+            this._coreService.openSnackBar('Erreur: '+err.error.message);
             console.log(err);
           }
         });

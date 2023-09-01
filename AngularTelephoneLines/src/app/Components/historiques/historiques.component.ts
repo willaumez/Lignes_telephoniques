@@ -5,8 +5,8 @@ import {HistoriqueService} from "../../Services/historique.service";
 import {Historique} from "../../Models/Historique";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {UserService} from "../../Services/user.service";
 import {LoginService} from "../../Services/login.service";
+import {PagedResponse} from "../../Models/PagedResponse";
 
 @Component({
   selector: 'app-historiques',
@@ -14,6 +14,15 @@ import {LoginService} from "../../Services/login.service";
   styleUrls: ['./historiques.component.scss']
 })
 export class HistoriquesComponent implements OnInit {
+  //pagination
+  pageSizeOptions: number[] = [10, 23, 33, 50, 100];
+  pageSize!: number;
+  currentPage: number = 0;
+  totalPages!: number;
+  totalItems!: number;
+
+  keyword: string = "";
+
   errorMessage!: string;
   displayedColumns: string[] = [
     'idHistorique', 'actionEffectue', 'dateAction', 'nomOperateur', 'elementCible', 'ACTIONS'];
@@ -31,15 +40,21 @@ export class HistoriquesComponent implements OnInit {
   constructor(private historiqueService: HistoriqueService, private _coreService: CoreService, private loginService: LoginService) { }
 
   ngOnInit(): void {
+    this.pageSize = this.pageSizeOptions[0];
     this.getHistoriques();
   }
 
   getHistoriques(): void {
-    this.historiqueService.listHistoriques().subscribe({
-      next: (data: Historique[]): void => {
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+    this.historiqueService.listHistoriques(this.currentPage, this.pageSize, this.keyword).subscribe({
+      next: (data: PagedResponse<Historique>): void => {
+        // Utilisez data.users car "users" est un champ dans PagedResponse<User>
+        this.dataSource = new MatTableDataSource(data.dataElements);
+
+        // Si vous souhaitez utiliser les métadonnées pour d'autres choses
+        this.currentPage = data.currentPage;
+        this.totalItems = data.totalItems;
+        this.totalPages = data.totalPages;
+        //console.log(JSON.stringify(data, null, 2));
       },
       error: err => {
         this.errorMessage = ('Erreur lors de la récupération des types de ligne: '+err.error.message)
@@ -48,23 +63,24 @@ export class HistoriquesComponent implements OnInit {
     });
   }
 
-  applyFilter(event: Event):void {
-    const filterValue:string = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  applyFilter(event: Event) {
+    // Récupérez la valeur du champ de filtre
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.pageSize = this.pageSizeOptions[0];
+    this.currentPage = 0;
+    // Affectez la valeur à la variable keyword
+    this.keyword = filterValue.trim();
+    this.getHistoriques();
   }
   applyDateFilter(selectedDate: Date | null): void {
     if (selectedDate) {
       const formattedDate: string = this.formatDate(selectedDate);
         this.selectedDate = selectedDate;
       // Appliquer le filtre en utilisant la date formatée
-      this.dataSource.filter = formattedDate.trim().toLowerCase();
-
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
+      this.pageSize = this.pageSizeOptions[0];
+      this.currentPage = 0;
+      this.keyword = formattedDate;
+      this.getHistoriques();
     }
   }
   formatDate(date: Date): string {
@@ -78,10 +94,10 @@ export class HistoriquesComponent implements OnInit {
     this.selectedDate = null;
     this.input.nativeElement.value = '';
     this.dataSource.filter = '';
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.pageSize = 10;
+    this.currentPage = 0;
+    this.keyword = "";
+    this.onDataChanged();
   }
 
 
@@ -116,6 +132,43 @@ export class HistoriquesComponent implements OnInit {
         console.log(err);
       }
     });
-
   }
+
+
+  //Pagination
+  firstPage() {
+    this.currentPage = 0;
+    this.onDataChanged();
+  }
+
+  previousPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.onDataChanged();
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.onDataChanged();
+    }
+  }
+
+  lastPage() {
+    this.currentPage = this.totalPages - 1;
+    this.onDataChanged();
+  }
+  onDataChanged() {
+    this.getHistoriques();
+  }
+  changePageSize(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const newSize = selectElement.value;
+    this.pageSize = +newSize;  // Convertir la chaîne en nombre
+    this.firstPage();
+    this.onDataChanged();
+  }
+
+
 }

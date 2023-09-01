@@ -6,6 +6,9 @@ import com.telephone.backendlignestelephoniques.repositories.HistoriquesReposito
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -53,8 +56,9 @@ public class HistoriqueServiceImpl implements HistoriqueService {
     }
 
     @Override
-    public List<Historiques> listHistoriques() {
-        return historiquesRepository.findAllOrderByDateDesc();
+    public Page<Historiques> listHistoriques(int page, int size, String kw) {
+        Pageable pageable = PageRequest.of(page, size);
+        return historiquesRepository.getAllHistoriques(kw, pageable);
     }
 
     @Override

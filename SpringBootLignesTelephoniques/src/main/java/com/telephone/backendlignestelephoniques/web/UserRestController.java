@@ -7,9 +7,14 @@ import com.telephone.backendlignestelephoniques.exceptions.UserNotFoundException
 import com.telephone.backendlignestelephoniques.services.User.UserServices;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -18,10 +23,28 @@ import java.util.List;
 public class UserRestController {
     private UserServices userServices;
 
-    @GetMapping("/users")
+   /* @GetMapping("/users")
     public List<User> getUsers() {
         return userServices.listUsers();
+    }*/
+
+    // Méthode avec numéro de page et taille de page spécifiés
+    @GetMapping("/users")
+    public ResponseEntity<Map<String, Object>> getUsers(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                        @RequestParam(name = "size", defaultValue = "10") int size,
+                                                        @RequestParam(name = "kw", defaultValue = "") String kw) {
+        Page<User> pageUsers = userServices.listUsers(page, size, kw);
+
+        List<User> users = pageUsers.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("dataElements", users);
+        response.put("currentPage", pageUsers.getNumber());
+        response.put("totalItems", pageUsers.getTotalElements());
+        response.put("totalPages", pageUsers.getTotalPages());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     @GetMapping("/users/search")
     public List<User> searchUsers(@RequestParam(name = "keyword", defaultValue = "") String keyword) {
@@ -34,8 +57,8 @@ public class UserRestController {
     }
 
     @PostMapping("/users/save/{operateur}")
-    public User saveUser(@PathVariable String operateur, @RequestBody User user) {
-        return userServices.saveUser(user, operateur);
+    public void saveUser(@PathVariable String operateur, @RequestBody User user) {
+        userServices.saveUser(user, operateur);
     }
 
     @PutMapping("/users/update/{userId}/{operateur}")

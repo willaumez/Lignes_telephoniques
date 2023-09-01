@@ -8,6 +8,7 @@ import {LoginService} from "../../Services/login.service";
 import {UserService} from "../../Services/user.service";
 import {UserAddEditComponent} from "./user-add-edit/user-add-edit.component";
 import {User} from "../../Models/User";
+import {PagedResponse} from "../../Models/PagedResponse";
 
 @Component({
   selector: 'app-utilisateurs',
@@ -16,15 +17,18 @@ import {User} from "../../Models/User";
 })
 export class UtilisateursComponent implements OnInit {
   // Initialisation des variables
-  pageNumber: number = 1;
-  pageSize: number = 10;
-  keyword: string = '';
+  pageSizeOptions: number[] = [10, 23, 33, 50, 100];
+  pageSize!: number;
+  currentPage: number = 0;
+  totalPages!: number;
+  totalItems!: number;
+
+  keyword: string = "";
 
 
-  pageSizeOptions: number[] = [10, 23, 33, 50,100];
   errorMessage!: string;
   displayedColumns: string[] = [
-    'id', 'username', 'email', 'createdDate', 'role', 'ACTIONS'];
+    'username', 'email', 'createdDate', 'role', 'ACTIONS'];
   userData: User = this.loginService.getUserData();
 
   @Input()
@@ -38,29 +42,53 @@ export class UtilisateursComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.pageSize = this.pageSizeOptions[0];
     this.getUtilisateurs();
   }
 
-  getUtilisateurs(): void {
+  /*getUtilisateurs(): void {
     this.userService.listUsers().subscribe({
         next: (data: any[]): void => {
           this.dataSource = new MatTableDataSource(data);
-          /*this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;*/
+          /!*this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;*!/
         },
         error: (error) => {
           this.errorMessage = ('Erreur lors de la récupération des utilisateurs: ' + error)
         }
       }
     );
+  }*/
+
+  getUtilisateurs(): void {
+    this.userService.listUsers(this.currentPage, this.pageSize, this.keyword).subscribe({
+      next: (data: PagedResponse<User>): void => {
+        // Utilisez data.users car "users" est un champ dans PagedResponse<User>
+        this.dataSource = new MatTableDataSource(data.dataElements);
+
+        // Si vous souhaitez utiliser les métadonnées pour d'autres choses
+        this.currentPage = data.currentPage;
+        this.totalItems = data.totalItems;
+        this.totalPages = data.totalPages;
+        //console.log(JSON.stringify(data, null, 2));
+
+      },
+      error: (error) => {
+        this.errorMessage = ('Erreur lors de la récupération des utilisateurs: ' + error);
+        console.log(JSON.stringify(error, null, 2));
+      }
+    });
   }
 
+
   applyFilter(event: Event) {
+    // Récupérez la valeur du champ de filtre
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.pageSize = this.pageSizeOptions[0];
+    this.currentPage = 0;
+    // Affectez la valeur à la variable keyword
+    this.keyword = filterValue.trim();
+    this.getUtilisateurs();
   }
 
   openAddEditLignForm() {
@@ -106,19 +134,34 @@ export class UtilisateursComponent implements OnInit {
     });
   }
   //pagination
+
+  firstPage() {
+    this.currentPage = 0;
+    this.onDataChanged();
+  }
+
   previousPage() {
-    if (this.pageNumber > 1) {
-      this.pageNumber--;
+    if (this.currentPage > 0) {
+      this.currentPage--;
       this.onDataChanged();
     }
   }
 
-// Méthode pour passer à la page suivante
   nextPage() {
-    // Ici, vous pouvez également vérifier si vous êtes à la dernière page
-    this.pageNumber++;
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.onDataChanged();
+    }
+  }
+
+  lastPage() {
+    this.currentPage = this.totalPages - 1;
     this.onDataChanged();
   }
+
+
+// Méthode pour passer à la page suivante
+
   // Méthode pour rafraîchir les données
   onDataChanged() {
     this.getUtilisateurs();
@@ -127,6 +170,7 @@ export class UtilisateursComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const newSize = selectElement.value;
     this.pageSize = +newSize;  // Convertir la chaîne en nombre
+    this.firstPage();
     this.onDataChanged();
   }
 

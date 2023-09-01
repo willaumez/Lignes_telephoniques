@@ -63,15 +63,12 @@ public class TypeLigneServiceImpl implements TypeLigneService {
         //updateBasicInfo
         existingTypeLigne.getAttributs().clear();
         existingTypeLigne.setAttributs(new HashSet<>(newTypeLigne.getAttributs()));
-        System.out.println("\n\n\n\n\n existingTypeLigne---"+existingTypeLigne+"\n\n\n\n\n");
 
         //updateAssociatedAttributes
         existingTypeLigne.getAttributs().clear();
         existingTypeLigne.setAttributs(new HashSet<>(newTypeLigne.getAttributs()));
-        System.out.println("\n\n\n\n\n updateAssociatedAttributes---"+existingTypeLigne+"\n\n\n\n\n");
 
         TypeLigne updatedTypeLigne = typeLigneRepository.save(existingTypeLigne);
-        System.out.println("\n\n\n\n\n updatedTypeLigne---"+existingTypeLigne+"\n\n\n\n\n");
 
         updateAssociatedLines(updatedTypeLigne);
         historiqueService.saveHistoriques("Mise à jour [Type-Ligne]", updatedTypeLigne.getNomType(), operateur);
