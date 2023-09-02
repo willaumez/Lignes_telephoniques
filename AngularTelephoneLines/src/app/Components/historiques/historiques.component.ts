@@ -30,7 +30,6 @@ export class HistoriquesComponent implements OnInit {
   @Input()
   dataSource!: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   @ViewChild('input', { static: false }) input!: ElementRef<HTMLInputElement>;

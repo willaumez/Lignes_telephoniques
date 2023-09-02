@@ -23,7 +23,7 @@ export class UserService {
       })
     );
   }*/
-  public listUsers(page: number = 0, size: number = 10, kw: string = ""): Observable<PagedResponse<User>> {
+   listUsers(page: number = 0, size: number = 10, kw: string = ""): Observable<PagedResponse<User>> {
     // Construire les paramètres de requête HTTP
     const params = new HttpParams()
       .set('page', page.toString())
@@ -50,7 +50,7 @@ export class UserService {
     );
   }
 
-  public deleteUser(id: number, operateur: string):Observable<object> {
+   deleteUser(id: number, operateur: string):Observable<object> {
     return this.http.delete(environment.backEndHost+"/users/delete/"+id+"/"+operateur).pipe(
       catchError(error => {
         return throwError(error);
@@ -58,7 +58,7 @@ export class UserService {
     );
   }
 
-  public confirmPassword(id: number, password: string):Observable<boolean> {
+   confirmPassword(id: number, password: string):Observable<boolean> {
     return this.http.get<boolean>(environment.backEndHost+"/confirm/"+id+"/"+password).pipe(
       catchError(error => {
         return throwError(error);

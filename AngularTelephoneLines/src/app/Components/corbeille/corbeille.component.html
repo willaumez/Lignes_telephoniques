@@ -1,1 +1,168 @@
-<p>corbeille works!</p>
+<div class="main-body container-fluid">
+  <div class="row">
+    <h1 class="titre">Corbeille </h1>
+  </div>
+  <ng-container *ngIf="dataSource ; else failureOrLading">
+    <div class="container">
+      <mat-form-field class="filter" appearance="outline" (click)="resetDateField()">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Recherche..." #input>
+      </mat-form-field>
+
+      <button mat-icon-button matTooltip="Effacer la recherche..." [matTooltipShowDelay]="1000" (click)="resetDateField()"><mat-icon matSuffix>clear</mat-icon></button>
+
+      <mat-form-field class="filter" appearance="outline">
+        <input matInput placeholder="Choisissez une date..." [matDatepicker]="picker" [value]="selectedDate" (dateChange)="applyDateFilter($event.value)" disabled #input>
+        <mat-datepicker-toggle matTooltip="Recherche par date " [matTooltipShowDelay]="1000" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker disabled="false"></mat-datepicker>
+      </mat-form-field>
+
+    </div>
+    <div class="container-fluid">
+      <div class="mat-elevation-z8">
+        <!-- Tableau pour l'entité Corbeille -->
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <!-- Colonne pour idCorbeille -->
+         <!-- <ng-container matColumnDef="idCorbeille">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Corbeille </th>
+            <td mat-cell *matCellDef="let row"> {{ row.idCorbeille }} </td>
+          </ng-container>-->
+
+          <!-- Colonne pour nomType -->
+          <ng-container matColumnDef="nomType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Type_de_ligne </th>
+            <td mat-cell *matCellDef="let row"> {{ row.nomType }} </td>
+          </ng-container>
+
+          <!-- Colonne pour numeroLigne -->
+          <ng-container matColumnDef="numeroLigne">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Numéro_de_Ligne </th>
+            <td mat-cell *matCellDef="let row"> {{ row.numeroLigne }} </td>
+          </ng-container>
+
+
+          <!-- Colonne pour dateSuppression -->
+          <ng-container matColumnDef="dateSuppression">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date_Suppression </th>
+            <td mat-cell *matCellDef="let row"> {{ row.dateSuppression | date }} </td>
+          </ng-container>
+
+
+          <!-- Colonne pour affectation -->
+          <ng-container matColumnDef="affectation">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Affectation </th>
+            <td mat-cell *matCellDef="let row"> {{ row.affectation }} </td>
+          </ng-container>
+
+          <!-- Colonne pour poste -->
+          <ng-container matColumnDef="poste">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Poste </th>
+            <td mat-cell *matCellDef="let row"> {{ row.poste }} </td>
+          </ng-container>
+
+          <!-- Colonne pour etat -->
+          <ng-container matColumnDef="etat">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> État </th>
+            <td mat-cell *matCellDef="let row"> {{ row.etat }} </td>
+          </ng-container>
+
+          <!-- Colonne pour dateLivraison -->
+          <ng-container matColumnDef="dateLivraison">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date_Livraison </th>
+            <td mat-cell *matCellDef="let row"> {{ row.dateLivraison | date }} </td>
+          </ng-container>
+
+          <!-- Colonne pour numeroSerie -->
+          <ng-container matColumnDef="numeroSerie">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Numéro_de_Série </th>
+            <td mat-cell *matCellDef="let row"> {{ row.numeroSerie }} </td>
+          </ng-container>
+
+          <!-- Colonne pour montant -->
+          <ng-container matColumnDef="montant">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Montant </th>
+            <td mat-cell *matCellDef="let row"> {{ row.montant }} </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="ACTIONS">
+            <th mat-header-cell *matHeaderCellDef>  </th>
+            <td mat-cell *matCellDef="let row" class="action-container">
+              <div  style="display: flex;">
+                <button mat-icon-button matTooltip="Restorer cette ligne" [matTooltipShowDelay]="1000"
+                        (click)="handleRestoration(row.idCorbeille)" class="ms-3"> <mat-icon style="color: green;">restore_from_trash</mat-icon></button>
+                <button mat-icon-button matTooltip="Supprimer définitivement cette ligne" [matTooltipShowDelay]="1000"
+                        (click)="handleDelete(row.idCorbeille)" class="ms-3"> <mat-icon color="warn">delete</mat-icon> </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Lignes du tableau -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- Ligne affichée lorsqu'il n'y a pas de données correspondantes -->
+          <tr class="mat-row" *matNoDataRow>
+            <td *ngIf="!selectedDate" class="mat-cell" colspan="17">Aucune donnée pour la Recherche :  "{{ input.value }}"</td>
+            <td *ngIf="selectedDate" class="mat-cell" colspan="17">Aucune donnée pour la Recherche :  "{{ selectedDate | date }}"</td>
+          </tr>
+
+        </table>
+
+        <div></div>
+      </div>
+      <div class="customer-container">
+        <div class="nombrePage">
+          <label for="pageSize">Éléments par page :</label>
+          <select id="pageSize" (change)="changePageSize($event)" [(ngModel)]="pageSize">
+            <option *ngFor="let sizeOption of pageSizeOptions" [value]="sizeOption">{{sizeOption}}</option>
+          </select>
+        </div>
+        <div class="custom-paginator">
+          <button mat-icon-button (click)="firstPage()" matTooltip="Première page" [matTooltipShowDelay]="1000"
+                  [disabled]="currentPage == 0">
+            <mat-icon>first_page</mat-icon>
+          </button>
+          <button mat-icon-button (click)="previousPage()" matTooltip="precedent" [matTooltipShowDelay]="1000"
+                  [disabled]="currentPage == 0">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <span>{{currentPage+1}}</span>
+          <button mat-icon-button (click)="nextPage()" matTooltip="suivant" [matTooltipShowDelay]="1000"
+                  [disabled]="currentPage == totalPages- 1 || totalPages == 0">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+          <button mat-icon-button (click)="lastPage()" matTooltip="Dernière page" [matTooltipShowDelay]="1000"
+                  [disabled]="currentPage == totalPages- 1 || totalPages == 0">
+            <mat-icon>last_page</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin: 1rem 0">
+      <button mat-raised-button matTooltip="Effacer tous les historiques?" [matTooltipShowDelay]="1000"
+              style="color: green; margin-right: 10px" type="button" (click)="handleRestorationAll()">Restaurer  toute la corbeille
+      </button>
+      <button mat-raised-button matTooltip="Effacer tous les historiques?" [matTooltipShowDelay]="1000"
+              color="accent" type="button" (click)="handleResetAll()">Supprimer toute la corbeille
+      </button>
+    </div>
+
+  </ng-container>
+  <ng-template #failureOrLading>
+    <div class="failureOrLading-container">
+      <ng-container *ngIf="errorMessage; else loading">
+        <div class="failure">
+          {{errorMessage}}
+        </div>
+      </ng-container>
+      <ng-template #loading>
+        <div class="Lading">
+          <mat-spinner>Chargement...</mat-spinner>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
+
+</div>

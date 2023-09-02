@@ -5,6 +5,7 @@ import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundExcept
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 public interface LigneTelephoniqueService {
 
@@ -46,6 +47,12 @@ public interface LigneTelephoniqueService {
     void restorationOfElement(Long id, String operateur) throws ElementNotFoundException;
 
     List<Corbeille> listCorbeille();
+
+    Page<Corbeille> listCorbeillePage(int page, int size, String kw);
+
+    void deleteAllCorbeille(String operateur);
+
+    Map<String, Integer> restorationAllElement(String operateur);
 
 
 }

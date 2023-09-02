@@ -4,7 +4,6 @@ import com.telephone.backendlignestelephoniques.embeddable.AttributValeur;
 import com.telephone.backendlignestelephoniques.entities.*;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.*;
-import com.telephone.backendlignestelephoniques.services.Corbeille.CorbeilleService;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
@@ -27,7 +26,6 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     private TypeLigneRepository typeLigneRepository;
     private AttributRepository attributRepository;
     private LigneAttributRepository ligneAttributRepository;
-    private CorbeilleService corbeilleService;
     private CorbeilleRepository corbeilleRepository;
 
     @Override
@@ -307,6 +305,49 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     public List<Corbeille> listCorbeille() {
         return corbeilleRepository.findAll();
     }
+
+   /* @Override
+    public Page<Corbeille> listCorbeillePage(int page, int size, String kw) {
+        Pageable pageable = PageRequest.of(page, size);
+        return corbeilleRepository.getAllElementPage(kw, pageable);
+    }*/
+
+    @Override
+    public Page<Corbeille> listCorbeillePage(int page, int size, String kw) {
+        Pageable pageable = PageRequest.of(page, size);
+        return corbeilleRepository.getAllElementPage(kw, pageable);
+    }
+
+    @Override
+    public void deleteAllCorbeille(String operateur) {
+        corbeilleRepository.deleteAll();
+        historiqueService.saveHistoriques("Suppression totale des points de restauration", "Toute la corbeille", operateur);
+    }
+
+    @Override
+    public Map<String, Integer> restorationAllElement(String operateur) {
+        int restoredCount = 0;
+        int notRestoredCount = 0;
+
+        List<Corbeille> allElementsInCorbeille = corbeilleRepository.findAll();
+
+        for (Corbeille corbeille : allElementsInCorbeille) {
+            try {
+                restorationOfElement(corbeille.getIdCorbeille(), operateur);
+                restoredCount++;
+            } catch (ElementNotFoundException e) {
+                System.err.println("Erreur lors de la restauration de l'élément avec l'ID " + corbeille.getIdCorbeille() + ": " + e.getMessage());
+                notRestoredCount++;
+            }
+        }
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put("restoredCount", restoredCount);
+        result.put("notRestoredCount", notRestoredCount);
+        return result;
+    }
+
+
 
 
 

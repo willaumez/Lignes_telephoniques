@@ -4,7 +4,6 @@ import {LoginService} from "./login.service";
 import {LigneTelephonique} from "../Models/LigneTelephonique";
 import {catchError, Observable, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
-import {Attribut} from "../Models/Attribut";
 import {Rapprochement} from "../Models/Rapprochement";
 import {PagedResponse} from "../Models/PagedResponse";
 

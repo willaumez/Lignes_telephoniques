@@ -4,3 +4,10 @@ export interface PagedResponse<T> {
   totalItems: number;
   totalPages: number;
 }
+
+
+export interface RestoreResponse {
+  restoredCount: number;
+  notRestoredCount: number;
+}
+

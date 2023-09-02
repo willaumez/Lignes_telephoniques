@@ -19,7 +19,7 @@ export class LoginService {
     this.accessToken = localStorage.getItem('access-token');
   }
 
-  public login(username: string, password: string): Observable<any> {
+   login(username: string, password: string): Observable<any> {
     let options: { headers: HttpHeaders } = {
       headers: new HttpHeaders().set("Content-Type", "application/x-www-form-urlencoded")
     }
