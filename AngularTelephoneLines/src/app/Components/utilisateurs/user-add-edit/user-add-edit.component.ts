@@ -68,7 +68,7 @@ export class UserAddEditComponent implements OnInit{
             this._dialogRef.close(true);
           },
           error: (err: any) => {
-            console.log(err);
+            this._dialogRef.close(true);
             this._coreService.openSnackBar('Erreur: '+err.error.message);
           }
         });
@@ -86,7 +86,7 @@ export class UserAddEditComponent implements OnInit{
           },
           error: (err: any) => {
             this._coreService.openSnackBar('Erreur: '+err.error.message);
-            console.log(err);
+            this._dialogRef.close(true);
           }
         });
       } else if (!this.showPasswordFields){
@@ -105,7 +105,7 @@ export class UserAddEditComponent implements OnInit{
             },
             error: (err: any) => {
               this._coreService.openSnackBar('Le Nom et l\'E-mail doivent être uniques !');
-              console.log(err);
+              this._dialogRef.close(true);
             }
           });
         }

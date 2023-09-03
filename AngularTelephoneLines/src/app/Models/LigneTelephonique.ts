@@ -17,6 +17,7 @@ export interface LigneTelephonique {
 }
 
 export enum EtatType {
+  INDETERMINER = "-----",
   ACTIF = "ACTIF",
   RESILIE = "RESILIE",
   CESSION = "CESSION"

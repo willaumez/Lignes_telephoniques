@@ -8,6 +8,8 @@ import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueSe
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -324,7 +326,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
         historiqueService.saveHistoriques("Suppression totale des points de restauration", "Toute la corbeille", operateur);
     }
 
-    @Override
+   /* @Override
     public Map<String, Integer> restorationAllElement(String operateur) {
         int restoredCount = 0;
         int notRestoredCount = 0;
@@ -341,6 +343,39 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
             }
         }
 
+        Map<String, Integer> result = new HashMap<>();
+        result.put("restoredCount", restoredCount);
+        result.put("notRestoredCount", notRestoredCount);
+        return result;
+    }*/
+
+
+    @Override
+    public Map<String, Integer> restorationAllElement(String operateur) {
+        int restoredCount = 0;
+        int notRestoredCount = 0;
+
+        // Initialisation du logger
+        Logger logger = LoggerFactory.getLogger(getClass());
+
+        // Récupération de tous les éléments dans la corbeille
+        List<Corbeille> allElementsInCorbeille = corbeilleRepository.findAll();
+
+        // Parcours de chaque élément pour tenter une restauration
+        for (Corbeille corbeille : allElementsInCorbeille) {
+            try {
+                restorationOfElement(corbeille.getIdCorbeille(), operateur);
+                restoredCount++;
+            } catch (ElementNotFoundException e) {
+                logger.error("Erreur lors de la restauration de l'élément avec l'ID {}: {}", corbeille.getIdCorbeille(), e.getMessage());
+                notRestoredCount++;
+            } catch (Exception e) {
+                logger.error("Erreur inattendue lors de la restauration de l'élément avec l'ID {}: {}", corbeille.getIdCorbeille(), e.getMessage());
+                notRestoredCount++;
+            }
+        }
+
+        // Renvoi du nombre d'éléments restaurés et non restaurés
         Map<String, Integer> result = new HashMap<>();
         result.put("restoredCount", restoredCount);
         result.put("notRestoredCount", notRestoredCount);

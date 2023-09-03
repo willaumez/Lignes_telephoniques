@@ -144,6 +144,7 @@ export class CorbeilleComponent implements OnInit {
     if (!conf) return;
     this.corbeilleService.restorCorbeilleAll().subscribe({
       next: (res: RestoreResponse):void => {
+        console.log(JSON.stringify(res, null, 2));
         if (res.restoredCount>0){
           this._coreService.openSnackBar("Nombre de lignes restauré avec succès! = "+ res.restoredCount);
         }
@@ -156,6 +157,7 @@ export class CorbeilleComponent implements OnInit {
         this.getCorbeille();
       },
       error:err => {
+        console.log(JSON.stringify(err, null, 2));
         this._coreService.openSnackBar("Erreur! "+err.error?.message);
       }
     });

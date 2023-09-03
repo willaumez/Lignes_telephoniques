@@ -53,6 +53,7 @@ import { LigneAddEditComponent } from './Components/lignes-telephonique/ligne-ad
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { TypeLigneComponent } from './Components/type-ligne/type-ligne.component';
 import { TypeLigneAddEditComponent } from './Components/type-ligne/type-ligne-add-edit/type-ligne-add-edit.component';
+import { ParametreComponent } from './Components/parametre/parametre.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { TypeLigneAddEditComponent } from './Components/type-ligne/type-ligne-ad
     LigneAddEditComponent,
     TypeLigneComponent,
     TypeLigneAddEditComponent,
+    ParametreComponent,
   ],
     imports: [
         BrowserModule,

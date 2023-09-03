@@ -70,18 +70,13 @@ export class TypeLigneAddEditComponent implements OnInit {
           attributsArray.push(attrGroup);
         });
       }
-      console.log("Add--  --  " + JSON.stringify(this.data?.typeLigne));
     }
     if (this.data?.edit) {
       this.ligneForm.patchValue(this.data.ligne);
-      console.log("Edit this.ligneForm.value--  --  " + JSON.stringify(this.ligneForm.value));
       this.ligneForm.get('typeLigne.idType')?.disable();
-      // Réinitialiser et remplir le FormArray 'ligneAttributs'
       const ligneAttributsArray = this.ligneForm.get('ligneAttributs') as FormArray;
       ligneAttributsArray.clear();
-      // Parcourir chaque 'LigneAttribut' dans les données
       this.data.ligne.ligneAttributs.forEach((ligneAttr: LigneAttribut) => {
-        // Créer un groupe de formulaires pour cette 'LigneAttribut'
         const ligneAttrGroup = this.fb.group({
           id: [ligneAttr.id, Validators.required], // ID de la ligne attribut
           attribut: this.fb.group({ // Groupe pour les attributs
@@ -92,10 +87,8 @@ export class TypeLigneAddEditComponent implements OnInit {
           }),
           valeurAttribut: [ligneAttr.valeurAttribut] // Valeur de l'attribut pour cette ligne
         });
-        // Ajouter ce groupe au FormArray 'ligneAttributs'
         ligneAttributsArray.push(ligneAttrGroup);
       });
-      console.log("Edit--  --  " + JSON.stringify(this.data?.ligne));
     }
 
   }
@@ -103,8 +96,8 @@ export class TypeLigneAddEditComponent implements OnInit {
   onFormSubmit() {
     if (this.ligneForm.valid) {
       const formData = this.ligneForm.value;
+      console.log(JSON.stringify(formData, null, 2));
       if (this.data?.edit) {
-        console.log("updateLigneTelephonique--    ",JSON.stringify(formData));
         this.ligneService.updateLigneTelephonique(formData).subscribe({
             next: (response): void => {
               this._coreService.openSnackBar("Ligne téléphonique mise à jour avec succès !");
@@ -112,7 +105,7 @@ export class TypeLigneAddEditComponent implements OnInit {
             },
             error: (error) => {
               this._coreService.openSnackBar(error.error.message);
-              console.log(error)
+              this._dialogRef.close(true);
             }
           }
         );
@@ -124,7 +117,7 @@ export class TypeLigneAddEditComponent implements OnInit {
             },
             error: (error) => {
               this._coreService.openSnackBar(error.error.message);
-              console.log(error)
+              this._dialogRef.close(true);
             }
           }
         );

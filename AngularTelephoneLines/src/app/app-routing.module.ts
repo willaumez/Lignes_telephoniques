@@ -16,6 +16,7 @@ import {CorbeilleComponent} from "./Components/corbeille/corbeille.component";
 import {TypeAttributComponent} from "./Components/type-attribut/type-attribut.component";
 import {LignesTelephoniqueComponent} from "./Components/lignes-telephonique/lignes-telephonique.component";
 import {TypeLigneComponent} from "./Components/type-ligne/type-ligne.component";
+import {ParametreComponent} from "./Components/parametre/parametre.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -36,6 +37,7 @@ const routes: Routes = [
       {path: 'rapprochement', component: RapprochementComponent},
       {path: 'corbeille', component: CorbeilleComponent},
       {path: 'historique', component: HistoriquesComponent},
+      {path: 'importation', component: ParametreComponent},
       {path: 'typeAttributs', component: TypeAttributComponent},
       {path: 'notAuthorized', component: NotAuthorizedComponent},
       {path: 'aide', component: AideComponent},

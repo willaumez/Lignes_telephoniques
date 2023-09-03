@@ -136,7 +136,7 @@ export class LigneAddEditComponent implements OnInit {
             },
             error: (error) => {
               this._coreService.openSnackBar(error.error.message);
-              console.log(error)
+              this._dialogRef.close(true);
             }
           }
         );
@@ -148,7 +148,7 @@ export class LigneAddEditComponent implements OnInit {
             },
             error: (error) => {
               this._coreService.openSnackBar(error.error.message);
-              console.log(error)
+              this._dialogRef.close(true);
             }
           }
         );

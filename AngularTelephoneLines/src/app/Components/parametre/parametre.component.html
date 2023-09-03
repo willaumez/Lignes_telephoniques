@@ -1,0 +1,120 @@
+<div class="row">
+  <h1 class="titre-liste">Importation de la base de donné
+    <!--<span *ngIf="selectedTypeLigne">{{selectedTypeLigne.nomType}}
+      <span>[  {{totalItems}}  ]</span>
+    </span>-->
+  </h1>
+</div>
+<mat-divider class="first-divider"></mat-divider>
+<ng-container *ngIf="typeLignes; else failureOrLading">
+  <div class="type-Container">
+    <div class="button-select">
+      <button mat-icon-button (click)="firstElement()" matTooltip="Premier type" [matTooltipShowDelay]="1000" [disabled]="typeLignes.length == 0">
+        <mat-icon>first_page</mat-icon>
+      </button>
+      <button mat-icon-button (click)="previousElement()" matTooltip="Type precedent" [matTooltipShowDelay]="1000"  [disabled]="typeLignes.length == 0">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+    </div>
+    <div class="type-select-Container">
+      <!-- Boucle pour générer un bouton pour chaque type de ligne -->
+      <button *ngFor="let typeLigne of typeLignes"
+              class="type-button"
+              [id]="typeLigne.idType"
+              [ngClass]="{'active': typeLigne === selectedTypeLigne}"
+              (click)="selectTypeLigne(typeLigne)">
+        {{ typeLigne.nomType }}
+      </button>
+    </div>
+    <div class="button-select">
+      <button mat-icon-button (click)="nextElement()" matTooltip="Type suivant" [matTooltipShowDelay]="1000"  [disabled]="typeLignes.length == 0">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <button mat-icon-button (click)="lastElement()" matTooltip="Dernier type" [matTooltipShowDelay]="1000"  [disabled]="typeLignes.length == 0">
+        <mat-icon>last_page</mat-icon>
+      </button>
+    </div>
+  </div>
+</ng-container>
+<h2 class="titre-liste">Type ligne:  <span *ngIf="selectedTypeLigne">{{selectedTypeLigne.nomType}}</span></h2>
+
+<mat-divider class="second-divider"></mat-divider>
+
+
+<div class="container-fluid">
+  <p>Pour importer massivement des données dans la base de données, il faut respecter les points suivants:</p>
+  <ul>
+    <li>Le fichier Excel doit être au format .xlsx ou .xls.</li>
+    <li>La première ligne du fichier doit contenir les noms des colonnes, qui doivent correspondre aux champs de la base de données. Les champs à inclure sont comme présentés ci-dessous.</li>
+    <li>Les données doivent être formatées correctement. Par exemple, les dates doivent être au format YYYY-MM-DD, et les numéros de ligne doivent être des chaînes de caractères valides.</li>
+    <li>Les valeurs pour les attributs de type Enum doivent correspondre à l'une des valeurs énumérées pour cet attribut.</li>
+    <li>Assurez-vous que le fichier ne contient pas de lignes vides ou de données incorrectes, car cela pourrait entraîner des erreurs lors de l'importation.</li>
+    <li>Il est possible d'ajouter, de modifier ou de supprimer des attributs supplémentaires directement via l'interface de l'application. Pour ce faire, <a href="/path/to/attributs">cliquez ici</a>.</li>
+    <li>Lors de l'ajout ou de la modification des attributs, assurez-vous de suivre les conventions de nommage et les types de données requis. Pour consulter les conventions, <a href="/path/to/conventions">cliquez ici</a>.</li>
+  </ul>
+  <div class="table-container">
+    <table class="table table-bordered table-striped">
+      <thead>
+      <tr>
+        <th *ngFor="let column of displayedColumns">{{ column }}</th>
+      </tr>
+      </thead>
+    </table>
+  </div>
+
+</div>
+
+<div class="container container-import">
+  <div class="import-section">
+    <button mat-raised-button type="button" color="primary" class="btn label-file"
+            (click)="fileInput.click()">
+      Importer un fichier excel
+    </button>
+    <input type="file" id="file" class="input-file" accept=".xlsx" (change)="getFile($event)" #fileInput
+           style="display: none"/>
+    <div class="file-drop-area"
+         (dragover)="onFileDragOver($event); preventDefault($event)"
+         (dragleave)="onFileDragLeave($event)"
+         (drop)="onFileDrop($event); preventDefault($event)">
+      <ng-container class="container">
+        <p class="drag-text" *ngIf="!isLoading && !selectedFile">--- Glissez et déposez un fichier excel ici
+          ---</p>
+        <mat-spinner diameter="60" class="custom-spinner" *ngIf="isLoading"></mat-spinner>
+        <mat-icon size="1" class="excel-icon" *ngIf="!isLoading && selectedFile" aria-hidden="false"
+                  aria-label="Fichier Excel">insert_drive_file
+        </mat-icon>
+        <div *ngIf="selectedFile" class="file-info">
+          <p><strong>Nom du fichier:</strong> {{ selectedFile.name }}</p>
+          <p><strong>Type:</strong> {{ selectedFile.type }}</p>
+          <p><strong>Taille:</strong> {{ selectedFile.size }}</p>
+        </div>
+        <ng-container *ngIf="!selectedFile && isLoading">
+          <div class="Loading">
+            <mat-spinner>Chargement...</mat-spinner>
+          </div>
+        </ng-container>
+      </ng-container>
+  </div>
+  <div class="verification-section">
+
+  </div>
+</div>
+
+
+
+
+<ng-template #failureOrLading>
+  <div class="failureOrLading-container">
+    <ng-container *ngIf="errorMessage; else loading">
+      <div class="failure">
+        {{errorMessage}}
+      </div>
+    </ng-container>
+    <ng-template #loading>
+      <div class="Loading">
+        <mat-spinner>Chargement...</mat-spinner>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>
+
