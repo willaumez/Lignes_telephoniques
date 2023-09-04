@@ -1,3 +1,22 @@
+.mat-toolbar-containner{
+  color: #ffffff;
+  background-color: #d1490a;
+  height: 47px;
+
+  .logo{
+    img{
+      border-radius: 1rem;
+    }
+  }
+  .logo-titre{
+    width: 100%;
+    text-align: center;
+    //justify-content: center;
+    //margin: 0 auto;
+    //flex: 1 1 auto;
+    //text-align: center;
+  }
+}
 .example-spacer {
   flex: 1 1 auto;
 }
@@ -28,7 +47,7 @@
   .vertical-divider {
     width: 4px;
     height: 100%;
-    background-color: #2d3a81;
+    background-color: #d1490a;
     margin: 0 12px;
   }
 
@@ -47,15 +66,30 @@
   box-shadow: 0 0 0 3px red inset;
 }*/
 
+
 .mat-drawer-container {
   mat-drawer {
     margin: 10px 0 15px 1px;
-    max-height: 90vh;
+    height: auto !important;
+    max-height: 90vh !important;
     border-width: 3px 1px 3px 3px;
     border-style: inset solid;
-    border-color: #4050b5;
+    border-color: #d1490a;
     border-radius: 0 10px 10px 0;
 
+
+
+    .logo-menu-container{
+      margin-top: auto;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      padding-top: 2rem ;
+      .logo-menu {
+        //flex: auto 1 1;
+        margin-top: auto;
+      }
+    }
     //background-color: cadetblue;
     //height: 80%;
 
@@ -84,7 +118,7 @@
 
         &:hover {
           button {
-            color: #4050b5;
+            color: #d1490a;
           }
         }
 
@@ -105,7 +139,7 @@
           }
         }
         .active {
-          background-color: #4050b5;
+          background-color: #d1490a;
           color: #ffff;
           &:hover {
             color: #ffff;
@@ -116,9 +150,11 @@
 
       mat-divider {
         margin: 10px 0;
-        border-bottom: 1px solid #4050b5;
+        border-bottom: 1px solid #d1490a;
       }
     }
+
+
   }
 
   mat-drawer-content {

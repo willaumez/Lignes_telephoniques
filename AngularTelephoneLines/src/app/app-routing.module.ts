@@ -51,7 +51,8 @@ const routes: Routes = [
       // Routes enfants pour les utilisateurs si nécessaire
       {path: 'accueil', component: AccueilComponent},
       {path: '', redirectTo: 'accueil', pathMatch: 'full'},
-
+      {path: 'lignes', component: LignesTelephoniqueComponent},
+      {path: 'types-Ligne', component: TypeLigneComponent},
       {path: 'profile', component: ProfileComponent},
       {path: 'rapprochement', component: RapprochementComponent},
       {path: 'aide', component: AideComponent},

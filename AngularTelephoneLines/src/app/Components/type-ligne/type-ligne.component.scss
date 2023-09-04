@@ -16,12 +16,12 @@
 .first-divider{
   width: 70%;
   margin: 5px auto;
-  border-bottom: 3px solid #1b6ca8;
+  border-bottom: 3px solid #d1490a;
 }
 .second-divider{
   width: 100%;
   margin-bottom: 1rem;
-  border-bottom: 3px solid #1b6ca8;
+  border-bottom: 3px solid #d1490a;
 }
 
 //selection du type de ligne
@@ -44,14 +44,14 @@
       background-color: transparent;
       cursor: pointer;
       font-size: 1rem;
-      color: #4050b5;
+      color: #d1490a;
     }
   }
   .type-select-Container{
     width: 75%;
     height: auto;
     padding: 1rem;
-    border: 2px solid #1b6ca8;
+    border: 2px solid #d1490a;
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
@@ -79,7 +79,7 @@
         background-color: #ddd;
       }
       &.active {
-        background-color: #4050b5;
+        background-color: #d1490a;
         color: #ffff;
         &:hover {
           color: #ffff;
@@ -121,7 +121,7 @@
 
 // Styles pour les entêtes de colonnes
 .mat-mdc-header-row {
-  border-bottom: 3px solid #1b6ca8;  // Bordure inférieure
+  border-bottom: 3px solid #d1490a;  // Bordure inférieure
   font-size: 17px;  // Taille de la police
   font-weight: bold;  // Gras
 }
@@ -147,7 +147,7 @@ td.mat-cell {
 // Styles pour l'effet hover sur les lignes
 .mat-mdc-row:hover {
   background-color: #dcdcde;  // Couleur de fond au survol
-  color: #4050b5;  // Couleur du texte au survol
+  color: #d1490a;  // Couleur du texte au survol
   border-top: 1px solid #263238;  // Bordure supérieure au survol
   border-bottom: 1px solid #263238;  // Bordure inférieure au survol
 }
@@ -161,7 +161,7 @@ td.mat-cell {
   max-width: 70px;  // Largeur maximale
   overflow-y: auto;  // Défilement vertical si nécessaire
   background-color: #ffffff;  // Couleur de fond
-  border: 3px solid #4050b5;  // Bordure
+  border: 3px solid #d1490a;  // Bordure
   border-radius: 10px 0 0 10px;  // Rayon de la bordure
   z-index: 1;  // Index z pour le positionnement
   display: flex;  // Affichage en flexbox
@@ -179,7 +179,7 @@ td.mat-cell {
   min-height: max-content;  // Hauteur minimale basée sur le contenu
   overflow-x: auto;  // Défilement vertical si nécessaire
   background-color: #ffffff;  // Couleur de fond
-  border: 1px solid #4050b5;  // Bordure
+  border: 1px solid #d1490a;  // Bordure
   border-radius: 10px 10px 10px 10px;
   z-index: 1;  // Index z pour le positionnement
   display: flex;  // Affichage en flexbox
@@ -204,20 +204,21 @@ td.mat-cell {
     margin-top: 1rem;
     display: inline-block;
     font-size: 1rem;
+    background-color: #ffffff;
 
 
     label {
       margin-right: 0.5rem;
       font-size: 1rem;
-      border-bottom: 1px solid #4050b5;
+      border-bottom: 1px solid #d1490a;
     }
 
     select {
       height: auto;
-      border: 1px solid #4050b5;
+      border: 1px solid #d1490a;
       //border-radius: 1rem;
       font-size: 1.2rem;
-      color: #4050b5;
+      color: #d1490a;
       padding: 0.5rem 0.5rem;
     }
   }
@@ -227,20 +228,21 @@ td.mat-cell {
     float: right;
     margin-top: 1rem;
     display: inline-block;
-    border: 1px solid #4050b5;
+    border: 1px solid #d1490a;
     font-size: 1rem;
+    background-color: #ffffff;
 
     button {
       border: none;
       background-color: transparent;
       cursor: pointer;
       font-size: 1rem;
-      color: #4050b5;
+      color: #d1490a;
     }
 
     span {
       font-size: 1.6rem;
-      color: #4050b5;
+      color: #d1490a;
       margin: 1rem;
     }
   }
@@ -253,12 +255,12 @@ td.mat-cell {
 
 // Styles pour les lignes sélectionnées ou surlignées
 .highlighted {
-  background-color: #4050b5;  // Couleur de fond
+  background-color: #d1490a;  // Couleur de fond
   color: #fff;  // Couleur du texte
   font-weight: bolder;  // Gras
 
   &:hover {
-    background-color: #4050b5;  // Couleur de fond au survol
+    background-color: #d1490a;  // Couleur de fond au survol
     color: #fff;  // Couleur du texte au survol
   }
 }

@@ -15,13 +15,16 @@ import {PagedResponse} from "../../Models/PagedResponse";
 })
 export class HistoriquesComponent implements OnInit {
   //pagination
-  pageSizeOptions: number[] = [10, 23, 33, 50, 100];
+  pageSizeOptions: number[] = [10, 23, 35, 50, 100, 500, 1000];
   pageSize!: number;
   currentPage: number = 0;
   totalPages!: number;
   totalItems!: number;
 
   keyword: string = "";
+
+  //pointer
+  isDownload: boolean = false;
 
   errorMessage!: string;
   displayedColumns: string[] = [
@@ -44,6 +47,7 @@ export class HistoriquesComponent implements OnInit {
   }
 
   getHistoriques(): void {
+    this.isDownload = true;
     this.historiqueService.listHistoriques(this.currentPage, this.pageSize, this.keyword).subscribe({
       next: (data: PagedResponse<Historique>): void => {
         // Utilisez data.users car "users" est un champ dans PagedResponse<User>
@@ -53,11 +57,14 @@ export class HistoriquesComponent implements OnInit {
         this.currentPage = data.currentPage;
         this.totalItems = data.totalItems;
         this.totalPages = data.totalPages;
+
+        this.isDownload = false;
         //console.log(JSON.stringify(data, null, 2));
       },
       error: err => {
         this.errorMessage = ('Erreur lors de la récupération des types de ligne: '+err.error.message)
         this._coreService.openSnackBar('Erreur lors de la récupération des historique:! \n ', err);
+        this.isDownload = false;
       }
     });
   }

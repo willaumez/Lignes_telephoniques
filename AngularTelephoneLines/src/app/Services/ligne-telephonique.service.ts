@@ -5,7 +5,7 @@ import {LigneTelephonique} from "../Models/LigneTelephonique";
 import {catchError, Observable, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Rapprochement} from "../Models/Rapprochement";
-import {PagedResponse} from "../Models/PagedResponse";
+import {HomeResponse, PagedResponse} from "../Models/PagedResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -96,6 +96,17 @@ export class LigneTelephoniqueService {
         })
       );
   }
+
+
+  getDataHome():Observable<HomeResponse>{
+    return this.http.get<HomeResponse>(environment.backEndHost + "/telephonique/accueil")
+      .pipe(
+        catchError(error => {
+          return throwError(error);
+        })
+      );
+  }
+
 
 
 }

@@ -11,14 +11,14 @@
     font-weight: bold;
     color: #333;
     text-align: center;
-    border-bottom: 6px solid #1b6ca8;
+    border-bottom: 6px solid #d1490a;
     padding-bottom: 10px;
     margin-bottom: 20px;
   }
   mat-divider{
     width: 90%;
     margin: 50px auto;
-    border-bottom: 4px solid #1b6ca8;
+    border-bottom: 4px solid #d1490a;
   }
 
   .infos {
@@ -41,13 +41,13 @@
 
         span{
           font-size: 1rem;
-          color: #1b6ca8;
+          color: #d1490a;
           padding: 0 15px;
         }
 
         &:hover {
           transform: scale(1.05);
-          background-color: #4050b5;
+          background-color: #d1490a;
           color: #ffff;
           span{
             color: #ffff;
@@ -68,7 +68,7 @@
       &:hover {
         cursor: pointer;
         transform: scale(1.05);
-        color: #1b6ca8;
+        color: #d1490a;
       }
     }
   }

@@ -25,10 +25,12 @@ export class UtilisateursComponent implements OnInit {
 
   keyword: string = "";
 
+  //pointer
+  isDownload: boolean = false;
+
 
   errorMessage!: string;
-  displayedColumns: string[] = [
-    'username', 'email', 'createdDate', 'role', 'ACTIONS'];
+  displayedColumns: string[] = ['id', 'username', 'email', 'createdDate', 'role', 'ACTIONS'];
   userData: User = this.loginService.getUserData();
 
   @Input()
@@ -61,18 +63,21 @@ export class UtilisateursComponent implements OnInit {
   }*/
 
   getUtilisateurs(): void {
+    this.isDownload = true;
     this.userService.listUsers(this.currentPage, this.pageSize, this.keyword).subscribe({
       next: (data: PagedResponse<User>): void => {
         this.dataSource = new MatTableDataSource(data.dataElements);
         this.currentPage = data.currentPage;
         this.totalItems = data.totalItems;
         this.totalPages = data.totalPages;
+        this.isDownload = false;
         //console.log(JSON.stringify(data, null, 2));
 
       },
       error: (error) => {
         this.errorMessage = ('Erreur lors de la récupération des utilisateurs: ' + error);
-        console.log(JSON.stringify(error, null, 2));
+        this.isDownload = false;
+        //console.log(JSON.stringify(error, null, 2));
       }
     });
   }

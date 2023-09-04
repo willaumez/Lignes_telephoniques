@@ -22,7 +22,10 @@ export class CorbeilleComponent implements OnInit {
 
   errorMessage!: string;
 
-  displayedColumns = [  'nomType', 'numeroLigne', 'dateSuppression', 'numeroSerie', 'etat', 'affectation', 'poste', 'dateLivraison', 'montant', 'ACTIONS'];
+  //pointer
+  isDownload: boolean = false;
+
+  displayedColumns = [ 'idCorbeille', 'nomType', 'numeroLigne', 'dateSuppression', 'numeroSerie', 'etat', 'affectation', 'poste', 'dateLivraison', 'montant', 'ACTIONS'];
   @Input()
   dataSource!: MatTableDataSource<any>;
 
@@ -40,6 +43,7 @@ export class CorbeilleComponent implements OnInit {
   }
 
   getCorbeille(): void {
+    this.isDownload = true;
     this.corbeilleService.listCorbeille(this.currentPage, this.pageSize, this.keyword).subscribe({
       next: (data: PagedResponse<Corbeille>): void => {
         // Utilisez data.users car "users" est un champ dans PagedResponse<User>
@@ -49,11 +53,13 @@ export class CorbeilleComponent implements OnInit {
         this.currentPage = data.currentPage;
         this.totalItems = data.totalItems;
         this.totalPages = data.totalPages;
+        this.isDownload = false;
         //console.log(JSON.stringify(data, null, 2));
       },
       error: err => {
         this.errorMessage = ('Erreur lors de la récupération des éléments supprimés: '+err.error.message)
         this._coreService.openSnackBar('Erreur lors de la récupération des éléments supprimés:! \n ');
+        this.isDownload = false;
       }
     });
   }

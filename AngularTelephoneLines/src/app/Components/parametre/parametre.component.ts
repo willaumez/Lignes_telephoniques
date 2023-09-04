@@ -3,7 +3,7 @@ import {TypeLigne} from "../../Models/TypeLigne";
 import {TypeAttributService} from "../../Services/type-attribut.service";
 import {CoreService} from "../../core/core.service";
 import {Attribut} from "../../Models/Attribut";
-import {Rapprochement, VerificationResult} from "../../Models/Rapprochement";
+import {ImportationResult, Rapprochement, VerificationResult} from "../../Models/Rapprochement";
 import {ImportationService} from "../../Services/importation.service";
 import {LigneTelephonique} from "../../Models/LigneTelephonique";
 
@@ -31,6 +31,7 @@ export class ParametreComponent implements OnInit{
 
   //import
   importDataToDB: LigneTelephonique[] = [];
+  importResult!: ImportationResult;
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -124,6 +125,8 @@ export class ParametreComponent implements OnInit{
     this.errorMessage = '';
     this.verificationFile = undefined;
 
+    this.importResult = {} as ImportationResult;
+
     // Réinitialiser le composant d'entrée de fichier
     this.fileInput.nativeElement.value = '';
   }
@@ -212,10 +215,10 @@ export class ParametreComponent implements OnInit{
 
     if (this.importDataToDB.length>0) {
       this.importationService.importDataToDB(this.importDataToDB).subscribe({
-          next: (data: any): void => {
-            console.log("savedCount :::   " + JSON.stringify(data?.savedCount, null, 2));
-            console.log("notSavedCount :::   " + JSON.stringify(data?.notSavedCount, null, 2));
-            console.log("failedNumbers :::   " + JSON.stringify(data?.failedNumbers, null, 2));
+          next: (data: ImportationResult): void => {
+
+            this.importResult = data;
+            console.log("failedNumbers :::   " + JSON.stringify(this.importResult, null, 2));
             //this.cdRef.detectChanges();
 
             this.importation = false;

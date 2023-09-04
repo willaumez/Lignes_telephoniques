@@ -6,3 +6,12 @@ export interface VerificationResult {
   isValid: boolean;
   message: string;
 }
+
+
+export interface ImportationResult {
+  savedCount: number;
+  notSavedCount: number;
+  failedNumbers: [];
+}
+
+

@@ -11,3 +11,22 @@ export interface RestoreResponse {
   notRestoredCount: number;
 }
 
+export interface HomeResponse {
+  totalLigne: number;
+  typeLigne: typeLigneResponse[];
+  etats: [];
+}
+
+export interface typeLigneResponse {
+  nomLigne: string;
+  nombreLigne: number;
+}
+
+
+
+export interface tableResponse {
+  nom: string;
+  valeur: number;
+  pourcentage: number;
+}
+

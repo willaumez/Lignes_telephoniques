@@ -1,6 +1,6 @@
 <div class="main-body container-fluid">
   <div class="row">
-    <h1 class="titre">Liste - Historique </h1>
+    <h1 class="titre">Liste - Historique: <span>[  {{totalItems}}  ]</span> </h1>
   </div>
   <ng-container *ngIf="dataSource ; else failureOrLading">
   <div class="container">
@@ -19,8 +19,7 @@
   </div>
   <div class="container-fluid">
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource" matSort>
-
+      <table mat-table *ngIf="!isDownload" [dataSource]="dataSource" matSort>
         <!-- ID Column -->
         <ng-container matColumnDef="idHistorique">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> No</th>
@@ -70,6 +69,10 @@
         </tr>
 
       </table>
+
+      <div *ngIf="isDownload" class="Lading">
+        <mat-spinner>Chargement...</mat-spinner>
+      </div>
       <div></div>
     </div>
     <div class="customer-container">

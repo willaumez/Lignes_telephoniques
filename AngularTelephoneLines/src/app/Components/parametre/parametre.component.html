@@ -61,7 +61,7 @@
       entraîner des erreurs lors de l'importation.
     </li>
     <li>Il est possible d'ajouter, de modifier ou de supprimer des attributs supplémentaires directement via l'interface
-      de l'application. Pour ce faire, <a href="/path/to/attributs">cliquez ici</a>.
+      de l'application. Pour ce faire, <a href="/admin/typeAttributs">cliquez ici</a>.
     </li>
     <li>Lors de l'ajout ou de la modification des attributs, assurez-vous de suivre les conventions de nommage et les
       types de données requis. <span style="color: red">Les noms de colonnes doivent être identiques aux colonnes du tableau ci-dessous!</span>
@@ -156,9 +156,18 @@
 
 <mat-divider class="second-divider"></mat-divider>
 
-<div class="resultats-importation">
-
+<div class="resultats-importation" *ngIf="importResult">
+  <h2>Importation terminée</h2>
+  <p>Nombre d'enregistrements sauvegardés : {{ importResult.savedCount }}</p>
+  <p>Nombre d'enregistrements non sauvegardés : {{ importResult.notSavedCount }}</p>
+  <div class=" container-fluid failed-numbers">
+    <span *ngFor="let numbers of importResult.failedNumbers" class="number">
+      {{numbers}}
+    </span>
+  </div>
 </div>
+
+
 
 <ng-template #failureOrLading>
   <div class="failureOrLading-container">

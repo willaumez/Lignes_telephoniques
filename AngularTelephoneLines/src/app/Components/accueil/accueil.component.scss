@@ -1,0 +1,132 @@
+.container-fluid{
+  min-height: 80vh;
+  border: 3px solid black;
+  .container{
+    width: 75%;
+    height: auto;
+    padding: 1rem;
+    //border: 2px solid #d1490a;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    overflow-x: auto;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+
+    .type-element{
+      white-space: nowrap;
+      margin: 0 10px;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      height: auto;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+      transition: background-color 0.3s ease;
+
+      text-transform: none;
+      color: #d1490a;
+      border-radius: 10px;
+
+      &:hover {
+        background-color: #ddd;
+      }
+      &.active {
+        background-color: #d1490a;
+        color: #ffff;
+        &:hover {
+          color: #ffff;
+        }
+      }
+    }
+  }
+}
+
+/*
+
+*{
+  box-shadow: 0 0 0 3px red inset;
+}
+*/
+
+.container {
+  // Votre CSS pour .container
+}
+
+.scrolling-container {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.item {
+  display: inline-block;
+  // Ajoutez une marge ou un espacement si nécessaire
+  margin-right: 20px;
+}
+
+// Styles SCSS pour le conteneur et les éléments à l'intérieur
+.col-lg-3, .col-md-6, .col-sm-6 {
+  // Vous pouvez ajouter des styles spécifiques pour les différentes tailles d'écran ici
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  &-stats {
+    // Styles supplémentaires pour .card-stats
+  }
+
+  &-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+
+    .row {
+      width: 100%;
+
+      .icon-big {
+        font-size: 2em;
+        text-align: center;
+
+        &.text-center {
+          // Styles supplémentaires
+        }
+
+        &.icon-warning {
+          color: #f39c12;  // Couleur d'avertissement
+        }
+      }
+
+      .numbers {
+        margin-left: 20px;
+
+        .card-category {
+          font-size: 0.8em;
+          color: #95a5a6;
+        }
+
+        .card-title {
+          font-size: 1.5em;
+        }
+      }
+    }
+  }
+
+  &-footer {
+    background-color: #ecf0f1;
+    padding: 10px 20px;
+    border-top: 1px solid #bdc3c7;
+
+    .stats {
+      font-size: 0.8em;
+
+      i.fa {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+

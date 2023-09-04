@@ -17,7 +17,7 @@
     font-weight: bold;
     color: #333;
     text-align: center;
-    border-bottom: 6px solid #1b6ca8;
+    border-bottom: 6px solid #d1490a;
   }
 
   .container {
@@ -129,7 +129,7 @@
           text-decoration: underline;
           text-align: center;
           margin: 1rem;
-          color: #1b6ca8;
+          color: #d1490a;
         }
 
         mat-list {
@@ -265,7 +265,7 @@
 //Traitement des données
 .verification {
   width: 100%;
-  border: 2px solid #2d3a81;
+  border: 2px solid #d1490a;
   min-height: 50vh;
   margin: 1rem;
   padding: 1rem;
@@ -286,7 +286,7 @@
     height: auto;
     button{
       &.active {
-        background-color: #4050b5;
+        background-color: #d1490a;
         color: #ffff;
         &:hover {
           color: #ffff;
@@ -331,7 +331,7 @@
     width: 100%; // Largeur du conteneur
     height: auto; // Hauteur ajustée automatiquement
     padding: 1rem; // Espacement intérieur du conteneur
-    border: 2px solid #1b6ca8; // Bordure du conteneur
+    border: 2px solid #d1490a; // Bordure du conteneur
     border-radius: 10px; // Rayon des coins arrondis du conteneur
     display: flex; // Utilisation de Flexbox pour le layout
     flex-wrap: wrap; // Permet a
@@ -383,7 +383,7 @@
 
       // Classe pour l'état actif du bouton
       &.active {
-        background-color: #4050b5; // Couleur de fond lorsque le bouton est actif
+        background-color: #d1490a; // Couleur de fond lorsque le bouton est actif
         color: #ffff; // Couleur du texte lorsque le bouton est actif
         span{
          color: #e3c300;
@@ -437,7 +437,7 @@
       font-weight: bold;
       color: #333;
       text-align: center;
-      border-bottom: 4px solid #1b6ca8;
+      border-bottom: 4px solid #d1490a;
     }
 
     .exportation {
@@ -475,7 +475,7 @@
         }
       }
       button {
-        background-color: #007bff;
+        background-color: #d1490a;
         color: #fff;
         padding: 10px 20px;
         border: none;
@@ -484,7 +484,7 @@
         transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: #0056b3;
+          background-color: #d1490a;
         }
       }
     }
@@ -534,7 +534,7 @@
   }
 
   .mat-divider{
-    border-bottom: 6px solid #1b6ca8;
+    border-bottom: 6px solid #d1490a;
     margin: 10px 0;
   }
 

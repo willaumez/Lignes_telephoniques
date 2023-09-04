@@ -39,10 +39,13 @@ export class TypeLigneComponent implements OnInit{
   totalItems!: number;
   keyword: string = "";
 
+  //pointer
+  isDownload: boolean = false;
+
 
   typeLignes!: TypeLigne[];
   selectedTypeLigne!: TypeLigne;
-  typeLigneAttributs!: Attribut[]
+  typeLigneAttributs!: Attribut[];
 
 
   errorMessage!: string;
@@ -183,6 +186,7 @@ export class TypeLigneComponent implements OnInit{
     this.getLignesTelephonique();
   }
   getLignesTelephonique(): void {
+    this.isDownload = true;
     this.selectedRowIndex = -1;
     this.ligneRow = {} as LigneTelephonique;
     this.getAttributNames();
@@ -193,11 +197,13 @@ export class TypeLigneComponent implements OnInit{
         this.currentPage = data.currentPage;
         this.totalItems = data.totalItems;
         this.totalPages = data.totalPages;
+        this.isDownload = false;
         //console.log(JSON.stringify(data, null, 2));
         },
         error: (error) => {
           this.errorMessage = "Erreur lors de la récupération des types de ligne";
           this._coreService.openSnackBar('Erreur lors de la récupération des Noms de types de ligne:' + error.error.message);
+          this.isDownload = false;
         }
       }
     );

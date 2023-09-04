@@ -1,6 +1,7 @@
 package com.telephone.backendlignestelephoniques.repositories;
 
 import com.telephone.backendlignestelephoniques.entities.*;
+import com.telephone.backendlignestelephoniques.enums.EtatType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,6 +21,14 @@ public interface LigneTelephoniqueRepository extends JpaRepository<LigneTelephon
     List<LigneTelephonique> findByTypeId(long id);
 
     Set<LigneTelephonique> findLigneTelephoniqueByTypeId(long id);
+
+    @Query("SELECT COUNT(l) FROM LigneTelephonique l WHERE l.typeId = :typeId")
+    int countByTypeId(@Param("typeId") Long typeId);
+
+    //@Query("SELECT COUNT(l) FROM LigneTelephonique l")
+    //    int countLigne();
+    long count();
+    long countByEtat(EtatType etat);
 
     List<LigneTelephonique> findByTypeLigneIdType(Long idType);
 

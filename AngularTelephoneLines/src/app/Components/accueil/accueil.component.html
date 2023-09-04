@@ -1,1 +1,54 @@
-<p>accueil works!</p>
+<div class="mat-elevation-z8 container-fluid">
+  <h2 class="titre">Bienvenue</h2>
+
+  <div class="container" *ngIf="dataHome">
+      <div class="type-element" *ngFor="let type of dataHome.typeLigne">
+        <mat-card class="type-card">
+          <mat-card-content>
+            <div class="row">
+              <div class="col">
+                <mat-icon>category</mat-icon>
+              </div>
+              <div class="col">
+                {{type.nomLigne}}
+              </div>
+              <div class="col">
+                <p>{{ type.nombreLigne }}</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+  </div>
+  <div>
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="reference">
+          <th mat-header-cell *matHeaderCellDef> Reference </th>
+          <td mat-cell *matCellDef="let element"> {{element.nom}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="valeur">
+          <th mat-header-cell *matHeaderCellDef> Nombre de ligne </th>
+          <td mat-cell *matCellDef="let element"> {{element.valeur}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="pourcentage">
+          <th mat-header-cell *matHeaderCellDef> Pourcentage </th>
+          <td mat-cell *matCellDef="let element"> {{element.pourcentage}} % </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+  </div>
+
+
+
+</div>

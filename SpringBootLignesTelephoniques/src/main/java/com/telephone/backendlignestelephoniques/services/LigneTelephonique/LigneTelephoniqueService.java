@@ -57,4 +57,8 @@ public interface LigneTelephoniqueService {
 
     //Import
     Map<String, Object> importLigneTelephonique(LigneTelephonique[] telephoniques, String operateur);
+
+    Map<String, Object> importAccueil();
+
+
 }

@@ -118,4 +118,12 @@ public class LigneTelephoniqueRestController {
     }
 
 
+    //Accueil
+    @GetMapping("/accueil")
+    public ResponseEntity<Map<String, Object>> importAccueil(){
+        Map<String, Object> response = ligneTelephoniqueService.importAccueil();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 }

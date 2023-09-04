@@ -52,12 +52,12 @@
     </button>
   </div>
   <div class="table-container">
-    <table mat-table [dataSource]="dataSource" [style.transform]="'scale(' + zoomLevel + ')'" matSort>
+    <table mat-table *ngIf="!isDownload" [dataSource]="dataSource" [style.transform]="'scale(' + zoomLevel + ')'" matSort>
       <!-- Colonne ID de la Ligne -->
       <ng-container matColumnDef="idLigne">
         <th mat-header-cell *matHeaderCellDef>N<sup>o</sup></th>
-        <td mat-cell *matCellDef="let element">
-          <div class="cell-content"> {{ element.idLigne }} </div>
+        <td mat-cell *matCellDef="let element ; let i = index">
+          <div class="cell-content"> {{ i + 1 }} </div>
         </td>
       </ng-container>
 
@@ -138,6 +138,9 @@
         <td class="mat-cell" colspan="17">Aucune donnée pour le filtre "{{ input.value }}"</td>
       </tr>
     </table>
+    <div *ngIf="isDownload" class="Loading">
+      <mat-spinner>Chargement...</mat-spinner>
+    </div>
     <div class="action-container" *ngIf="!isObjectEmpty(ligneRow)" [@slideInOut]="buttonActionState">
       <button mat-button (click)="EditLigne()" matTooltip="Modifier" [matTooltipShowDelay]="1000">
         <mat-icon color="primary">edit</mat-icon>

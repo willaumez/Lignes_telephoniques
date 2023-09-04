@@ -2,6 +2,7 @@ package com.telephone.backendlignestelephoniques.services.LigneTelephonique;
 
 import com.telephone.backendlignestelephoniques.embeddable.AttributValeur;
 import com.telephone.backendlignestelephoniques.entities.*;
+import com.telephone.backendlignestelephoniques.enums.EtatType;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.*;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Array;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -413,18 +415,45 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
             // Gestion des erreurs globales, si nécessaire
         }
 
-
         response.put("savedCount", savedCount);
         response.put("notSavedCount", notSavedCount);
         response.put("failedNumbers", failedNumbers);
         return response;
     }
 
+
     private boolean isNumeroLigneExists(String numeroLigne) {
         return ligneTelephoniqueRepository.existsByNumeroLigne(numeroLigne); // Retournez true si le numéro existe, sinon false
     }
 
 
+    //Accueil
+    @Override
+    public Map<String, Object> importAccueil() {
+        Map<String, Object> response = new HashMap<>();
+
+        //typeLigne
+        List<Map<String, Object>> typeLigneData = new ArrayList<>();
+
+        for (TypeLigne typeLigne: typeLigneRepository.findAll()){
+            Map<String, Object> exempleLigne1 = new HashMap<>();
+            exempleLigne1.put("nomLigne", typeLigne.getNomType());
+            //int nb = ligneTelephoniqueRepository.countByTypeId(typeLigne.getIdType());
+            exempleLigne1.put("nombreLigne", ligneTelephoniqueRepository.countByTypeId(typeLigne.getIdType()));
+            typeLigneData.add(exempleLigne1);
+        }
+
+        //etat
+        Map<String, Long> ligneEtat = new HashMap<>();
+        for (EtatType etatType : EtatType.values()) {
+            ligneEtat.put(etatType.name(), ligneTelephoniqueRepository.countByEtat(etatType));
+        }
+
+        response.put("totalLigne",ligneTelephoniqueRepository.count());
+        response.put("typeLigne", typeLigneData);
+        response.put("etats", ligneEtat);
+        return response;
+    }
 
 
 

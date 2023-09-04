@@ -1,10 +1,10 @@
-<mat-toolbar color="primary" class="mat-elevation-z8">
-<!--<mat-toolbar style="background-color: #df7829" class="mat-elevation-z8">-->
+<!--<mat-toolbar color="primary" class="mat-elevation-z8">-->
+<mat-toolbar class="mat-elevation-z8 mat-toolbar-containner">
   <button class="togglebtn" (click)="drawer.toggle()" mat-icon-button matTooltip="Menu" [matTooltipShowDelay]="1000">
     <mat-icon>menu</mat-icon>
   </button>
-    <!--<span><img ngSrc="assets/logo3.webp" alt="logo" height="34" width="150"> </span>-->
-  <span routerLink="accueil">Lignes-Téléphonique</span>
+    <span routerLink="accueil" class="logo"><img ngSrc="assets/logo2.png" alt="logo2" height="34" width="150"> </span>
+    <span routerLink="accueil" class="logo-titre">Lignes-Téléphonique</span>
   <span class="example-spacer"></span>
   <button mat-button class="username" routerLink="profile" matTooltip="-- Profil -- ">
     <mat-icon>account_circle</mat-icon>
@@ -45,11 +45,12 @@
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}"><mat-icon> insert_drive_file </mat-icon> Rapprochement </button>
       </mat-list-item>
-      <mat-list-item>
+
+      <!--<mat-list-item>
         <button routerLink="facturation" mat-button
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}"><mat-icon>event_note</mat-icon> Facturations </button>
-      </mat-list-item>
+      </mat-list-item>-->
 
             <mat-divider></mat-divider>
       <mat-list-item>
@@ -98,8 +99,10 @@
         <button mat-button (click)="handleLogOut()">
           <mat-icon>exit_to_app</mat-icon> Deconnexion </button>
       </mat-list-item>
-
     </mat-nav-list>
+    <div class="logo-menu-container">
+      <span class="logo-menu"><img ngSrc="assets/logo3.webp" alt="logo2" height="50" width="200"> </span>
+    </div>
   </mat-drawer>
 
   <mat-drawer-content>

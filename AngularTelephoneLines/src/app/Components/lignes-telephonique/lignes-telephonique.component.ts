@@ -37,6 +37,9 @@ export class LignesTelephoniqueComponent implements OnInit {
   totalItems!: number;
   keyword: string = "";
 
+  //pointer
+  isDownload: boolean = false;
+
 
   errorMessage!: string;
   columnsInit: string[] = ['idLigne', 'typeLigne.nomType', 'numeroLigne', 'affectation', 'poste', 'etat', 'dateLivraison', 'numeroSerie', 'montant', 'createdDate'];
@@ -148,6 +151,7 @@ export class LignesTelephoniqueComponent implements OnInit {
 
   //fonctions
   getLignesTelephonique(): void {
+    this.isDownload = true;
     this.selectedRowIndex = -1;
     this.ligneRow = {} as LigneTelephonique;
     this.getAttributNames();
@@ -159,11 +163,14 @@ export class LignesTelephoniqueComponent implements OnInit {
           this.currentPage = data.currentPage;
           this.totalItems = data.totalItems;
           this.totalPages = data.totalPages;
+
+          this.isDownload = false;
           //console.log(JSON.stringify(data, null, 2));
         },
         error: (error) => {
           this.errorMessage = "Erreur lors de la récupération des types de ligne";
           this._coreService.openSnackBar('Erreur lors de la récupération des Noms de types de ligne:' + error.error.message);
+          this.isDownload = false;
         }
       }
     );
