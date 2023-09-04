@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +104,17 @@ public class LigneTelephoniqueRestController {
     @GetMapping("/rapprochement")
     public List<Rapprochement> rapprochementList() {
         return ligneTelephoniqueService.rapprochementList();
+    }
+
+
+
+
+    //====================  Importation des donnée  ======================//
+    @PostMapping("/import/{operateur}")
+    public ResponseEntity<Map<String, Object>> importLigneTelephonique(@PathVariable String operateur, @RequestBody LigneTelephonique[] telephonique) throws ElementNotFoundException {
+        System.out.println("\n\n\n\n\n importLigneTelephonique     "+ Arrays.toString(telephonique) +"\n\n\n\n");
+        Map<String, Object> response = ligneTelephoniqueService.importLigneTelephonique(telephonique, operateur);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

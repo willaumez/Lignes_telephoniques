@@ -47,7 +47,7 @@ public class SecurityController {
                 new UsernamePasswordAuthenticationToken(username, password)
         );
         User user = userServices.getUserByUsername(username);
-        System.out.println("user::   "+user);
+        //System.out.println("user::   "+user);
 
         Instant instant= Instant.now();
         String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining("  "));

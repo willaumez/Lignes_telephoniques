@@ -7,8 +7,8 @@ export interface LigneTelephonique {
   numeroLigne: string;
   affectation?: string;
   poste?: string;
-  etat?: EtatType;
-  dateLivraison?: Date;
+  etat?: EtatType | null;
+  dateLivraison?: Date | null;
   numeroSerie?: string;
   montant?: number;
   createdDate: Date;
@@ -17,7 +17,8 @@ export interface LigneTelephonique {
 }
 
 export enum EtatType {
-  INDETERMINER = "-----",
+  NULL = "NULL",
+  INACTIF= "INACTIF",
   ACTIF = "ACTIF",
   RESILIE = "RESILIE",
   CESSION = "CESSION"

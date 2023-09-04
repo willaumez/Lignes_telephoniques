@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Rapprochement, VerificationResult} from "../../Models/Rapprochement";
 import {MatSort} from "@angular/material/sort";
@@ -44,6 +44,8 @@ export class RapprochementComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   displayedColumns: string[] = ['numero', 'montant'];
   dataSource = new MatTableDataSource<any>([]);
+
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   ngOnInit(): void {
     this.indexTab = 0;
@@ -95,6 +97,7 @@ export class RapprochementComponent implements OnInit {
       this.isLoading = true;
       this.selectedFile = event.target.files[0];
       if (this.selectedFile) {
+
         this.rapService.verifyExcelFile(this.selectedFile).subscribe({
             next: (data: VerificationResult): void => {
               this.verificationFile = data;
@@ -107,6 +110,8 @@ export class RapprochementComponent implements OnInit {
               console.error('Une erreur est survenue lors de l\'importation des données depuis Excel', error);
             }
           }
+
+
         );
         this.isLoading = false;
       } else {
@@ -161,6 +166,9 @@ export class RapprochementComponent implements OnInit {
     this.dataMontantNoCor = [];
     this.dataNoExistDB = [];
     this.dataNoExistExcel = [];
+
+    // Réinitialiser le composant d'entrée de fichier
+    this.fileInput.nativeElement.value = '';
   }
 
   extractDataFromExcel(): void {

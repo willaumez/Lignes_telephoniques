@@ -5,8 +5,8 @@ import com.telephone.backendlignestelephoniques.entities.*;
 import com.telephone.backendlignestelephoniques.exceptions.ElementNotFoundException;
 import com.telephone.backendlignestelephoniques.repositories.*;
 import com.telephone.backendlignestelephoniques.services.Historique.HistoriqueService;
-import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     private CorbeilleRepository corbeilleRepository;
 
     @Override
+    @Transactional
     public void saveLigneTelephonique(LigneTelephonique ligneTelephonique, String operateur) throws EntityNotFoundException {
         if (ligneTelephoniqueRepository.existsByNumeroLigne(ligneTelephonique.getNumeroLigne())) {
             throw new IllegalArgumentException("Une ligne Téléphonique du même numéro existe déjà.");
@@ -380,6 +382,46 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
         result.put("restoredCount", restoredCount);
         result.put("notRestoredCount", notRestoredCount);
         return result;
+    }
+
+
+    //Import
+    @Override
+    @Transactional
+    public Map<String, Object> importLigneTelephonique(LigneTelephonique[] telephoniques, String operateur) {
+        Map<String, Object> response = new HashMap<>();
+        List<String> failedNumbers = new ArrayList<>();
+        int savedCount = 0;
+        int notSavedCount = 0;
+
+        try {
+            for (LigneTelephonique telephonique : telephoniques) {
+                try {
+                    if (isNumeroLigneExists(telephonique.getNumeroLigne())) {
+                        notSavedCount++;
+                        failedNumbers.add(telephonique.getNumeroLigne());
+                        continue;
+                    }
+                    saveLigneTelephonique(telephonique, operateur);
+                    savedCount++;
+                } catch (Exception e) {
+                    notSavedCount++;
+                    failedNumbers.add(telephonique.getNumeroLigne());
+                }
+            }
+        } catch (Exception e) {
+            // Gestion des erreurs globales, si nécessaire
+        }
+
+
+        response.put("savedCount", savedCount);
+        response.put("notSavedCount", notSavedCount);
+        response.put("failedNumbers", failedNumbers);
+        return response;
+    }
+
+    private boolean isNumeroLigneExists(String numeroLigne) {
+        return ligneTelephoniqueRepository.existsByNumeroLigne(numeroLigne); // Retournez true si le numéro existe, sinon false
     }
 
 

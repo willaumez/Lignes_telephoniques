@@ -9,10 +9,12 @@
 <ng-container *ngIf="typeLignes; else failureOrLading">
   <div class="type-Container">
     <div class="button-select">
-      <button mat-icon-button (click)="firstElement()" matTooltip="Premier type" [matTooltipShowDelay]="1000" [disabled]="typeLignes.length == 0">
+      <button mat-icon-button (click)="firstElement()" matTooltip="Premier type" [matTooltipShowDelay]="1000"
+              [disabled]="typeLignes.length == 0">
         <mat-icon>first_page</mat-icon>
       </button>
-      <button mat-icon-button (click)="previousElement()" matTooltip="Type precedent" [matTooltipShowDelay]="1000"  [disabled]="typeLignes.length == 0">
+      <button mat-icon-button (click)="previousElement()" matTooltip="Type precedent" [matTooltipShowDelay]="1000"
+              [disabled]="typeLignes.length == 0">
         <mat-icon>chevron_left</mat-icon>
       </button>
     </div>
@@ -27,30 +29,43 @@
       </button>
     </div>
     <div class="button-select">
-      <button mat-icon-button (click)="nextElement()" matTooltip="Type suivant" [matTooltipShowDelay]="1000"  [disabled]="typeLignes.length == 0">
+      <button mat-icon-button (click)="nextElement()" matTooltip="Type suivant" [matTooltipShowDelay]="1000"
+              [disabled]="typeLignes.length == 0">
         <mat-icon>chevron_right</mat-icon>
       </button>
-      <button mat-icon-button (click)="lastElement()" matTooltip="Dernier type" [matTooltipShowDelay]="1000"  [disabled]="typeLignes.length == 0">
+      <button mat-icon-button (click)="lastElement()" matTooltip="Dernier type" [matTooltipShowDelay]="1000"
+              [disabled]="typeLignes.length == 0">
         <mat-icon>last_page</mat-icon>
       </button>
     </div>
   </div>
 </ng-container>
-<h2 class="titre-liste">Type ligne:  <span *ngIf="selectedTypeLigne">{{selectedTypeLigne.nomType}}</span></h2>
+<h2 class="titre-liste">Type ligne: <span *ngIf="selectedTypeLigne">{{selectedTypeLigne.nomType}}</span></h2>
 
 <mat-divider class="second-divider"></mat-divider>
-
 
 <div class="container-fluid">
   <p>Pour importer massivement des données dans la base de données, il faut respecter les points suivants:</p>
   <ul>
     <li>Le fichier Excel doit être au format .xlsx ou .xls.</li>
-    <li>La première ligne du fichier doit contenir les noms des colonnes, qui doivent correspondre aux champs de la base de données. Les champs à inclure sont comme présentés ci-dessous.</li>
-    <li>Les données doivent être formatées correctement. Par exemple, les dates doivent être au format YYYY-MM-DD, et les numéros de ligne doivent être des chaînes de caractères valides.</li>
-    <li>Les valeurs pour les attributs de type Enum doivent correspondre à l'une des valeurs énumérées pour cet attribut.</li>
-    <li>Assurez-vous que le fichier ne contient pas de lignes vides ou de données incorrectes, car cela pourrait entraîner des erreurs lors de l'importation.</li>
-    <li>Il est possible d'ajouter, de modifier ou de supprimer des attributs supplémentaires directement via l'interface de l'application. Pour ce faire, <a href="/path/to/attributs">cliquez ici</a>.</li>
-    <li>Lors de l'ajout ou de la modification des attributs, assurez-vous de suivre les conventions de nommage et les types de données requis. Pour consulter les conventions, <a href="/path/to/conventions">cliquez ici</a>.</li>
+    <li>La première ligne du fichier doit contenir les noms des colonnes, qui doivent correspondre aux champs de la base
+      de données. Les champs à inclure sont comme présentés ci-dessous.
+    </li>
+    <li>Les données doivent être formatées correctement. Par exemple, les dates doivent être au format ['YYYY-MM-DD' ou 'DD/MM/YYYY'], et
+      les numéros de ligne doivent être des chaînes de caractères valides.
+    </li>
+    <li>Les valeurs pour les attributs de type Enum doivent correspondre à l'une des valeurs énumérées pour cet
+      attribut.
+    </li>
+    <li>Assurez-vous que le fichier ne contient pas de lignes vides ou de données incorrectes, car cela pourrait
+      entraîner des erreurs lors de l'importation.
+    </li>
+    <li>Il est possible d'ajouter, de modifier ou de supprimer des attributs supplémentaires directement via l'interface
+      de l'application. Pour ce faire, <a href="/path/to/attributs">cliquez ici</a>.
+    </li>
+    <li>Lors de l'ajout ou de la modification des attributs, assurez-vous de suivre les conventions de nommage et les
+      types de données requis. <span style="color: red">Les noms de colonnes doivent être identiques aux colonnes du tableau ci-dessous!</span>
+    </li>
   </ul>
   <div class="table-container">
     <table class="table table-bordered table-striped">
@@ -61,8 +76,9 @@
       </thead>
     </table>
   </div>
-
 </div>
+
+<mat-divider class="second-divider"></mat-divider>
 
 <div class="container container-import">
   <div class="import-section">
@@ -94,14 +110,55 @@
           </div>
         </ng-container>
       </ng-container>
+    </div>
+    <button mat-button color="warn" type="button" (click)="resetImport()"
+            *ngIf="selectedFile || errorMessage">Annuler
+    </button>
   </div>
   <div class="verification-section">
+    <h2>Vérification du fichier</h2>
+    <div *ngIf="verificationFile?.isValid && selectedFile" class="fileValid">
+      <p style="color: #008800"><strong><i class="fas fa-check-circle"></i> Le fichier est valide</strong>
+      </p>
+    </div>
+    <div *ngIf="!verificationFile?.isValid && selectedFile" class="fileValid">
+      <p style="color: #bb0000">
+        <i class="fas fa-exclamation-circle"></i> Le fichier est invalide ! :   {{verificationFile?.message}}
+      </p>
+    </div>
+    <div class="traitement-btn" *ngIf="verificationFile?.isValid">
+      <button mat-raised-button matTooltip="Importer les données" [matTooltipShowDelay]="500"
+              (click)="validerImportation()" [ngClass]="{'active': importation}">
+        <mat-icon class="example-tab-icon">settings</mat-icon>
+        Commencer l'importation des données
+      </button>
+    </div>
+    <div class="traitement-btn" *ngIf="!verificationFile?.isValid">
+      <button mat-button style="color: #d30000">
+        <mat-icon class="example-tab-icon">settings</mat-icon>
+        Importation des données impossible
+      </button>
+    </div>
+
+    <div class="spinner-progress" *ngIf="importation">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div class="spinner-progress" *ngIf="errorMessage">
+      <div class="failure">
+        {{errorMessage}}
+      </div>
+    </div>
+
 
   </div>
 </div>
 
+<mat-divider class="second-divider"></mat-divider>
 
+<div class="resultats-importation">
 
+</div>
 
 <ng-template #failureOrLading>
   <div class="failureOrLading-container">

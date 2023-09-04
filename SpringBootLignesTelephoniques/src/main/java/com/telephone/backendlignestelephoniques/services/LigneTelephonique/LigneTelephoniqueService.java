@@ -55,4 +55,6 @@ public interface LigneTelephoniqueService {
     Map<String, Integer> restorationAllElement(String operateur);
 
 
+    //Import
+    Map<String, Object> importLigneTelephonique(LigneTelephonique[] telephoniques, String operateur);
 }

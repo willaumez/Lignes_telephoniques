@@ -13,7 +13,7 @@ import {PagedResponse} from "../Models/PagedResponse";
 export class LigneTelephoniqueService {
 
   operateur!: string;
-  constructor(private http: HttpClient,private userData: LoginService) {
+  constructor(private http: HttpClient, private userData: LoginService) {
     this.operateur = this.userData.getUserData().username;
   }
 
