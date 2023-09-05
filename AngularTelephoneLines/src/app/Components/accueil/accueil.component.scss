@@ -1,7 +1,22 @@
-.container-fluid{
+.titre {
+  font-size: 28px; // Taille de la police
+  font-weight: bold; // Gras
+  color: #333; // Couleur du texte
+  text-align: center; // Alignement du texte
+  border-bottom: 6px solid #d1490a; // Bordure inférieure
+  span {
+    margin: 0 1rem;
+    color: #946b00;
+  }
+}
+
+.container-fluid {
+  margin: 2rem auto;
+  padding: 2rem;
   min-height: 80vh;
-  border: 3px solid black;
-  .container{
+  //max-height: 100%;
+  //border: 3px solid black;
+  .container {
     width: 75%;
     height: auto;
     padding: 1rem;
@@ -14,7 +29,7 @@
       width: 100%;
     }
 
-    .type-element{
+    .type-element {
       white-space: nowrap;
       margin: 0 10px;
       padding: 0.5rem 1rem;
@@ -32,15 +47,40 @@
       &:hover {
         background-color: #ddd;
       }
+
       &.active {
         background-color: #d1490a;
         color: #ffff;
+
         &:hover {
           color: #ffff;
         }
       }
     }
   }
+
+  .stat-container {
+    margin: auto;
+    display: flex; // Utilise le modèle de boîte flexible
+    justify-content: space-between; // Espacement maximal entre les éléments
+
+    @media (max-width: 768px) {
+      flex-direction: column; // Alignement en colonne pour les petits écrans
+      align-items: center; // Centre les éléments horizontalement
+    }
+  }
+
+  .table-container {
+    width: 100%;
+    height: 450px; // À ajuster en fonction de vos besoins
+    overflow-y: auto;
+    margin: 2rem;
+    padding: 2rem;
+  }
+
+  .circle-container {
+  }
+
 }
 
 /*
@@ -73,7 +113,7 @@
 .card {
   border: 1px solid #ccc;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &-stats {
     // Styles supplémentaires pour .card-stats
@@ -84,33 +124,44 @@
     display: flex;
     flex-direction: row;
 
-    .row {
-      width: 100%;
+    .icon-big {
+      font-size: 2em;
+      text-align: center;
 
-      .icon-big {
-        font-size: 2em;
-        text-align: center;
-
-        &.text-center {
-          // Styles supplémentaires
-        }
-
-        &.icon-warning {
-          color: #f39c12;  // Couleur d'avertissement
-        }
+      &.text-center {
+        // Styles supplémentaires
       }
 
-      .numbers {
-        margin-left: 20px;
+      &.icon-warning {
+        color: #f39c12; // Couleur d'avertissement
+      }
+    }
 
-        .card-category {
-          font-size: 0.8em;
-          color: #95a5a6;
-        }
+    .numbers {
+      margin-left: 20px;
 
-        .card-title {
-          font-size: 1.5em;
-        }
+      .card-category {
+        font-size: 0.8em;
+        color: #95a5a6;
+      }
+
+      .card-title {
+        font-size: 1.5em;
+      }
+    }
+    .mat-card-content {
+      display: flex; // Utilise le modèle de boîte flexible
+      align-items: center; // Centre verticalement les éléments à l'intérieur
+      white-space: nowrap; // Pour éviter le retour à la ligne dans le texte
+
+      mat-icon {
+        margin-right: 8px; // Ajoute une marge à droite de l'icône
+        color: #007bff; // Couleur de l'icône
+        font-size: 24px; // Taille de l'icône
+      }
+      span {
+        color: #333; // Couleur du texte
+        font-weight: bold; // Gras
       }
     }
   }
@@ -128,5 +179,53 @@
       }
     }
   }
+}
+
+
+//Cercle
+// Classe pour le conteneur du cercle
+.circle-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+// Classe pour le SVG
+.circular-chart {
+  width: 100%;
+  height: 100%;
+}
+
+// Classe pour le cercle de fond
+.circle-bg {
+  fill: none;
+  stroke: #f3f3f3;
+  stroke-width: 3;
+}
+
+// Classe pour le cercle de progression
+.circle {
+  fill: none;
+  stroke: #d1490a;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+// Classe pour le texte du pourcentage
+.percentage {
+  font-size: 0.4em;
+  text-anchor: middle;
+}
+
+.item-container {
+  display: flex;
+  align-items: center;
+}
+
+// Classe pour le conteneur du nom
+.name-container {
+  margin-right: 10px;
 }
 

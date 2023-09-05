@@ -17,6 +17,7 @@ export class AccueilComponent implements OnInit{
 
   displayedColumns: string[] = ['reference', 'valeur', 'pourcentage'];
   dataSource!: tableResponse[];
+  dataSource2!: tableResponse[];
 
   constructor(private ligneService: LigneTelephoniqueService) {
   }
@@ -29,6 +30,7 @@ export class AccueilComponent implements OnInit{
     this.ligneService.getDataHome().subscribe({
       next: (data: HomeResponse): void => {
         this.dataHome = data;
+        this.dataSource2 = [];
         this.dataSource = [];
         this.dataSource.push({nom: "Toutes les lignes", valeur: data.totalLigne, pourcentage: 100});
         for (let element of data.typeLigne){
@@ -36,6 +38,12 @@ export class AccueilComponent implements OnInit{
           pourcentage = parseFloat(pourcentage.toFixed(2));
           this.dataSource.push({nom: element.nomLigne, valeur: element.nombreLigne, pourcentage: pourcentage});
         }
+        for (let [nom, valeur] of Object.entries(data.etats)) {
+          let pourcentage = (valeur / data.totalLigne) * 100;
+          pourcentage = parseFloat(pourcentage.toFixed(2));
+          this.dataSource2.push({nom: nom, valeur: valeur, pourcentage: pourcentage});
+        }
+
         console.log(JSON.stringify(this.dataHome, null, 2));
         this.isDownload = false;
       },

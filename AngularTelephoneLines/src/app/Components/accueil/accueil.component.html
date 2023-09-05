@@ -2,27 +2,23 @@
   <h2 class="titre">Bienvenue</h2>
 
   <div class="container" *ngIf="dataHome">
-      <div class="type-element" *ngFor="let type of dataHome.typeLigne">
-        <mat-card class="type-card">
-          <mat-card-content>
-            <div class="row">
-              <div class="col">
-                <mat-icon>category</mat-icon>
-              </div>
-              <div class="col">
-                {{type.nomLigne}}
-              </div>
-              <div class="col">
-                <p>{{ type.nombreLigne }}</p>
-              </div>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
+    <div class="type-element" *ngFor="let type of dataHome.typeLigne">
+      <mat-card class="type-card">
+        <mat-card-content>
+          <mat-icon>category</mat-icon>
+          <span>{{type.nomLigne}} : {{ type.nombreLigne }}</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
-  <div>
+  <!--  <div class="container" *ngIf="dataHome">
+      <div class="type-element" *ngFor="let type of dataHome.typeLigne">
+        <mat-icon>category</mat-icon> {{type.nomLigne}} : {{ type.nombreLigne }}
+      </div>
+    </div>-->
+  <div class="stat-container">
     <div class="table-container">
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
 
         <!-- Name Column -->
         <ng-container matColumnDef="reference">
@@ -47,6 +43,35 @@
       </table>
     </div>
 
+    <div class="cicle-container">
+      <h2>État des lignes</h2>
+      <div class="item-container" *ngFor="let data of dataSource2">
+        <!-- Nom à gauche du cercle -->
+        <div class="name-container">
+          {{ data.nom }}
+        </div>
+        <!-- Cercle de progression -->
+        <div class="circle-container">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <!-- Cercle de fond -->
+            <path class="circle-bg"
+                  d="M18 2.0845
+                 a 15.9155 15.9155 0 0 1 0 31.831
+                 a 15.9155 15.9155 0 0 1 0 -31.831"
+            ></path>
+            <!-- Cercle de progression -->
+            <path class="circle"
+                  [attr.stroke-dasharray]="data.pourcentage + ', 100'"
+                  d="M18 2.0845
+                 a 15.9155 15.9155 0 0 1 0 31.831
+                 a 15.9155 15.9155 0 0 1 0 -31.831"
+            ></path>
+            <!-- Texte du pourcentage -->
+            <text x="18" y="20.35" class="percentage">{{ data.pourcentage }}%</text>
+          </svg>
+        </div>
+      </div>
+    </div>
   </div>
 
 
