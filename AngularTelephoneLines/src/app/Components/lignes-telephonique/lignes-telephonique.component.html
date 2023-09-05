@@ -30,7 +30,7 @@
       <ng-container matColumnDef="numeroLigne">
         <th mat-header-cell *matHeaderCellDef> Numéro_de_la_Ligne</th>
         <td mat-cell *matCellDef="let element">
-          <div class="cell-content">{{element.numeroLigne}} </div>
+          <div class="cell-content">{{formatNumeroLigne(element.numeroLigne)}} </div>
         </td>
       </ng-container>
 

@@ -170,7 +170,7 @@ export class ParametreComponent implements OnInit{
             //this.cdRef.detectChanges();
           },
           error: (error) => {
-            console.error('Erreur lors de l\'importation du fichier :', error);
+            this._coreService.openSnackBar("Erreur lors de l\'extraction des données du fichier :"+error.error.message);
           }
         }
       );
@@ -216,15 +216,11 @@ export class ParametreComponent implements OnInit{
     if (this.importDataToDB.length>0) {
       this.importationService.importDataToDB(this.importDataToDB).subscribe({
           next: (data: ImportationResult): void => {
-
             this.importResult = data;
-            console.log("failedNumbers :::   " + JSON.stringify(this.importResult, null, 2));
             //this.cdRef.detectChanges();
-
             this.importation = false;
           },
           error: (error) => {
-            console.error('Erreur lors de l\'importation du fichier :', error);
             this.errorMessage = "Erreur lors de l\'importation du fichier :"+error.error.message;
           }
         }

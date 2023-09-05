@@ -18,11 +18,11 @@
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource" matSort>
         <!-- ID Column -->
-        <!--<ng-container matColumnDef="idType">
+        <ng-container matColumnDef="idType">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> No</th>
           <td mat-cell *matCellDef="let type; let i = index"> {{ i + 1 }} </td>
-        </ng-container>-->
-        <!-- Name Column -->
+        </ng-container>
+         Name Column
         <ng-container matColumnDef="nomType">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom_Type</th>
           <td mat-cell *matCellDef="let type"> {{ type.nomType }} </td>
@@ -87,6 +87,9 @@
         <select id="pageSize" (change)="changePageSize($event)" [(ngModel)]="pageSize">
           <option *ngFor="let sizeOption of pageSizeOptions" [value]="sizeOption">{{sizeOption}}</option>
         </select>
+      </div>
+      <div class="Lading" *ngIf="isLoading">
+        <mat-spinner>Chargement...</mat-spinner>
       </div>
       <div class="custom-paginator">
         <button mat-icon-button (click)="firstPage()" matTooltip="Première page" [matTooltipShowDelay]="1000"
@@ -174,6 +177,9 @@
       </div>
       <div class="button-container">
         <button mat-raised-button color="warn" type="reset" (click)="handleResetUpdate()">Annuler</button>
+        <div class="Lading" *ngIf="isLoading">
+          <mat-spinner>Chargement...</mat-spinner>
+        </div>
         <button mat-raised-button color="primary" type="submit" [disabled]="typeLigneForm.invalid">Enregistrer</button>
       </div>
     </form>

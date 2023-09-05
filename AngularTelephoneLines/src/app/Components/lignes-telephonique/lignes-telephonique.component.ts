@@ -243,6 +243,20 @@ export class LignesTelephoniqueComponent implements OnInit {
   }
 
 
+  //format numero
+  formatNumeroLigne(numeroLigne: string): string {
+    if (!numeroLigne) return '---';
+
+    const cleanedNumber = numeroLigne.replace(/[^\d]/g, '');
+
+    if (cleanedNumber.length === 12) {
+      return `(${cleanedNumber.substr(0, 3)}) ${cleanedNumber.substr(3, 3)} ${cleanedNumber.substr(6, 3)} ${cleanedNumber.substr(9, 3)}`;
+    }
+    return numeroLigne;
+  }
+
+
+
 
 
 }

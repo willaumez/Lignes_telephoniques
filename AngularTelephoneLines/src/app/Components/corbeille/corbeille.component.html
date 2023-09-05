@@ -123,6 +123,9 @@
             <option *ngFor="let sizeOption of pageSizeOptions" [value]="sizeOption">{{sizeOption}}</option>
           </select>
         </div>
+        <div class="Lading" *ngIf="isLoading">
+          <mat-spinner>Chargement...</mat-spinner>
+        </div>
         <div class="custom-paginator">
           <button mat-icon-button (click)="firstPage()" matTooltip="Première page" [matTooltipShowDelay]="1000"
                   [disabled]="currentPage == 0">

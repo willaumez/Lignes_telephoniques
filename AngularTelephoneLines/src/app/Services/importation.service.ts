@@ -37,7 +37,7 @@ export class ImportationService {
   private createAttributs(row: any, typeLigneAttributs: Attribut[]): Attribut[] {
     const attributs: Attribut[] = [];
     for (const att of typeLigneAttributs) {
-      const valeur = row[att.nomAttribut.toLowerCase()] || null;
+      const valeur = row[att.nomAttribut] !== undefined ? row[att.nomAttribut] : null;
       const attribut: Attribut = {
         ...att,
         valeurAttribut: valeur
@@ -68,13 +68,13 @@ export class ImportationService {
           }
 
           const ligne: LigneTelephonique = {
-            numeroLigne: row['numeroligne'] || null,
-            affectation: row['affectation'] || null,
-            poste: row['poste'] || null,
-            etat: row['etat'] ? row['etat'] as EtatType : null,
+            numeroLigne: row['numeroLigne'] !== undefined ? row['numeroLigne'].toString() : null,
+            affectation: row['affectation'] !== undefined ? row['affectation'].toString() : null,
+            poste: row['poste'] !== undefined ? row['poste'].toString() : null,
+            etat: row['etat'] !== undefined ? row['etat'].toString() : null,
             dateLivraison: dateLivraison,
-            numeroSerie: row['numeroserie'] || null,
-            montant: row['montant'] || null,
+            numeroSerie: row['numeroSerie'] !== undefined ? row['numeroSerie'].toString() : null,
+            montant: row['montant'] !== undefined ? row['montant'].toString() : null,
             createdDate: new Date(), // Date de création actuelle
             typeLigne: {
               ...typeLigne,

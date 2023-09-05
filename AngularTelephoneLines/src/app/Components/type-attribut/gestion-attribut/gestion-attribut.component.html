@@ -18,11 +18,11 @@
       <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
           <!-- ID Column -->
-          <!--<ng-container matColumnDef="idAttribut">
+          <ng-container matColumnDef="idAttribut">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> No</th>
             <td mat-cell *matCellDef="let attribut; let i = index"> {{ i + 1 }} </td>
-          </ng-container>-->
-          <!-- Name Column -->
+          </ng-container>
+           Name Column
           <ng-container matColumnDef="nomAttribut">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom</th>
             <td mat-cell *matCellDef="let attribut"> {{ attribut.nomAttribut }} </td>
@@ -79,6 +79,9 @@
           <select id="pageSize" (change)="changePageSize($event)" [(ngModel)]="pageSize">
             <option *ngFor="let sizeOption of pageSizeOptions" [value]="sizeOption">{{sizeOption}}</option>
           </select>
+        </div>
+        <div class="Loading" *ngIf="isLoading">
+          <mat-spinner>Chargement...</mat-spinner>
         </div>
         <div class="custom-paginator">
           <button mat-icon-button (click)="firstPage()" matTooltip="Première page" [matTooltipShowDelay]="1000"

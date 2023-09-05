@@ -22,6 +22,8 @@ export class CorbeilleComponent implements OnInit {
 
   errorMessage!: string;
 
+  isLoading: boolean = false;
+
   //pointer
   isDownload: boolean = false;
 
@@ -106,12 +108,15 @@ export class CorbeilleComponent implements OnInit {
   handleDelete(id: number) {
     let conf:boolean = confirm("Êtes-vous certain de vouloir le supprimer?")
     if (!conf) return;
+    this.isLoading = true;
     this.corbeilleService.deleteCorbeille(id).subscribe({
       next: (res):void => {
+        this.isLoading = false;
         this.getCorbeille();
         this._coreService.openSnackBar("ligne supprimé avec succès! ");
       },
       error:err => {
+        this.isLoading = false;
         this._coreService.openSnackBar("Erreur: "+err.error?.message);
       }
     });
@@ -119,13 +124,15 @@ export class CorbeilleComponent implements OnInit {
   handleRestoration(idCorbeille: number) {
     let conf:boolean = confirm("Êtes-vous certain de vouloir Restaurer cet élément?")
     if (!conf) return;
-
+    this.isLoading = true;
     this.corbeilleService.restorCorbeille(idCorbeille).subscribe({
       next: (res):void => {
+        this.isLoading = false;
         this.getCorbeille();
         this._coreService.openSnackBar("ligne restauré avec succès! ");
       },
       error:err => {
+        this.isLoading = false;
         this._coreService.openSnackBar("Erreur: "+err.error?.message);
       }
     });
@@ -134,12 +141,15 @@ export class CorbeilleComponent implements OnInit {
   handleResetAll():void {
     let conf:boolean = confirm("Etes-vous certain de supprimer tout les éléments corbeille ?")
     if (!conf) return;
+    this.isLoading = true;
     this.corbeilleService.deleteAllCorbeille().subscribe({
       next: (res):void => {
+        this.isLoading = false;
         this.getCorbeille();
         this._coreService.openSnackBar("Corbeille supprimé avec succès! ");
       },
       error:err => {
+        this.isLoading = false;
         this._coreService.openSnackBar("Erreur en supprimant la corbeille ! "+err.error.message);
       }
     });
@@ -148,9 +158,11 @@ export class CorbeilleComponent implements OnInit {
   handleRestorationAll() {
     let conf:boolean = confirm("Êtes-vous certain de vouloir Restaurer toute les lignes ?")
     if (!conf) return;
+    this.isLoading = true;
     this.corbeilleService.restorCorbeilleAll().subscribe({
       next: (res: RestoreResponse):void => {
-        console.log(JSON.stringify(res, null, 2));
+        //console.log(JSON.stringify(res, null, 2));
+        this.isLoading = false;
         if (res.restoredCount>0){
           this._coreService.openSnackBar("Nombre de lignes restauré avec succès! = "+ res.restoredCount);
         }
@@ -163,7 +175,8 @@ export class CorbeilleComponent implements OnInit {
         this.getCorbeille();
       },
       error:err => {
-        console.log(JSON.stringify(err, null, 2));
+        this.isLoading = false;
+        //console.log(JSON.stringify(err, null, 2));
         this._coreService.openSnackBar("Erreur! "+err.error?.message);
       }
     });

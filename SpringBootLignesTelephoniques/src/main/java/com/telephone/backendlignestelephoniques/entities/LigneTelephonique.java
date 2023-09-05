@@ -22,7 +22,7 @@ import org.springframework.data.annotation.CreatedDate;
 @AllArgsConstructor
 public class LigneTelephonique {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idLigne;
 
     @Column(unique = true, nullable = false)
@@ -36,7 +36,7 @@ public class LigneTelephonique {
 
     private Date dateLivraison;
 
-    @Column(unique = true, nullable = false)
+    //@Column(unique = true, nullable = false)
     private String numeroSerie;
 
     private Double montant;

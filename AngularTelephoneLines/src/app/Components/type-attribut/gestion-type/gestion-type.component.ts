@@ -27,6 +27,8 @@ export class GestionTypeComponent implements OnInit {
   selectUpdate: boolean = false;
   typeLigneForm!: FormGroup;
 
+  isLoading: boolean = false;
+
   typeAttributs: Set<Attribut> = new Set<Attribut>();
 
 
@@ -34,7 +36,7 @@ export class GestionTypeComponent implements OnInit {
 
   @Input()
   dataSource!: MatTableDataSource<any>;
-  displayedColumns: string[] = ['nomType', 'createdDate', 'descriptionType', 'attributs', 'ACTIONS'];
+  displayedColumns: string[] = ['idType','nomType', 'createdDate', 'descriptionType', 'attributs', 'ACTIONS'];
   @ViewChild(MatSort) sort!: MatSort;
 
   public selectedAttributsIds: number[] = [];
@@ -76,12 +78,15 @@ export class GestionTypeComponent implements OnInit {
     if (!conf) return;
     let confirmation: boolean = confirm("Supprimer aussi toutes les lignes téléphonique du type .")
     if (!confirmation) return;
+    this.isLoading = true;
     this.typeAttributService.deleteTypeLigne(idType).subscribe({
       next: (response): void => {
+        this.isLoading = false;
         this.getTypesLigne();
         this._coreService.openSnackBar("Type et ligne téléphonique supprimés avec succès !");
       },
       error: (error) => {
+        this.isLoading = false;
         this._coreService.openSnackBar(error.error.message);
       }}
     );
@@ -101,7 +106,6 @@ export class GestionTypeComponent implements OnInit {
         this.selectedAttributsIds.push(attr.idAttribut);
       }
     });
-    console.log("this.editTypeAttributs      "+ JSON.stringify(this.selectedAttributsIds, null, 2));
     this.getAttributs();
     this.selectUpdate = true;
   }
@@ -162,14 +166,17 @@ export class GestionTypeComponent implements OnInit {
 
   onTypeLigneUpdate(): void {
     if (this.typeLigneForm.valid) {
+      this.isLoading = true;
       const formData = this.typeLigneForm.value;
       this.typeAttributService.updateTypeLigne(formData).subscribe({
           next: (response): void => {
+            this.isLoading= false;
             this._coreService.openSnackBar("Type de ligne enregistré avec succès !");
             this.getTypesLigne();
             this.handleResetUpdate();
           },
           error: (error) => {
+            this.isLoading= false;
             this.handleResetUpdate();
             this._coreService.openSnackBar(error.error.message);
           }

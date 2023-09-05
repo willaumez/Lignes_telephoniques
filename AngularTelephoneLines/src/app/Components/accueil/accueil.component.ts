@@ -44,7 +44,7 @@ export class AccueilComponent implements OnInit{
           this.dataSource2.push({nom: nom, valeur: valeur, pourcentage: pourcentage});
         }
 
-        console.log(JSON.stringify(this.dataHome, null, 2));
+        ///*/**/*/console.log(JSON.stringify(this.dataHome, null, 2));
         this.isDownload = false;
       },
       error: (error) => {

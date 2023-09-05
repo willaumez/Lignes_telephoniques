@@ -15,10 +15,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.sql.Array;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -97,13 +99,13 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
 
     @Override
     public void updateLigneTelephonique(LigneTelephonique updatedLigne, String operateur) throws EntityNotFoundException {
-        System.out.println("\n\n\n\nMise à jour de la ligne téléphonique en cours..." + updatedLigne+"\n\n\n\n");
+        System.out.println("\n\n\n\nMise à jour de la ligne téléphonique en cours..." + updatedLigne + "\n\n\n\n");
 
         // Étape 1: Trouver la ligne téléphonique existante par son ID
         LigneTelephonique existingLigne = ligneTelephoniqueRepository.findById(updatedLigne.getIdLigne())
                 .orElseThrow(() -> new EntityNotFoundException("Ligne téléphonique introuvable"));
 
-        System.out.println("\n\n\n\nexistingLigne       ..." + existingLigne+"\n\n\n\n");
+        System.out.println("\n\n\n\nexistingLigne       ..." + existingLigne + "\n\n\n\n");
 
         //charger les donneés
         existingLigne.setNumeroLigne(updatedLigne.getNumeroLigne());
@@ -176,12 +178,6 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     }
 
 
-
-
-
-
-
-
     //Corbeille
     @Override
     public void saveInCorbeille(LigneTelephonique ligneTelephonique) {
@@ -236,6 +232,8 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
         Corbeille corbeille = corbeilleRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Element avec l'id " + id + " non trouvé"));
 
+        System.out.println("\n\n\nrestorationOfElement     "+ corbeille+"\n\n\n");
+
         //Créer la ligne
         LigneTelephonique ligneTelephonique = new LigneTelephonique();
         ligneTelephonique.setNumeroLigne(corbeille.getNumeroLigne());
@@ -259,10 +257,10 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
             typeLigne.setDescriptionType(corbeille.getDescriptionType());
             typeLigneRepository.save(typeLigne);
         }
-        ligneTelephonique.setTypeLigne(typeLigne);
 
         // Restaurer les attributs
         Set<LigneAttribut> ligneAttributsToRestore = new HashSet<>();
+        Set<Attribut> attributSet = new HashSet<>();
         // Parcourir tous les attributs de la corbeille et les restaurer
         for (AttributValeur attributValeur : corbeille.getAttributValeurs()) {
             // Créer et initialiser le LigneAttribut à partir de AttributValeur
@@ -270,7 +268,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
 
             // Vérifier si l'attribut existe déjà dans la base de données
             Attribut existingAttribut = attributRepository.findByNomAttribut(attributValeur.getNomAttribut()).orElse(null);
-            if(existingAttribut == null) {
+            if (existingAttribut == null) {
                 // Si l'attribut n'existe pas, le créer
                 Attribut newAttribut = new Attribut();
                 newAttribut.setNomAttribut(attributValeur.getNomAttribut());
@@ -286,9 +284,18 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
                 // (initialisez les autres champs de newAttribut si nécessaire)
                 attributRepository.save(newAttribut);
                 ligneAttribut.setAttribut(newAttribut);
+                newAttribut.setValeurAttribut(attributValeur.getValeurAttribut());
+                attributSet.add(newAttribut);
             } else {
                 ligneAttribut.setAttribut(existingAttribut);
+                existingAttribut.setValeurAttribut(attributValeur.getValeurAttribut());
+                attributSet.add(existingAttribut);
             }
+
+            //ligneAttribut.setValeurAttribut(attributValeur.getValeurAttribut());
+
+            typeLigne.setAttributs(attributSet);
+            typeLigne = typeLigneRepository.save(typeLigne);
 
             ligneAttribut.setValeurAttribut(attributValeur.getValeurAttribut());
 
@@ -296,6 +303,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
             ligneAttributsToRestore.add(ligneAttribut);
         }
 
+        ligneTelephonique.setTypeLigne(typeLigne);
         ligneTelephonique.setLigneAttributs(ligneAttributsToRestore);
 
         // Sauvegarder la ligne restaurée
@@ -307,6 +315,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
         // Ajouter un historique
         historiqueService.saveHistoriques("Restauration d'une ligne depuis la corbeille", ligneTelephonique.getNumeroLigne(), operateur);
     }
+
     @Override
     public List<Corbeille> listCorbeille() {
         return corbeilleRepository.findAll();
@@ -388,7 +397,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
 
 
     //Import
-    @Override
+   /* @Override
     @Transactional
     public Map<String, Object> importLigneTelephonique(LigneTelephonique[] telephoniques, String operateur) {
         Map<String, Object> response = new HashMap<>();
@@ -422,10 +431,83 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     }
 
 
+
+*/
+
+    @Override
+    public Map<String, Object> importLigneTelephonique(LigneTelephonique[] telephoniques, String operateur) {
+        Map<String, Object> response = new HashMap<>();
+        List<String> failedNumbers = new ArrayList<>();
+        AtomicInteger savedCount = new AtomicInteger(0);
+        AtomicInteger notSavedCount = new AtomicInteger(0);
+        AtomicInteger nullNumbersCount = new AtomicInteger(0);  // Compteur pour les numéros null
+
+        Arrays.stream(telephoniques).forEach(telephonique -> {
+            if (telephonique.getNumeroLigne() == null) {
+                nullNumbersCount.incrementAndGet();  // Incrémenter le compteur pour les numéros null
+            } else {
+                if (isNumeroLigneExists(telephonique.getNumeroLigne())) {
+                    notSavedCount.incrementAndGet();
+                    failedNumbers.add(telephonique.getNumeroLigne());
+                } else {
+                    try {
+                        saveTelephonique(telephonique, operateur);
+                        savedCount.incrementAndGet();
+                    } catch (Exception e) {
+                        notSavedCount.incrementAndGet();
+                        failedNumbers.add(telephonique.getNumeroLigne());
+                    }
+                }
+            }
+        });
+
+        response.put("savedCount", savedCount.get());
+        response.put("notSavedCount", notSavedCount.get());
+        response.put("failedNumbers", failedNumbers);
+        response.put("nullNumbersCount", nullNumbersCount.get());  // Ajout du compteur pour les numéros null dans la réponse
+
+        return response;
+    }
+
+
+
+    @Transactional
+    public void saveTelephonique(LigneTelephonique ligneTelephonique, String operateur) {
+        ligneTelephonique.setCreatedDate(new Date());
+
+        TypeLigne typeLigne = typeLigneRepository.findById(ligneTelephonique.getTypeLigne().getIdType())
+                .orElseThrow(() -> new EntityNotFoundException("Type ligne introuvable"));
+
+        ligneTelephonique.setTypeId(typeLigne.getIdType());
+        //ligneTelephonique.setNomTypeLigne(typeLigne.getNomType());
+
+        LigneTelephonique savedLigne = ligneTelephoniqueRepository.save(ligneTelephonique);
+        System.out.println("Ligne sauvegardée: " + savedLigne);
+
+        Set<LigneAttribut> ligneAttributs = new HashSet<>();
+
+        Set<Attribut> attributsFromRequest = ligneTelephonique.getTypeLigne().getAttributs();
+        for (Attribut attributFromRequest : attributsFromRequest) {
+            Optional<Attribut> optionalAttribut = attributRepository.findById(attributFromRequest.getIdAttribut());
+            if (!optionalAttribut.isPresent()) {
+                continue; // ou lancez une exception si nécessaire
+            }
+            Attribut attribut = optionalAttribut.get();
+            LigneAttribut ligneAttribut = new LigneAttribut();
+            ligneAttribut.setLigneId(savedLigne.getIdLigne());
+            ligneAttribut.setAttribut(attribut);
+            ligneAttribut.setValeurAttribut(attributFromRequest.getValeurAttribut()); // Insère la valeur de l'attribut de la requête
+            ligneAttributs.add(ligneAttribut);
+        }
+
+        savedLigne.setLigneAttributs(ligneAttributs);
+        ligneTelephoniqueRepository.save(savedLigne);
+        historiqueService.saveHistoriques("Ajout [Ligne-Téléphonique]", savedLigne.getNumeroLigne(), operateur);
+    }
+
     private boolean isNumeroLigneExists(String numeroLigne) {
         return ligneTelephoniqueRepository.existsByNumeroLigne(numeroLigne); // Retournez true si le numéro existe, sinon false
     }
-
 
     //Accueil
     @Override
@@ -435,7 +517,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
         //typeLigne
         List<Map<String, Object>> typeLigneData = new ArrayList<>();
 
-        for (TypeLigne typeLigne: typeLigneRepository.findAll()){
+        for (TypeLigne typeLigne : typeLigneRepository.findAll()) {
             Map<String, Object> exempleLigne1 = new HashMap<>();
             exempleLigne1.put("nomLigne", typeLigne.getNomType());
             //int nb = ligneTelephoniqueRepository.countByTypeId(typeLigne.getIdType());
@@ -449,13 +531,11 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
             ligneEtat.put(etatType.name(), ligneTelephoniqueRepository.countByEtat(etatType));
         }
 
-        response.put("totalLigne",ligneTelephoniqueRepository.count());
+        response.put("totalLigne", ligneTelephoniqueRepository.count());
         response.put("typeLigne", typeLigneData);
         response.put("etats", ligneEtat);
         return response;
     }
-
-
 
 
 }

@@ -11,6 +11,7 @@ export interface VerificationResult {
 export interface ImportationResult {
   savedCount: number;
   notSavedCount: number;
+  nullNumbersCount: number;
   failedNumbers: [];
 }
 

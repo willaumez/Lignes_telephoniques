@@ -80,7 +80,7 @@
 
 <mat-divider class="second-divider"></mat-divider>
 
-<div class="container container-import">
+<div class="container container-import" *ngIf="selectedTypeLigne">
   <div class="import-section">
     <button mat-raised-button type="button" color="primary" class="btn label-file"
             (click)="fileInput.click()">
@@ -153,14 +153,21 @@
 
   </div>
 </div>
+<div class="container container-import" *ngIf="!selectedTypeLigne">
+  <div class="failure">
+    Aucun type de ligne selectionné
+  </div>
+</div>
 
 <mat-divider class="second-divider"></mat-divider>
 
 <div class="resultats-importation" *ngIf="importResult">
   <h2>Importation terminée</h2>
   <p>Nombre d'enregistrements sauvegardés : {{ importResult.savedCount }}</p>
+  <p>Nombre d'enregistrements vide : {{ importResult.nullNumbersCount }}</p>
   <p>Nombre d'enregistrements non sauvegardés : {{ importResult.notSavedCount }}</p>
   <div class=" container-fluid failed-numbers">
+    Enregistrements non sauvegardés :
     <span *ngFor="let numbers of importResult.failedNumbers" class="number">
       {{numbers}}
     </span>

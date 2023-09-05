@@ -25,6 +25,7 @@ export class HistoriquesComponent implements OnInit {
 
   //pointer
   isDownload: boolean = false;
+  isLoading: boolean = false;
 
   errorMessage!: string;
   displayedColumns: string[] = [
@@ -107,19 +108,20 @@ export class HistoriquesComponent implements OnInit {
   }
 
 
-
   // delete
   handleDelete(id: number) {
     let conf:boolean = confirm("Es-tu sûre de supprimer cet historique ?")
     if (!conf) return;
+    this.isLoading = true;
     this.historiqueService.deleteHistorique(id).subscribe({
       next: (res):void => {
         this.getHistoriques();
+        this.isLoading= false;
         this._coreService.openSnackBar("historique supprimé avec succès! ");
       },
       error:err => {
-        this._coreService.openSnackBar("historique Innexistant! ");
-        console.log(err);
+        this.isLoading= false;
+        this._coreService.openSnackBar("historique Innexistant! ", err.error.message);
       }
     });
   }
@@ -128,14 +130,16 @@ export class HistoriquesComponent implements OnInit {
   handleResetAll():void {
     let conf:boolean = confirm("Etes-vous certain de supprimer tout l'historique ?")
     if (!conf) return;
+    this.isLoading= true;
     this.historiqueService.deleteAllHistorique(this.loginService.getUserData().username).subscribe({
       next: (res):void => {
         this.getHistoriques();
+        this.isLoading = false;
         this._coreService.openSnackBar("historiques supprimé avec succès! ");
       },
       error:err => {
+        this.isLoading = false;
         this._coreService.openSnackBar("Erreur en supprimant les historiques ! ");
-        console.log(err);
       }
     });
   }

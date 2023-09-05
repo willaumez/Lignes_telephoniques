@@ -24,6 +24,8 @@ export class GestionAttributComponent implements OnInit {
   totalItems!: number;
   keyword: string = "";
 
+  isLoading: boolean = false;
+
   errorMessage!: string;
   addOnBlur: boolean = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
@@ -37,7 +39,7 @@ export class GestionAttributComponent implements OnInit {
   //attributs$!: Observable<Attribut[]>;
   @Input()
   dataSource!: MatTableDataSource<any>;
-  displayedColumns: string[] = ['nomAttribut', 'type', 'valeurAttribut', 'enumeration', 'ACTIONS'];
+  displayedColumns: string[] = ['idAttribut','nomAttribut', 'type', 'valeurAttribut', 'enumeration', 'ACTIONS'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -75,12 +77,15 @@ export class GestionAttributComponent implements OnInit {
   handleDelete(idAttribut: number): void {
     let conf: boolean = confirm("Es-tu sure de supprimer cet Attribut ?")
     if (!conf) return;
+    this.isLoading = true;
     this.typeAttributService.deleteAttribut(idAttribut).subscribe({
         next: (responce): void => {
+          this.isLoading= false;
           this.getAttributs();
           this._coreService.openSnackBar("Attribut supprimé avec succès !");
         },
         error: (error) => {
+          this.isLoading= false;
           this._coreService.openSnackBar(error.error.message);
         }
       }
@@ -123,15 +128,17 @@ export class GestionAttributComponent implements OnInit {
 
   onAttributSubmit(): void {
     if (this.attributForm.valid) {
+      this.isLoading= true;
       const formData = this.attributForm.value;
-
       this.typeAttributService.saveAttribut(formData).subscribe({
           next: (data: any) => {
+            this.isLoading= false;
             this._coreService.openSnackBar("Attribut enregistré avec succès !");
             this.getAttributs();
             this.handleAdd();
           },
           error: (error) => {
+            this.isLoading= false;
             this.handleAdd();
             this._coreService.openSnackBar(error.error.message);
             console.log(error)
