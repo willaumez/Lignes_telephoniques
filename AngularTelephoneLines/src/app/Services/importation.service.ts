@@ -60,11 +60,22 @@ export class ImportationService {
         const lignes: LigneTelephonique[] = jsonData.map((row: any) => {
           let dateLivraison: Date | null = null;
 
-          if (row['datelivraison']) {
-            const parsedDate = moment(row['datelivraison'], ['YYYY-MM-DD', 'DD/MM/YYYY']);
-            if (parsedDate.isValid()) {
-              dateLivraison = parsedDate.toDate();
+          if (row['dateLivraison']) {
+            // Si la date est un nombre, c'est probablement un numéro de série Excel
+            if (typeof row['dateLivraison'] === 'number') {
+              const excelDate = row['dateLivraison'];
+              const parsedDate = moment('1900-01-01').add(excelDate - 2, 'days');
+              if (parsedDate.isValid()) {
+                dateLivraison = parsedDate.toDate();
+              }
+            } else {
+              // Sinon, on essaie de l'analyser avec les formats 'YYYY-MM-DD' et 'DD/MM/YYYY'
+              const parsedDate = moment(row['dateLivraison'], ['YYYY-MM-DD', 'DD/MM/YYYY']);
+              if (parsedDate.isValid()) {
+                dateLivraison = parsedDate.toDate();
+              }
             }
+            //console.log("dateLivraison    "+dateLivraison);
           }
 
           const ligne: LigneTelephonique = {
