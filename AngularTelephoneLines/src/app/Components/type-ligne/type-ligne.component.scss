@@ -154,7 +154,7 @@ td.mat-cell {
 
 // Styles pour le conteneur d'actions (boutons Modifier, Supprimer)
 .action-container {
-  position: absolute;  // Positionnement absolu
+  position: fixed;  // Positionnement absolu
   top: 38vh;  // A partir du haut
   right: 0;  // A partir de la droite
   min-height: max-content;  // Hauteur minimale basée sur le contenu

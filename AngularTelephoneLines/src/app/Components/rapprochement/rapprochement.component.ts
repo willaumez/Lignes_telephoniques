@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Rapprochement, VerificationResult} from "../../Models/Rapprochement";
 import {MatSort} from "@angular/material/sort";
@@ -6,7 +6,7 @@ import {LigneTelephoniqueService} from "../../Services/ligne-telephonique.servic
 import {RapprochementService} from "../../Services/rapprochement.service";
 import {MatTabGroup} from "@angular/material/tabs";
 import * as XLSX from 'xlsx';
-import {Observable} from "rxjs";
+
 
 @Component({
   selector: 'app-rapprochement',

@@ -1,9 +1,5 @@
 <div class="row">
-  <h1 class="titre-liste">Importation de la base de donné
-    <!--<span *ngIf="selectedTypeLigne">{{selectedTypeLigne.nomType}}
-      <span>[  {{totalItems}}  ]</span>
-    </span>-->
-  </h1>
+  <h1 class="titre-liste">Importation de la base de donné</h1>
 </div>
 <mat-divider class="first-divider"></mat-divider>
 <ng-container *ngIf="typeLignes; else failureOrLading">
@@ -173,8 +169,6 @@
     </span>
   </div>
 </div>
-
-
 
 <ng-template #failureOrLading>
   <div class="failureOrLading-container">

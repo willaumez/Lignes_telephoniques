@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 
 import { AuthorizationGuard } from './authorization.guard';
+import {HttpClientModule} from "@angular/common/http";
 
 describe('AuthorizationGuard', () => {
   let authorizationGuard: AuthorizationGuard;
@@ -11,6 +12,7 @@ describe('AuthorizationGuard', () => {
     mockRouter = jasmine.createSpyObj('Router', ['navigateByUrl']);
 
     TestBed.configureTestingModule({
+      imports: [HttpClientModule],
       providers: [
         AuthorizationGuard,
         { provide: Router, useValue: mockRouter }

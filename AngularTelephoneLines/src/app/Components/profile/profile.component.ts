@@ -1,10 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {User} from "../../Models/User";
 import {CoreService} from "../../core/core.service";
 import {UserService} from "../../Services/user.service";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LoginService} from "../../Services/login.service";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-profile',

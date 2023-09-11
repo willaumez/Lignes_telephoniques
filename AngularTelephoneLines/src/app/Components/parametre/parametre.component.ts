@@ -3,7 +3,7 @@ import {TypeLigne} from "../../Models/TypeLigne";
 import {TypeAttributService} from "../../Services/type-attribut.service";
 import {CoreService} from "../../core/core.service";
 import {Attribut} from "../../Models/Attribut";
-import {ImportationResult, Rapprochement, VerificationResult} from "../../Models/Rapprochement";
+import {ImportationResult, VerificationResult} from "../../Models/Rapprochement";
 import {ImportationService} from "../../Services/importation.service";
 import {LigneTelephonique} from "../../Models/LigneTelephonique";
 

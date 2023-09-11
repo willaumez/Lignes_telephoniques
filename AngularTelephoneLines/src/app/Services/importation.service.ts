@@ -20,20 +20,6 @@ export class ImportationService {
     this.operateur = this.userData.getUserData().username;
   }
 
-  // Cette fonction prend une ligne du fichier Excel et les attributs du TypeLigne
-  /*private createAttributs(row: any, typeLigneAttributs: Attribut[]): Attribut[] {
-    const attributs: Attribut[] = [];
-    for (const att of typeLigneAttributs) {
-      if (row[att.nomAttribut.toLowerCase()]) {
-        const attribut: Attribut = {
-          ...att,
-          valeurAttribut: row[att.nomAttribut.toLowerCase()]
-        };
-        attributs.push(attribut);
-      }
-    }
-    return attributs;
-  }*/
   private createAttributs(row: any, typeLigneAttributs: Attribut[]): Attribut[] {
     const attributs: Attribut[] = [];
     for (const att of typeLigneAttributs) {
@@ -123,46 +109,6 @@ export class ImportationService {
     }
   }
 
-
-  /*dataFromExcelFile(file: File, typeLigne: TypeLigne): Observable<LigneTelephonique[]> {
-    return new Observable<LigneTelephonique[]>((observer) => {
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const data = new Uint8Array(reader.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-
-        const lignes: LigneTelephonique[] = jsonData.map((row: any) => {
-          const ligne: LigneTelephonique = {
-            numeroLigne: row['numeroligne'],
-            affectation: row['affectation'],
-            poste: row['poste'],
-            etat: row['etat'] as EtatType,
-            dateLivraison: new Date(row['datelivraison']),
-            numeroSerie: row['numeroserie'],
-            montant: row['montant'],
-            createdDate: new Date(), // Date de création actuelle
-            typeLigne: {
-              ...typeLigne,
-              attributs: this.createAttributs(row, typeLigne.attributs)
-            }
-          };
-          return ligne;
-        });
-
-        observer.next(lignes);
-        observer.complete();
-      };
-
-      reader.onerror = (error) => {
-        observer.error(error);
-      };
-
-      reader.readAsArrayBuffer(file);
-    });
-  }*/
 
   verifyExcelFileForImport(data: File, displayedColumns: string[]): Observable<VerificationResult> {
     return new Observable<VerificationResult>((observer) => {

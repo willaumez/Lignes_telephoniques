@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserAddEditComponent } from './user-add-edit.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 describe('UserAddEditComponent', () => {
   let component: UserAddEditComponent;
@@ -8,6 +9,7 @@ describe('UserAddEditComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [MatDialogModule],
       declarations: [UserAddEditComponent]
     });
     fixture = TestBed.createComponent(UserAddEditComponent);

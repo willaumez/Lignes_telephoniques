@@ -92,9 +92,6 @@ export class RapprochementService {
   }
 
   private normalizeNumero(numero: string): string {
-    // Mettez ici la logique pour normaliser les numéros selon vos besoins
-    // (similaire à celle dans la fonction readNumerosEntrepriseFromExcel)
-    // Exemple :
     if (numero.startsWith("0")) {
       return "212" + numero.substring(1);
     } else if (numero.startsWith("+")) {
@@ -106,62 +103,6 @@ export class RapprochementService {
     }
   }
 
-
-// ...
-/*
-  isExcelFileValid(data: any): boolean {
-    const workbook = XLSX.read(data, {
-      type: 'array'
-    });
-
-    const firstSheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[firstSheetName];
-
-    const rows = XLSX.utils.sheet_to_json(worksheet, {range: 1});  // Ignorer la première ligne
-
-    if (rows.length === 0) {
-      console.log('Le fichier est vide.');
-      return false;
-    }
-
-    // Prendre les 5 premières lignes pour la vérification
-    const sampleRows = rows.slice(0, 5) as Record<string, any>[];
-
-    let lineNumberColumn = '';
-    let lineAmountColumn = '';
-
-    if (sampleRows.length > 0) {
-      const columnNames = Object.keys(sampleRows[0]);
-
-      for (const columnName of columnNames) {
-        const isLineNumber = sampleRows.every(row =>
-          (typeof row[columnName] === 'string' || typeof row[columnName] === 'number')
-          && row[columnName].toString().startsWith('212')
-        );
-
-        const isLineAmount = sampleRows.every(row =>
-          typeof row[columnName] === 'string' || typeof row[columnName] === 'number'
-        );
-
-        if (isLineNumber) {
-          lineNumberColumn = columnName;
-        }
-
-        if (isLineAmount) {
-          lineAmountColumn = columnName;
-        }
-      }
-    }
-
-    if (lineNumberColumn && lineAmountColumn) {
-      console.log(`Le fichier est valide. Numéro de Ligne: ${lineNumberColumn}, Montant de la Ligne: ${lineAmountColumn}`);
-      return true;
-    } else {
-      console.log('Le fichier n\'est pas valide.');
-      return false;
-    }
-  }
-*/
 
   // Fonction pour vérifier si le fichier est un fichier Excel valide
   verifyExcelFile(data: File): Observable<VerificationResult> {

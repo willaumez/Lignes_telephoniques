@@ -1,16 +1,14 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
 import {TypeAttributService} from "../../../Services/type-attribut.service";
 import {CoreService} from "../../../core/core.service";
 import {Attribut} from "../../../Models/Attribut";
 import {TypeLigne} from "../../../Models/TypeLigne";
-import {AbstractControl, FormArray, FormBuilder, FormGroup, isFormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatSelectChange} from "@angular/material/select";
 import {EtatType} from "../../../Models/LigneTelephonique";
 import {LigneTelephoniqueService} from "../../../Services/ligne-telephonique.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {LigneAttribut} from "../../../Models/LigneAttributs";
-import {parseJson} from "@angular/cli/src/utilities/json-file";
 
 @Component({
   selector: 'app-ligne-add-edit',
@@ -128,6 +126,7 @@ export class LigneAddEditComponent implements OnInit {
   onFormSubmit() {
     if (this.ligneForm.valid) {
       const formData = this.ligneForm.value;
+      formData.numeroLigne = this.normalizeNumero(formData.numeroLigne);
       if (this.data) {
         this.ligneService.updateLigneTelephonique(formData).subscribe({
             next: (response): void => {
@@ -156,6 +155,17 @@ export class LigneAddEditComponent implements OnInit {
 
     }
   }
+  private normalizeNumero(numero: string): string {
+    if (numero.startsWith("0")) {
+      return "212" + numero.substring(1);
+    } else if (numero.startsWith("+")) {
+      return numero.substring(1);
+    } else if (numero.startsWith("7") || numero.startsWith("6")) {
+      return "212" + numero;
+    } else {
+      return numero;
+    }
+  }
 
   isFormGroup(control: AbstractControl): control is FormGroup {
     return control instanceof FormGroup;
@@ -182,4 +192,6 @@ export class LigneAddEditComponent implements OnInit {
     //return (new Date(2023, 0, 1));
     return new Date(Date.now());
   }
+
+
 }

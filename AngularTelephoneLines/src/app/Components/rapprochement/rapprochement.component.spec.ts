@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 import { RapprochementComponent } from './rapprochement.component';
 
@@ -8,6 +9,7 @@ describe('RapprochementComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientModule],
       declarations: [RapprochementComponent]
     });
     fixture = TestBed.createComponent(RapprochementComponent);

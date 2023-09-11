@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LignesTelephoniqueComponent } from './lignes-telephonique.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 describe('LignesTelephoniqueComponent', () => {
   let component: LignesTelephoniqueComponent;
@@ -8,6 +9,7 @@ describe('LignesTelephoniqueComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [MatDialogModule],
       declarations: [LignesTelephoniqueComponent]
     });
     fixture = TestBed.createComponent(LignesTelephoniqueComponent);

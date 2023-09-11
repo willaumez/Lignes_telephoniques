@@ -96,7 +96,7 @@ export class TypeLigneAddEditComponent implements OnInit {
   onFormSubmit() {
     if (this.ligneForm.valid) {
       const formData = this.ligneForm.value;
-      console.log(JSON.stringify(formData, null, 2));
+      formData.numeroLigne = this.normalizeNumero(formData.numeroLigne);
       if (this.data?.edit) {
         this.ligneService.updateLigneTelephonique(formData).subscribe({
             next: (response): void => {
@@ -122,6 +122,17 @@ export class TypeLigneAddEditComponent implements OnInit {
           }
         );
       }
+    }
+  }
+  private normalizeNumero(numero: string): string {
+    if (numero.startsWith("0")) {
+      return "212" + numero.substring(1);
+    } else if (numero.startsWith("+")) {
+      return numero.substring(1);
+    } else if (numero.startsWith("7") || numero.startsWith("6")) {
+      return "212" + numero;
+    } else {
+      return numero;
     }
   }
   startDate() {

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TypeLigneAddEditComponent } from './type-ligne-add-edit.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 describe('TypeLigneAddEditComponent', () => {
   let component: TypeLigneAddEditComponent;
@@ -8,6 +9,7 @@ describe('TypeLigneAddEditComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [MatDialogModule],
       declarations: [TypeLigneAddEditComponent]
     });
     fixture = TestBed.createComponent(TypeLigneAddEditComponent);

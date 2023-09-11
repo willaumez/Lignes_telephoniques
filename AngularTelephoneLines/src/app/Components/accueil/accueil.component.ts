@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {LigneTelephoniqueService} from "../../Services/ligne-telephonique.service";
-import {HomeResponse, PagedResponse, tableResponse} from "../../Models/PagedResponse";
-import {User} from "../../Models/User";
-import {MatTableDataSource} from "@angular/material/table";
+import {HomeResponse, tableResponse} from "../../Models/PagedResponse";
 
 @Component({
   selector: 'app-accueil',
@@ -43,14 +41,11 @@ export class AccueilComponent implements OnInit{
           pourcentage = parseFloat(pourcentage.toFixed(2));
           this.dataSource2.push({nom: nom, valeur: valeur, pourcentage: pourcentage});
         }
-
-        ///*/**/*/console.log(JSON.stringify(this.dataHome, null, 2));
         this.isDownload = false;
       },
       error: (error) => {
         this.errorMessage = ('Erreur lors de la récupération des données: ' + error);
         this.isDownload = false;
-        //console.log(JSON.stringify(error, null, 2));
       }
     });
   }

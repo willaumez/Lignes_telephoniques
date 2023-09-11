@@ -1,6 +1,5 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {UserAddEditComponent} from "../utilisateurs/user-add-edit/user-add-edit.component";
 import {MatDialog} from "@angular/material/dialog";
 import {LigneAddEditComponent} from "./ligne-add-edit/ligne-add-edit.component";
 import {CoreService} from "../../core/core.service";

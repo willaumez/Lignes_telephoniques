@@ -3,7 +3,6 @@ import {CoreService} from "../../core/core.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {HistoriqueService} from "../../Services/historique.service";
 import {Historique} from "../../Models/Historique";
-import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {LoginService} from "../../Services/login.service";
 import {PagedResponse} from "../../Models/PagedResponse";
@@ -15,7 +14,7 @@ import {PagedResponse} from "../../Models/PagedResponse";
 })
 export class HistoriquesComponent implements OnInit {
   //pagination
-  pageSizeOptions: number[] = [10, 23, 35, 50, 100, 500, 1000];
+  pageSizeOptions: number[] = [10, 35, 50, 100, 300, 500];
   pageSize!: number;
   currentPage: number = 0;
   totalPages!: number;
@@ -71,11 +70,9 @@ export class HistoriquesComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    // Récupérez la valeur du champ de filtre
     const filterValue = (event.target as HTMLInputElement).value;
     this.pageSize = this.pageSizeOptions[0];
     this.currentPage = 0;
-    // Affectez la valeur à la variable keyword
     this.keyword = filterValue.trim();
     this.getHistoriques();
   }

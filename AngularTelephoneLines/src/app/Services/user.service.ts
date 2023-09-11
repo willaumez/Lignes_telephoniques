@@ -12,9 +12,9 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-/*  public listUsers():Observable<Array<User>> {
-    return this.http.get<Array<User>>(environment.backEndHost+"/users");
-  }*/
+  /*  public listUsers():Observable<Array<User>> {
+      return this.http.get<Array<User>>(environment.backEndHost+"/users");
+    }*/
 
   /*public listUsers(page: number = 0, size: number = 3, kw: string = ""):Observable<PagedResponse<User>> {
     return this.http.get<PagedResponse<User>>(environment.backEndHost+"/users/"+page+"/"+size+"/"+kw).pipe(
@@ -23,7 +23,7 @@ export class UserService {
       })
     );
   }*/
-   listUsers(page: number = 0, size: number = 10, kw: string = ""): Observable<PagedResponse<User>> {
+  listUsers(page: number = 0, size: number = 10, kw: string = ""): Observable<PagedResponse<User>> {
     // Construire les paramètres de requête HTTP
     const params = new HttpParams()
       .set('page', page.toString())
@@ -50,7 +50,7 @@ export class UserService {
     );
   }
 
-   deleteUser(id: number, operateur: string):Observable<object> {
+  deleteUser(id: number, operateur: string):Observable<object> {
     return this.http.delete(environment.backEndHost+"/users/delete/"+id+"/"+operateur).pipe(
       catchError(error => {
         return throwError(error);
@@ -58,7 +58,7 @@ export class UserService {
     );
   }
 
-   confirmPassword(id: number, password: string):Observable<boolean> {
+  confirmPassword(id: number, password: string):Observable<boolean> {
     return this.http.get<boolean>(environment.backEndHost+"/confirm/"+id+"/"+password).pipe(
       catchError(error => {
         return throwError(error);
