@@ -31,7 +31,7 @@ export class ParametreComponent implements OnInit{
 
   //import
   importDataToDB: LigneTelephonique[] = [];
-  importResult!: ImportationResult;
+  importResult!: ImportationResult | undefined;
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -125,7 +125,7 @@ export class ParametreComponent implements OnInit{
     this.errorMessage = '';
     this.verificationFile = undefined;
 
-    this.importResult = {} as ImportationResult;
+    this.importResult = undefined;
 
     // Réinitialiser le composant d'entrée de fichier
     this.fileInput.nativeElement.value = '';

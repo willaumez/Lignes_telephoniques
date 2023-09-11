@@ -17,6 +17,8 @@ import {TypeAttributComponent} from "./Components/type-attribut/type-attribut.co
 import {LignesTelephoniqueComponent} from "./Components/lignes-telephonique/lignes-telephonique.component";
 import {TypeLigneComponent} from "./Components/type-ligne/type-ligne.component";
 import {ParametreComponent} from "./Components/parametre/parametre.component";
+import {adminAuthorizationGuard} from "./guards/admin-authorization.guard";
+import {userAuthorizationGuard} from "./guards/user-authorization.guard";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -24,7 +26,7 @@ const routes: Routes = [
   {
     path: 'admin',
     component: AdminTemplateComponent,
-    canActivate: [AuthenticationGuard, AuthorizationGuard], // Utilisation d'AuthenticationGuard et AuthorizationGuard
+    canActivate: [AuthenticationGuard, AuthorizationGuard, adminAuthorizationGuard], // Utilisation d'AuthenticationGuard et AuthorizationGuard
     children: [
       // Routes enfants pour l'administration si nécessaire
       {path: 'accueil', component: AccueilComponent},
@@ -46,7 +48,7 @@ const routes: Routes = [
   {
     path: 'user',
     component: UserTemplateComponent,
-    canActivate: [AuthenticationGuard, AuthorizationGuard], // Utilisation d'AuthenticationGuard et AuthorizationGuard
+    canActivate: [AuthenticationGuard, AuthorizationGuard, userAuthorizationGuard], // Utilisation d'AuthenticationGuard et AuthorizationGuard
     children: [
       // Routes enfants pour les utilisateurs si nécessaire
       {path: 'accueil', component: AccueilComponent},

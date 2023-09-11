@@ -32,7 +32,7 @@ import {PagedResponse} from "../../Models/PagedResponse";
 
 export class TypeLigneComponent implements OnInit{
   // Initialisation des variables
-  pageSizeOptions: number[] = [10, 23, 33, 50, 100,500];
+  pageSizeOptions: number[] = [12, 33, 50, 100, 300,500];
   pageSize!: number;
   currentPage: number = 0;
   totalPages!: number;

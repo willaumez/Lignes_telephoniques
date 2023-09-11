@@ -42,12 +42,4 @@ public interface CorbeilleRepository extends JpaRepository<Corbeille, Long> {
             "(FUNCTION('DATE_FORMAT', c.dateLivraison, '%Y-%m-%d %T') LIKE LOWER(CONCAT('%', :kw, '%'))) OR " +
             "(LOWER(c.etat) LIKE LOWER(CONCAT('%', :kw, '%')))")
     Page<Corbeille> getAllElementPage(@Param("kw") String keyword, Pageable pageable);
-
-
-
-
-
-
-
-
 }

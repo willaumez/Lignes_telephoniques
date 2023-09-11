@@ -115,14 +115,5 @@ public class UserServicesImpl implements UserServices {
     }
     //==========================================================================================================//
 
-    /*@Override
-    public UserDetails getLoggedInUserDetails() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            return (UserDetails) authentication.getPrincipal();
-        }
-        return null; // Aucun utilisateur connecté ou informations non disponibles
-    }*/
-
 
 }

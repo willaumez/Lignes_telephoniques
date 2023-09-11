@@ -4,7 +4,7 @@ import {LigneAttribut} from "./LigneAttributs";
 export interface LigneTelephonique {
   idLigne?: number;
   typeId?: number;
-  numeroLigne: string;
+  numeroLigne: string | null;
   affectation?: string;
   poste?: string;
   etat?: EtatType | null;

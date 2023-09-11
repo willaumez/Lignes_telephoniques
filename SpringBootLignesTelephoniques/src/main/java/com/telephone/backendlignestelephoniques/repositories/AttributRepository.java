@@ -22,6 +22,4 @@ public interface AttributRepository extends JpaRepository<Attribut, Long> {
             "(LOWER(a.type) LIKE LOWER(CONCAT('%', :kw, '%'))) OR " +
             "(LOWER(a.valeurAttribut) LIKE LOWER(CONCAT('%', :kw, '%')))")
     Page<Attribut> getAllAttributs(@Param("kw") String keyword, Pageable pageable);
-
-
 }

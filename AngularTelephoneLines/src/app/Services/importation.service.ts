@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {catchError, Observable, throwError} from 'rxjs';
 import * as XLSX from 'xlsx';
@@ -53,7 +53,7 @@ export class ImportationService {
 
       reader.onload = (e) => {
         const data = new Uint8Array(reader.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
+        const workbook = XLSX.read(data, {type: 'array'});
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
@@ -79,7 +79,7 @@ export class ImportationService {
           }
 
           const ligne: LigneTelephonique = {
-            numeroLigne: row['numeroLigne'] !== undefined ? row['numeroLigne'].toString() : null,
+            numeroLigne: row['numeroLigne'] !== undefined ? this.normalizeNumero(row['numeroLigne'].toString()) : null,
             affectation: row['affectation'] !== undefined ? row['affectation'].toString() : null,
             poste: row['poste'] !== undefined ? row['poste'].toString() : null,
             etat: row['etat'] !== undefined ? row['etat'].toString() : null,
@@ -106,6 +106,23 @@ export class ImportationService {
       reader.readAsArrayBuffer(file);
     });
   }
+
+  private normalizeNumero(numero: string | null | undefined): string | null {
+    if (numero === null || numero === undefined) {
+      return null;
+    }
+
+    if (numero.startsWith("0")) {
+      return "212" + numero.substring(1);
+    } else if (numero.startsWith("+")) {
+      return numero.substring(1);
+    } else if (numero.startsWith("7") || numero.startsWith("6")) {
+      return "212" + numero;
+    } else {
+      return numero;
+    }
+  }
+
 
   /*dataFromExcelFile(file: File, typeLigne: TypeLigne): Observable<LigneTelephonique[]> {
     return new Observable<LigneTelephonique[]>((observer) => {
@@ -161,10 +178,10 @@ export class ImportationService {
         }
 
         const bstr = arr.join('');
-        const workbook = XLSX.read(bstr, { type: 'binary' });
+        const workbook = XLSX.read(bstr, {type: 'binary'});
         const first_sheet_name = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[first_sheet_name];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Convertir la feuille de calcul en JSON
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1}); // Convertir la feuille de calcul en JSON
 
         // Prendre les noms de colonnes à partir de la première ligne du fichier Excel
         const columnNamesFromFile = (jsonData[0] as string[]).map((col: string) => col.toLowerCase());
@@ -176,9 +193,12 @@ export class ImportationService {
         const missingColumns = expectedColumns.filter((col: string) => !columnNamesFromFile.includes(col));
 
         if (missingColumns.length > 0) {
-          observer.next({ isValid: false, message: `Les colonnes suivantes sont manquantes : ${missingColumns.join(', ')}` });
+          observer.next({
+            isValid: false,
+            message: `Les colonnes suivantes sont manquantes : ${missingColumns.join(', ')}`
+          });
         } else {
-          observer.next({ isValid: true, message: 'Le fichier est valide.' });
+          observer.next({isValid: true, message: 'Le fichier est valide.'});
         }
 
         observer.complete();
@@ -193,15 +213,13 @@ export class ImportationService {
     if (!this.operateur || !importDataToDB) {
       return throwError('Operateur ou données importées manquantes');
     }
-    return this.http.post<any>(environment.backEndHost + "/telephonique/import/"+this.operateur, importDataToDB)
+    return this.http.post<any>(environment.backEndHost + "/telephonique/import/" + this.operateur, importDataToDB)
       .pipe(
         catchError(error => {
           return throwError(error);
         })
       );
   }
-
-
 
 
 }

@@ -29,8 +29,4 @@ public interface TypeLigneRepository extends JpaRepository<TypeLigne, Long> {
             "(:kw IS NULL OR STR(t.createdDate) LIKE CONCAT('%', :kw, '%'))")
     Page<TypeLigne> getAllTypeLignes(@Param("kw") String keyword, Pageable pageable);
 
-
-
-
-
 }

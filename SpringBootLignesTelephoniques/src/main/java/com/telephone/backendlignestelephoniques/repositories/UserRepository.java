@@ -52,11 +52,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "(:kw IS NULL OR STR(u.createdDate) LIKE CONCAT('%', :kw, '%'))")
     Page<User> getAllUsers(@Param("kw") String keyword, Pageable pageable);
 
-
-
-
-
-
 }
 
 

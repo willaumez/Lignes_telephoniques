@@ -85,8 +85,4 @@ public class CorbeilleRestController {
         }
     }
 
-
-
-
-
 }

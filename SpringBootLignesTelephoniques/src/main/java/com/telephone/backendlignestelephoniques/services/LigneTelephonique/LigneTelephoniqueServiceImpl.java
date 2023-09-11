@@ -339,30 +339,6 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
         historiqueService.saveHistoriques("Suppression totale des points de restauration", "Toute la corbeille", operateur);
     }
 
-   /* @Override
-    public Map<String, Integer> restorationAllElement(String operateur) {
-        int restoredCount = 0;
-        int notRestoredCount = 0;
-
-        List<Corbeille> allElementsInCorbeille = corbeilleRepository.findAll();
-
-        for (Corbeille corbeille : allElementsInCorbeille) {
-            try {
-                restorationOfElement(corbeille.getIdCorbeille(), operateur);
-                restoredCount++;
-            } catch (ElementNotFoundException e) {
-                System.err.println("Erreur lors de la restauration de l'élément avec l'ID " + corbeille.getIdCorbeille() + ": " + e.getMessage());
-                notRestoredCount++;
-            }
-        }
-
-        Map<String, Integer> result = new HashMap<>();
-        result.put("restoredCount", restoredCount);
-        result.put("notRestoredCount", notRestoredCount);
-        return result;
-    }*/
-
-
     @Override
     public Map<String, Integer> restorationAllElement(String operateur) {
         int restoredCount = 0;
@@ -397,43 +373,6 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
 
 
     //Import
-   /* @Override
-    @Transactional
-    public Map<String, Object> importLigneTelephonique(LigneTelephonique[] telephoniques, String operateur) {
-        Map<String, Object> response = new HashMap<>();
-        List<String> failedNumbers = new ArrayList<>();
-        int savedCount = 0;
-        int notSavedCount = 0;
-
-        try {
-            for (LigneTelephonique telephonique : telephoniques) {
-                try {
-                    if (isNumeroLigneExists(telephonique.getNumeroLigne())) {
-                        notSavedCount++;
-                        failedNumbers.add(telephonique.getNumeroLigne());
-                        continue;
-                    }
-                    saveLigneTelephonique(telephonique, operateur);
-                    savedCount++;
-                } catch (Exception e) {
-                    notSavedCount++;
-                    failedNumbers.add(telephonique.getNumeroLigne());
-                }
-            }
-        } catch (Exception e) {
-            // Gestion des erreurs globales, si nécessaire
-        }
-
-        response.put("savedCount", savedCount);
-        response.put("notSavedCount", notSavedCount);
-        response.put("failedNumbers", failedNumbers);
-        return response;
-    }
-
-
-
-*/
-
     @Override
     public Map<String, Object> importLigneTelephonique(LigneTelephonique[] telephoniques, String operateur) {
         Map<String, Object> response = new HashMap<>();
