@@ -9,6 +9,7 @@ import {EtatType} from "../../../Models/LigneTelephonique";
 import {LigneTelephoniqueService} from "../../../Services/ligne-telephonique.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {LigneAttribut} from "../../../Models/LigneAttributs";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-ligne-add-edit',
@@ -21,7 +22,7 @@ export class LigneAddEditComponent implements OnInit {
   etatTypes = Object.values(EtatType);
   typesLigne: TypeLigne[] = [];
 
-  constructor(private typeAttributService: TypeAttributService, private _coreService: CoreService,
+  constructor(private typeAttributService: TypeAttributService, private _coreService: CoreService, private router: Router,
               private ligneService: LigneTelephoniqueService, private fb: FormBuilder, private _dialogRef: MatDialogRef<LigneAddEditComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.ligneForm = this.fb.group({
@@ -192,6 +193,12 @@ export class LigneAddEditComponent implements OnInit {
     //return (new Date(2023, 0, 1));
     return new Date(Date.now());
   }
+
+  addTypeAttribut() {
+    this._dialogRef.close(true);
+    this.router.navigateByUrl("admin/typeAttributs");
+  }
+
 
 
 }

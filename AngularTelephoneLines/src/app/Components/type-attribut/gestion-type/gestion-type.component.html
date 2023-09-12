@@ -116,6 +116,9 @@
 
   <ng-container *ngIf="selectAdd">
     <h3 class="titre">Ajouter un Type de Ligne</h3>
+    <div class="defaut-attibuts">
+      Attribut par defaut des lignes:  numeroLigne, affectation, poste, etat, dateLivraison, numeroSerie, montant.
+    </div>
     <form [formGroup]="typeLigneForm" (ngSubmit)="onTypeLigneSubmit()">
       <div class="first">
         <mat-form-field class="first-first" appearance="outline">
@@ -133,17 +136,18 @@
       <div class="second">
         <h3>Attributs:</h3>
         <div class="attribut-liste">
-          <mat-selection-list formControlName="attributs" multiple>
+          <mat-selection-list *ngIf="attributs.length > 0" formControlName="attributs" multiple>
             <mat-list-option *ngFor="let attribut of attributs" [value]="attribut" class="mat-list-option"
                              color="primary">
               {{ attribut.nomAttribut }}
             </mat-list-option>
           </mat-selection-list>
+          <span *ngIf="attributs.length <= 0">Il n'existe aucun attribut. Merci d'ajouter quelques-uns.</span>
         </div>
       </div>
       <div class="button-container">
         <button mat-raised-button color="warn" type="reset" (click)="handleAdd()">Annuler</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="typeLigneForm.invalid">Enregistrer</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="typeLigneForm.invalid || attributs.length<=0">Enregistrer</button>
       </div>
     </form>
   </ng-container>

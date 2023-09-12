@@ -175,12 +175,12 @@ td.mat-cell {
 
 // Styles pour les lignes sélectionnées ou surlignées
 .highlighted {
-  background-color: #4050b5;  // Couleur de fond
+  background-color: #d1490a;  // Couleur de fond
   color: #fff;  // Couleur du texte
   font-weight: bolder;  // Gras
 
   &:hover {
-    background-color: #4050b5;  // Couleur de fond au survol
+    background-color: #d1490a;  // Couleur de fond au survol
     color: #fff;  // Couleur du texte au survol
   }
 }

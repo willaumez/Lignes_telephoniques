@@ -302,6 +302,7 @@ export class TypeLigneComponent implements OnInit{
   onDataChanged():void {
     this.getLignesTelephonique();
   }
+
   changePageSize(event: Event):void {
     const selectElement = event.target as HTMLSelectElement;
     const newSize = selectElement.value;
@@ -309,6 +310,7 @@ export class TypeLigneComponent implements OnInit{
     this.firstPage();
     this.onDataChanged();
   }
+
   formatNumeroLigne(numeroLigne: string): string {
     if (!numeroLigne) return '---';
     const cleanedNumber = numeroLigne.replace(/[^\d]/g, '');

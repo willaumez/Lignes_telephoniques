@@ -6,6 +6,9 @@
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. nom" #input>
     </mat-form-field>
+    <div class="defaut-attibuts">
+      Attribut par defaut des lignes:  numeroLigne, affectation, poste, etat, dateLivraison, numeroSerie, montant.
+    </div>
     <button mat-raised-button matTooltip="Ajouter un attribut"
             *ngIf="!selectUpdate"
             [matTooltipShowDelay]="1000"

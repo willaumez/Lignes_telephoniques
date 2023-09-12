@@ -49,7 +49,7 @@ public interface LigneTelephoniqueRepository extends JpaRepository<LigneTelephon
             "(LOWER(l.numeroSerie) LIKE LOWER(CONCAT('%', :kw, '%'))) OR " +
             "(LOWER(l.typeLigne.nomType) LIKE LOWER(CONCAT('%', :kw, '%'))) OR " +
             "(:kw IS NULL OR STR(l.createdDate) LIKE CONCAT('%', :kw, '%')) OR " +
-            "(la.valeurAttribut LIKE :kw)")
+            "(LOWER(la.valeurAttribut) LIKE LOWER(CONCAT('%', :kw, '%')))")
     Page<LigneTelephonique> getAllLignesTelephoniques(@Param("kw") String keyword, Pageable pageable);
 
 
@@ -61,7 +61,7 @@ public interface LigneTelephoniqueRepository extends JpaRepository<LigneTelephon
             "(LOWER(l.numeroSerie) LIKE LOWER(CONCAT('%', :kw, '%'))) OR " +
             "(LOWER(l.typeLigne.nomType) LIKE LOWER(CONCAT('%', :kw, '%'))) OR " +
             "(:kw IS NULL OR STR(l.createdDate) LIKE CONCAT('%', :kw, '%')) OR " +
-            "(la.valeurAttribut LIKE :kw))")
+            "(LOWER(la.valeurAttribut) LIKE LOWER(CONCAT('%', :kw, '%'))))")
     Page<LigneTelephonique> getAllLignesTelephoniquesByType(@Param("kw") String keyword, @Param("idType") Long typeId, Pageable pageable);
 
 

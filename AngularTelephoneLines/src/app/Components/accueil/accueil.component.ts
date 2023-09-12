@@ -30,7 +30,7 @@ export class AccueilComponent implements OnInit{
         this.dataHome = data;
         this.dataSource2 = [];
         this.dataSource = [];
-        this.dataSource.push({nom: "Toutes les lignes", valeur: data.totalLigne, pourcentage: 100});
+        this.dataSource.push({nom: "Toutes les lignes", valeur: data.totalLigne, pourcentage: data.totalLigne > 0 ? 100 : 0});
         for (let element of data.typeLigne){
           let pourcentage = (element.nombreLigne / data.totalLigne) * 100;
           pourcentage = parseFloat(pourcentage.toFixed(2));

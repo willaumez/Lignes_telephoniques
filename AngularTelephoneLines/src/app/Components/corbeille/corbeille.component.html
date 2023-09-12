@@ -39,7 +39,7 @@
           <!-- Colonne pour numeroLigne -->
           <ng-container matColumnDef="numeroLigne">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Numéro_de_Ligne </th>
-            <td mat-cell *matCellDef="let row"> {{ row.numeroLigne }} </td>
+            <td mat-cell *matCellDef="let row"> {{ formatNumeroLigne(row.numeroLigne) }} </td>
           </ng-container>
 
 

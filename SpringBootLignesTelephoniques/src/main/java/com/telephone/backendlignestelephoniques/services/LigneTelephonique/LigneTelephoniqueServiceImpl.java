@@ -147,6 +147,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
     @Override
     public Page<LigneTelephonique> listLigneTelephonique(int page, int size, String kw) {
         Pageable pageable = PageRequest.of(page, size);
+        System.out.println("\n\n\n\n  KeyWord  "+ kw + "   \n\n\n\n");
         return ligneTelephoniqueRepository.getAllLignesTelephoniques(kw, pageable);
         //return ligneTelephoniqueRepository.findAll();
     }

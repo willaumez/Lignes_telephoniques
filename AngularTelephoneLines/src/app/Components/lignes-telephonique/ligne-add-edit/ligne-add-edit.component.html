@@ -57,11 +57,13 @@
             <mat-option value="" disabled>Sélectionnez un type</mat-option>
             <mat-option *ngFor="let type of typesLigne" [value]="type.idType">{{type.nomType}}</mat-option>
           </mat-select>
+
           <mat-error
             *ngIf="ligneForm.get('typeLigne.idType')?.invalid && (ligneForm.get('typeLigne.idType')?.dirty || ligneForm.get('typeLigne.idType')?.touched)">
             Vous devez sélectionner un type de ligne.
           </mat-error>
         </mat-form-field>
+        <button style="width: 300px; margin: 10px auto" mat-button *ngIf="typesLigne.length == 0" (click)="addTypeAttribut()"><mat-icon>table</mat-icon> Ajouter un type de ligne / attributs</button>
         <mat-divider></mat-divider>
         <ng-container *ngIf="!data">
           <!-- Pour les Attributs -->
