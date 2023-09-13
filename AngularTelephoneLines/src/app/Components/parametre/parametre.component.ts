@@ -86,12 +86,14 @@ export class ParametreComponent implements OnInit{
   firstElement() {
     this.currentIndex = 0;
     this.selectedTypeLigne = this.typeLignes[this.currentIndex];
+    this.getAttributNames();
     this.elementSelected();
   }
   previousElement() {
     if (this.currentIndex > 0) {
       this.currentIndex--;
       this.selectedTypeLigne = this.typeLignes[this.currentIndex];
+      this.getAttributNames();
       this.elementSelected();
     }
   }
@@ -99,12 +101,14 @@ export class ParametreComponent implements OnInit{
     if (this.currentIndex < this.typeLignes.length - 1) {
       this.currentIndex++;
       this.selectedTypeLigne = this.typeLignes[this.currentIndex];
+      this.getAttributNames();
       this.elementSelected();
     }
   }
   lastElement() {
     this.currentIndex = this.typeLignes.length - 1;
     this.selectedTypeLigne = this.typeLignes[this.currentIndex];
+    this.getAttributNames();
     this.elementSelected();
   }
   elementSelected() {

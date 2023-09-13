@@ -92,6 +92,8 @@ export class RapprochementService {
   }
 
   private normalizeNumero(numero: string): string {
+    // Suppression de tous les espaces dans le numéro
+    numero = numero.replace(/\s+/g, '');
     if (numero.startsWith("0")) {
       return "212" + numero.substring(1);
     } else if (numero.startsWith("+")) {

@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {Rapprochement, VerificationResult} from "../../Models/Rapprochement";
+import {Rapprochement, RapprochementMontant, VerificationResult} from "../../Models/Rapprochement";
 import {MatSort} from "@angular/material/sort";
 import {LigneTelephoniqueService} from "../../Services/ligne-telephonique.service";
 import {RapprochementService} from "../../Services/rapprochement.service";
@@ -32,17 +32,19 @@ export class RapprochementComponent implements OnInit {
   traitementFinit: boolean = false;
   resultats: boolean = false;
   titreResultats!: string;
+  dataMontant: boolean = false;
 
   //Données rapprochement
   dataCorresponding: Rapprochement[] = [];
   dataNotCorresponding: Rapprochement[] = [];
-  dataMontantNoCor: Rapprochement[] = [];
+  dataMontantNoCor: RapprochementMontant[] = [];
   dataNoExistDB: Rapprochement[] = [];
   dataNoExistExcel: Rapprochement[] = [];
 
   //Table
   @ViewChild(MatSort) sort!: MatSort;
   displayedColumns: string[] = ['numero', 'montant'];
+  displayedColumnsMontant: string[] = ['numero', 'montantDb', 'montantExcel'];
   dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -110,8 +112,6 @@ export class RapprochementComponent implements OnInit {
               console.error('Une erreur est survenue lors de l\'importation des données depuis Excel', error);
             }
           }
-
-
         );
         this.isLoading = false;
       } else {
@@ -195,13 +195,14 @@ export class RapprochementComponent implements OnInit {
 
       for (const dbItem of this.dataFromDataBase) {
         if (excelItem.numero === dbItem.numero) {
-          this.dataCorresponding.push(excelItem);
+          this.dataCorresponding.push(dbItem);
           numeroExisteDansDB = true;
           break; // Passer au prochain élément de dataFromExcel dès qu'une correspondance est trouvée
         }
       }
       if (!numeroExisteDansDB) {
         this.dataNoExistDB.push(excelItem);
+        this.dataNotCorresponding.push(excelItem)
       }
     }
 
@@ -210,7 +211,12 @@ export class RapprochementComponent implements OnInit {
       const excelItem = this.dataFromExcel.find(excelItem => excelItem.numero === correspondingItem.numero);
 
       if (excelItem && excelItem.montant !== correspondingItem.montant) {
-        this.dataMontantNoCor.push(correspondingItem);
+        const data: RapprochementMontant = {
+          numero: correspondingItem.numero,
+          montantDb: correspondingItem.montant,
+          montantExcel: excelItem.montant
+        };
+        this.dataMontantNoCor.push(data);
       }
     }
 
@@ -238,7 +244,6 @@ export class RapprochementComponent implements OnInit {
   }
 
 
-
   //Resultats Traitement
   resultatsTraitement(): void {
     this.resultats = true;
@@ -246,7 +251,7 @@ export class RapprochementComponent implements OnInit {
 
 
   //Charger les données
-  chargerDataSource(data: Rapprochement[]): void {
+  chargerDataSource(data: any): void {
     this.isLoading = true;
     this.dataSource = new MatTableDataSource(data);
     if (this.sort) {
@@ -258,37 +263,43 @@ export class RapprochementComponent implements OnInit {
   }
 
   dataOfBase(): void {
+    this.dataMontant = false;
     this.titreResultats = "Lignes téléphoniques de la base de donnée";
     this.chargerDataSource(this.dataFromDataBase);
   }
 
   dataOfExcel(): void {
-
+    this.dataMontant = false;
     this.titreResultats = "Lignes téléphoniques du fichier Excel";
     this.chargerDataSource(this.dataFromExcel);
   }
 
   dataCorresp(): void {
+    this.dataMontant = false;
     this.titreResultats = "Lignes téléphoniques correspondantes";
     this.chargerDataSource(this.dataCorresponding);
   }
 
   dataNotCorresp(): void {
+    this.dataMontant = false;
     this.titreResultats = "Lignes téléphoniques non correspondantes";
     this.chargerDataSource(this.dataNotCorresponding);
   }
 
   dataNotCorrespMontant(): void {
     this.titreResultats = "Numéros correspondants mais montants différents";
+    this.dataMontant = true;
     this.chargerDataSource(this.dataMontantNoCor);
   }
 
   dataNotExistDataBase(): void {
+    this.dataMontant = false;
     this.titreResultats = "Lignes téléphoniques dans le fichier Excel et non dans la base de donnée";
     this.chargerDataSource(this.dataNoExistDB);
   }
 
   dataNotExistExcel(): void {
+    this.dataMontant = false;
     this.titreResultats = "Numéros de téléphone dans la base de donnée, mais pas dans le fichier Excel";
     this.chargerDataSource(this.dataNoExistExcel);
   }
@@ -307,26 +318,44 @@ export class RapprochementComponent implements OnInit {
     this.isExport = true;
     const rawData = this.dataSource.data;
     const ws: XLSX.WorkSheet = {};
-
     ws['A1'] = {v: titre, t: 's'};
     ws['!merges'] = [{s: {r: 0, c: 0}, e: {r: 0, c: 1}}];
 
-    ws['A2'] = {v: 'Numéro', t: 's'};
-    ws['B2'] = {v: 'Montant', t: 's'};
+    if (titre == "Numéros correspondants mais montants différents") {
+      ws['A2'] = {v: 'Numéro', t: 's'};
+      ws['B2'] = {v: 'Montant Base de données', t: 's'};
+      ws['C2'] = {v: 'Montant Fichier Excel', t: 's'};
+      rawData.forEach((row, index) => {
+        const rowIndex = index + 3;
+        ws['A' + rowIndex] = {v: row.numero, t: 's'};
+        ws['B' + rowIndex] = {v: row.montantDb, t: 'n'};
+        ws['C' + rowIndex] = {v: row.montantExcel, t: 'n'};
+      });
+      const range = {s: {c: 0, r: 0}, e: {c: 2, r: rawData.length + 2}};
+      ws['!ref'] = XLSX.utils.encode_range(range);
+      ws['!cols'] = [
+        {wch: 38},
+        {wch: 38},
+        {wch: 38}
+      ];
+    } else {
+      ws['A2'] = {v: 'Numéro', t: 's'};
+      ws['B2'] = {v: 'Montant', t: 's'};
 
-    rawData.forEach((row, index) => {
-      const rowIndex = index + 3;
-      ws['A' + rowIndex] = {v: row.numero, t: 's'};
-      ws['B' + rowIndex] = {v: row.montant, t: 'n'};
-    });
+      rawData.forEach((row, index) => {
+        const rowIndex = index + 3;
+        ws['A' + rowIndex] = {v: row.numero, t: 's'};
+        ws['B' + rowIndex] = {v: row.montant, t: 'n'};
+      });
 
-    const range = {s: {c: 0, r: 0}, e: {c: 1, r: rawData.length + 2}};
-    ws['!ref'] = XLSX.utils.encode_range(range);
+      const range = {s: {c: 0, r: 0}, e: {c: 1, r: rawData.length + 2}};
+      ws['!ref'] = XLSX.utils.encode_range(range);
 
-    ws['!cols'] = [
-      {wch: 38},
-      {wch: 38}
-    ];
+      ws['!cols'] = [
+        {wch: 38},
+        {wch: 38}
+      ];
+    }
 
     // Appliquer le style de format "Text" à la première colonne
     for (let i = 1; i <= rawData.length + 2; i++) {
@@ -343,9 +372,8 @@ export class RapprochementComponent implements OnInit {
     setTimeout(() => {
       this.isExport = false;
     }, 1000);
+
   }
-
-
 
 
 }

@@ -247,7 +247,7 @@
             </mat-form-field>
           </div>
           <div class="container">
-            <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-auto-width" matSort>
+            <mat-table *ngIf="!dataMontant" [dataSource]="dataSource" class="mat-elevation-z8 mat-table-auto-width" matSort>
               <!-- ID Column -->
               <ng-container matColumnDef="numero">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
@@ -260,6 +260,30 @@
               </ng-container>
               <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
               <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="2" *ngIf="dataSource.data.length > 0">Aucune donnée pour le filtre
+                  "{{ input.value }}"
+                </td>
+                <td class="mat-cell" colspan="2" *ngIf="dataSource.data.length == 0" style="color: red">Aucune donnée...
+                  "{{ input.value }}"
+                </td>
+              </tr>
+            </mat-table>
+            <mat-table *ngIf="dataMontant" [dataSource]="dataSource" class="mat-elevation-z8 mat-table-auto-width" matSort>
+              <ng-container matColumnDef="numero">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero</th>
+                <td mat-cell *matCellDef="let row">{{ row.numero }}</td>
+              </ng-container>
+              <ng-container matColumnDef="montantDb">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant DB</th>
+                <td mat-cell *matCellDef="let row">{{ row.montantDb }}</td>
+              </ng-container>
+              <ng-container matColumnDef="montantExcel">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Montant Excel</th>
+                <td mat-cell *matCellDef="let row">{{ row.montantExcel }}</td>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsMontant"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsMontant;"></mat-row>
               <tr class="mat-row" *matNoDataRow>
                 <td class="mat-cell" colspan="2" *ngIf="dataSource.data.length > 0">Aucune donnée pour le filtre
                   "{{ input.value }}"

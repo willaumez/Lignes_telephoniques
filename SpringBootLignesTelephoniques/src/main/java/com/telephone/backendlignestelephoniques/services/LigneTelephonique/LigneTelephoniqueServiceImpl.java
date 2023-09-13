@@ -172,7 +172,7 @@ public class LigneTelephoniqueServiceImpl implements LigneTelephoniqueService {
         List<LigneTelephonique> ligneTelephoniques = ligneTelephoniqueRepository.findAll();
         return ligneTelephoniques.stream().map(ligneTelephonique -> {
             Rapprochement rapprochement = new Rapprochement();
-            rapprochement.setNumero(ligneTelephonique.getNumeroLigne());
+            rapprochement.setNumero(ligneTelephonique.getNumeroLigne().replaceAll("\\s+", ""));
             rapprochement.setMontant(ligneTelephonique.getMontant());
             return rapprochement;
         }).collect(Collectors.toList());
